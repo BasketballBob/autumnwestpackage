@@ -5,7 +5,7 @@ namespace AWP
         
         public float GetEasedDelta(float delta)
         {
-
+            return 0;
         }
     }
 }
