@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace AWP
 {
-    public class AWUnity
+    public static class AWUnity
     {
-        public void TraverseAllChildren(Transform parent, Action<Transform> action)
+        public static void TraverseAllChildren(Transform parent, Action<Transform> action)
         {
             RecursiveTraversal(parent);
 
