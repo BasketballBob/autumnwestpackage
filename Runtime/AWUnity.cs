@@ -11,12 +11,12 @@ namespace AWP
         {
             RecursiveTraversal(parent);
 
-            void RecursiveTraversal(Transform parent)
+            void RecursiveTraversal(Transform child)
             {
-                foreach (Transform element in parent)
+                foreach (Transform element in child)
                 {
                     action(element);
-                    RecursiveTraversal(parent);
+                    RecursiveTraversal(child);
                 }
             }
         }
