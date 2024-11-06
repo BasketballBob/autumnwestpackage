@@ -16,7 +16,7 @@ namespace AWP
                 foreach (Transform element in child)
                 {
                     action(element);
-                    RecursiveTraversal(child);
+                    RecursiveTraversal(element);
                 }
             }
         }
