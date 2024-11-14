@@ -1,8 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 
-public static class AWFunctions
+namespace AWP
 {
+    public static class AWFunctions
+    {
 
+    }
 }

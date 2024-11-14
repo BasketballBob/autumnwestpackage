@@ -7,18 +7,31 @@ namespace AWP
 {
     public static class AWUnity
     {
-        public static void TraverseAllChildren(Transform parent, Action<Transform> action)
-        {
-            RecursiveTraversal(parent);
-
-            void RecursiveTraversal(Transform child)
+        #region Traversal
+            public static void TraverseAllChildren(Transform parent, Action<Transform> action)
             {
-                foreach (Transform element in child)
+                RecursiveTraversal(parent);
+
+                void RecursiveTraversal(Transform child)
                 {
-                    action(element);
-                    RecursiveTraversal(element);
+                    foreach (Transform element in child)
+                    {
+                        action(element);
+                        RecursiveTraversal(element);
+                    }
                 }
             }
-        }
+        #endregion
+
+        #region Physics
+            
+        #endregion
+
+        #region Colors
+            public static Color ShiftAlpha(Color color, float alpha)
+            {
+                return new Color(color.r, color.g, color.b, alpha);
+            }
+        #endregion
     }
 }
