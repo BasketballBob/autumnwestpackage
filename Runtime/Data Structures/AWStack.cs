@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class AWStack<T> : AWList<T>
 {
-    public T TopItem => _items[_items.Count - 1];
-    public T BottomItem => _items[0];
+    public T TopItem => this[Count - 1];
+    public T BottomItem => this[0];
 
     public AWStack() : base()
     {
@@ -14,7 +14,7 @@ public class AWStack<T> : AWList<T>
 
     public void Push(T element)
     {
-        _items.Add(element);
+        Add(element);
     }
 
     public T Peek()
@@ -25,7 +25,7 @@ public class AWStack<T> : AWList<T>
     public T Pop()
     {
         T item = TopItem;
-        _items.RemoveAt(_items.Count - 1);
+        RemoveAt(Count - 1);
         return item;
     }
 }
