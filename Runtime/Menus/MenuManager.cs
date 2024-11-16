@@ -30,7 +30,6 @@ namespace AWP
 
         public void Push(Menu menu)
         {
-            Debug.Log("PUSH COUNT " + _menuStack.Count);
             if (InTransition) return;
 
             _menuStack.Push(new MenuItem()
@@ -43,7 +42,6 @@ namespace AWP
 
         public void Pop()
         {
-            Debug.Log("POP COUNT " + _menuStack.Count);
             if (InTransition) return;
 
             StartTransitionRoutine(_menuStack.TopItem.Menu.PopAnimation());
@@ -54,7 +52,7 @@ namespace AWP
         {
             if (InTransition) return;
             
-            for (int i = _menuStack.Count - 1; i > 0; i--)
+            for (int i = _menuStack.Count - 1; i >= 0; i--)
             {
                 if (_menuStack[i].Menu != menu) continue;
                 StartTransitionRoutine(_menuStack[i].Menu.PopAnimation());
@@ -74,6 +72,7 @@ namespace AWP
                 SetEventSystemEnabled(false);
                 yield return routine;
                 SetEventSystemEnabled(true);
+                _transitionRoutine = null;
             }
         }
 

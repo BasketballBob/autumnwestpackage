@@ -22,7 +22,6 @@ namespace AWP
 
         protected override void OnPress()
         {
-            Debug.Log("PRESSED");
             _toggleValue = !_toggleValue;
 
             if (_toggleValue) OnToggleTrue();

@@ -22,13 +22,11 @@ public class MenuToggleButton : ToggleButton
     {
         base.OnToggleTrue();
         _menu.PushSelf();
-        Debug.Log("TOGGLE TRUE");
     }
 
     protected override void OnToggleFalse()
     {
         base.OnToggleFalse();
         _menu.PopSelf();
-        Debug.Log("TOGGLE FALSE");
     }
 }
