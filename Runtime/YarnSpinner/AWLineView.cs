@@ -14,39 +14,51 @@ namespace AWP
 
         [Header("Text Printing")]
         [SerializeField]
+        private bool _waitForInput = true;
+        [SerializeField]
         private bool _useTypewriterEffect = true;
+
+        protected float DismissAnimationDuration => .5f;
 
         public override void DialogueStarted()
         {
-            
+            base.DialogueStarted();
         }
 
         public override void RunLine(LocalizedLine dialogueLine, Action onDialogueLineFinished)
         {
-            StartCoroutine(RunLineRoutine());
+            _advanceHandler = requestInterrupt;
+            StartAnimationRoutine(RunLineRoutine());
             
             IEnumerator RunLineRoutine()
             {
-                if (_useTypewriterEffect) yield return PrintText(_text, dialogueLine.TextWithoutCharacterName.Text);
-
-                onDialogueLineFinished?.Invoke();
+                yield return RunLineAnimation(dialogueLine);
+                if (!_waitForInput) onDialogueLineFinished?.Invoke();
             }
         }
 
         public override void InterruptLine(LocalizedLine dialogueLine, Action onDialogueLineFinished)
         {
-            StopAnimationRoutine();
-            InstantPrintText(_text, dialogueLine.TextWithoutCharacterName.Text);
+            if (AnimationActive)
+            {
+                StopAnimationRoutine();
+                InstantPrintText(_text, dialogueLine.TextWithoutCharacterName.Text);
+                return;
+            }
+
+            _advanceHandler = null;
+            onDialogueLineFinished();
         }
 
         public override void DismissLine(Action onDismissalComplete)
         {
-            
-        }
+            StartAnimationRoutine(DismissLineRoutine());
 
-        public override void RunOptions(DialogueOption[] dialogueOptions, Action<int> onOptionSelected)
-        {
-            
+            IEnumerator DismissLineRoutine()
+            {
+                yield return DismissLineAnimation();
+                onDismissalComplete?.Invoke();
+            }
         }
 
         public override void DialogueComplete()
@@ -54,9 +66,17 @@ namespace AWP
             
         }
 
-        public override void UserRequestedViewAdvancement()
-        {
-            requestInterrupt?.Invoke();
-        }
+        #region Animations
+            protected virtual IEnumerator RunLineAnimation(LocalizedLine dialogueLine)
+            {
+                _canvasGroup.alpha = 1;
+                if (_useTypewriterEffect) yield return PrintText(_text, dialogueLine.TextWithoutCharacterName.Text);
+            }
+
+            protected virtual IEnumerator DismissLineAnimation()
+            {
+                yield return _canvasGroup.CanvasGroupShiftAlpha(0, DismissAnimationDuration, EasingFunction.Sin, AWDelta.DeltaType.Update);
+            }
+        #endregion
     }
 }

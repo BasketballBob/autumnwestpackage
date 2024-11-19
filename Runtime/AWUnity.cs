@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace AWP
 {
@@ -20,6 +21,19 @@ namespace AWP
                         RecursiveTraversal(element);
                     }
                 }
+            }
+        #endregion
+
+        #region Events
+            public static void AddOneShotListener(this UnityEvent unityEvent, Action action)
+            {
+                UnityAction oneShotAction = null;
+                oneShotAction = () =>
+                {
+                    action?.Invoke();
+                    unityEvent.RemoveListener(oneShotAction);
+                };
+                unityEvent.AddListener(oneShotAction);
             }
         #endregion
 

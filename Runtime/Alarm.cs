@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace AWP
 {
     public class Alarm
@@ -7,6 +9,7 @@ namespace AWP
 
         public float RemainingTime { get { return _remainingTime; } }
         public float Duration { get { return _duration; } }
+        public float Delta => 1 - Mathf.Clamp01(RemainingTime / Duration);
 
         public Alarm(float duration)
         {
