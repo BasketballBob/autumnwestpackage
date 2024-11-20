@@ -60,7 +60,7 @@ namespace AWP
         #endregion
 
         #region Colors
-            public static Color ShiftAlpha(Color color, float alpha)
+            public static Color SetAlpha(this Color color, float alpha)
             {
                 return new Color(color.r, color.g, color.b, alpha);
             }

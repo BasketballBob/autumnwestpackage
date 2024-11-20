@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace AWP
@@ -33,6 +34,18 @@ namespace AWP
                 }, duration, easingFunc, deltaType);
             }
         #endregion
+
+        #region TMP_Text
+            public static IEnumerator ShiftAlpha(this TMP_Text tmp,  float endAlpha, float duration, EasingFunction easingFunc, AWDelta.DeltaType deltaType = AWDelta.DeltaType.Update)
+            {
+                float startAlpha = tmp.color.a;
+
+                return DeltaRoutine((delta) => 
+                {
+                    tmp.color.SetAlpha(startAlpha + (endAlpha - startAlpha) * delta);
+                }, duration, easingFunc, deltaType);
+            }
+        #endregion 
 
         #region Helper functions
             public static IEnumerator DeltaRoutine(Action<float> deltaAction, float duration, EasingFunction easingFunc, AWDelta.DeltaType deltaType = AWDelta.DeltaType.Update)

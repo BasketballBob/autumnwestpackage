@@ -20,6 +20,9 @@ namespace AWP
         [SerializeField]
         private bool _useTypewriterEffect = true;
 
+        protected bool _enterBodyText;
+        protected bool _enterNameText;
+
         protected float DismissAnimationDuration => .25f;
 
         protected override void OnEnable()
@@ -81,7 +84,7 @@ namespace AWP
             protected virtual IEnumerator RunLineAnimation(LocalizedLine dialogueLine)
             {
                 bool typewriterBody = _useTypewriterEffect;
-                bool typewriterName = _useTypewriterEffect && (dialogueLine.CharacterName?.Equals(_prevLine.CharacterName) ?? false);
+                bool typewriterName = false; //_useTypewriterEffect;
 
                 _canvasGroup.alpha = 1;
 
@@ -93,7 +96,11 @@ namespace AWP
 
             protected virtual IEnumerator DismissLineAnimation()
             {
-                yield return _canvasGroup.ShiftAlpha(0, DismissAnimationDuration, EasingFunction.Sin, AWDelta.DeltaType.Update);
+                yield return this.WaitOnRoutines(new IEnumerator[]
+                {
+                    _text.ShiftAlpha(0, DismissAnimationDuration, EasingFunction.Sin, AWDelta.DeltaType.Update),
+                   // _nameText.ShiftAlpha(0, DismissAnimationDuration, EasingFunction.Sin, AWDelta.DeltaType.Update)
+                });
             }
         #endregion
     }

@@ -46,7 +46,7 @@ namespace AWP
             {
                 if (!Application.isPlaying) return;
 
-                Gizmos.color = AWUnity.ShiftAlpha(Color.red, .5f);
+                Gizmos.color = AWUnity.SetAlpha(Color.red, .5f);
                 Gizmos.DrawCube(_rb.transform.TransformPoint(_rb.centerOfMass), Vector2.one * .5f);
             }
         #endif
