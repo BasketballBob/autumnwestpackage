@@ -7,7 +7,7 @@ namespace AWP
 {
     public static class AnimationFX
     {
-        public static IEnumerator WaitForAnimationToComplete(Animator anim)
+        public static IEnumerator WaitForAnimationToComplete(this Animator anim)
         {
             yield return null;
 
@@ -16,9 +16,14 @@ namespace AWP
                 yield return null;
             }
         }
+        public static IEnumerator WaitForAnimationToComplete(this Animator anim, string animName, int layer = 0)
+        {
+            anim.Play(animName, layer);
+            return anim.WaitForAnimationToComplete();
+        }
 
         #region Canvas group
-            public static IEnumerator CanvasGroupShiftAlpha(this CanvasGroup canvasGroup, float endAlpha, float duration, EasingFunction easingFunc, AWDelta.DeltaType deltaType = AWDelta.DeltaType.Update)
+            public static IEnumerator ShiftAlpha(this CanvasGroup canvasGroup, float endAlpha, float duration, EasingFunction easingFunc, AWDelta.DeltaType deltaType = AWDelta.DeltaType.Update)
             {
                 float startAlpha = canvasGroup.alpha;
 

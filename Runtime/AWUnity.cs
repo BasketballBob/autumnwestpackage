@@ -37,6 +37,24 @@ namespace AWP
             }
         #endregion
 
+        #region Coroutine
+            public static IEnumerator WaitOnRoutines(this MonoBehaviour monoBehaviour, IEnumerator[] enumerators)
+            {
+                List<Coroutine> routines = new List<Coroutine>();
+
+                for (int i = 0; i < enumerators.Length; i++)
+                {
+                    if (enumerators[i] == null) continue;
+                    routines.Add(monoBehaviour.StartCoroutine(enumerators[i]));
+                }
+
+                foreach (Coroutine routine in routines)
+                {
+                    yield return routine;
+                }
+            }
+        #endregion
+
         #region Physics
             
         #endregion

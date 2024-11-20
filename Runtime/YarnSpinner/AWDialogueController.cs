@@ -8,35 +8,74 @@ using Sirenix.Utilities;
 
 namespace AWP
 {
+    [DefaultExecutionOrder(AWExecutionOrder.AWDialogueController)]
     [RequireComponent(typeof(DialogueRunner))]
     public class AWDialogueController : AWDialogueViewBase
     {
-        private DialogueRunner _dialogueRunner;
+        protected const string EnterAnim = "DialogueController_Enter";
+        protected const string ExitAnim = "DialogueController_Exit";
 
-        protected virtual bool AdvancePressed => false;
-        protected virtual bool InterruptPressed => AdvancePressed;
-        protected virtual bool DismissPressed => AdvancePressed;
+        [SerializeField]
+        private Animator _animator;
+
+        private DialogueRunner _dialogueRunner;
+        private bool _startAutomatically;
+        private string _startNode;
+
+        protected void Awake()
+        {
+
+        }
 
         protected override void OnEnable()
         {
             base.OnEnable();
 
             _dialogueRunner = GetComponent<DialogueRunner>();
+
+            _startAutomatically = _dialogueRunner.startAutomatically;
+            _startNode = _dialogueRunner.startNode;
+
+            if (!_startAutomatically) _animator?.Play(ExitAnim, 0, 1);
+            _dialogueRunner.startAutomatically = false;
         }
 
-        public override void DialogueStarted()
+        private void Start()
         {
-            StartAnimationRoutine(StartDialogueAnimation());
-        }   
+            if (_startAutomatically) StartDialogue();
+        }
+
+        public void StartDialogue()
+        {
+            StartAnimationRoutine(StartDialogueRoutine());
+
+            Debug.Log("START");
+
+            IEnumerator StartDialogueRoutine()
+            {   
+                yield return EnterAnimation();
+                _dialogueRunner.StartDialogue(_startNode);
+            }
+        }
 
         public override void RunLine(LocalizedLine dialogueLine, Action onDialogueLineFinished)
         {
-            StartCoroutine(RunLineRoutine());
+            StartAnimationRoutine(RunLineRoutine());
 
             IEnumerator RunLineRoutine()
             {
                 while (AnimationActive) yield return null;
                 base.RunLine(dialogueLine, onDialogueLineFinished);
+            }
+        }
+
+        public override void DialogueComplete()
+        {
+            StartAnimationRoutine(DialogueCompleteRoutine());
+
+            IEnumerator DialogueCompleteRoutine()
+            {
+                yield return ExitAnimation();
             }
         }
 
@@ -55,11 +94,6 @@ namespace AWP
         //     //onOptionSelected(0);
         // }
 
-        public override void DialogueComplete()
-        {
-            StartAnimationRoutine(EndDialogueAnimation());
-        }
-
         public override void UserRequestedViewAdvancement()
         {
             _dialogueRunner.dialogueViews.ForEach((x) => 
@@ -70,14 +104,14 @@ namespace AWP
         }
 
         #region Custom animations
-            protected IEnumerator StartDialogueAnimation()
+            protected IEnumerator EnterAnimation()
             {
-                yield break;
+                yield return _animator?.WaitForAnimationToComplete(EnterAnim);
             }
 
-            protected IEnumerator EndDialogueAnimation()
+            protected IEnumerator ExitAnimation()
             {
-                yield break;
+                yield return _animator?.WaitForAnimationToComplete(ExitAnim);
             }
         #endregion
     }

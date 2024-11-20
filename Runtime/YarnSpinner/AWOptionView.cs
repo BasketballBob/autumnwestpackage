@@ -14,6 +14,15 @@ namespace AWP
 
         private List<AWOptionButton> _optionButtons = new List<AWOptionButton>();
 
+        protected float RunOptionsAnimationDuration => .25f;
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            SetHidden(true);
+        }
+
         private void Start()
         {
             _optionButtons.Add(_optionButtonPrefab);
@@ -22,10 +31,15 @@ namespace AWP
 
         public override void RunOptions(DialogueOption[] dialogueOptions, Action<int> onOptionSelected)
         {
-            base.RunOptions(dialogueOptions, onOptionSelected);
+            StartAnimationRoutine(RunOptionsRoutine());
 
-            SyncButtonCount(dialogueOptions.Length);
-            SyncButtonValues(dialogueOptions, onOptionSelected);
+            IEnumerator RunOptionsRoutine()
+            {
+                SyncButtonCount(dialogueOptions.Length);
+                SyncButtonValues(dialogueOptions, onOptionSelected);
+
+                yield return RunOptionsAnimation();
+            }
         }
 
         private void SyncButtonCount(int buttonCount)
@@ -65,5 +79,14 @@ namespace AWP
         {
             _optionButtons.ForEach((x) => x.Disable());
         }
+
+        #region Custom animations
+            protected virtual IEnumerator RunOptionsAnimation()
+            {
+                _canvasGroup.alpha = 0;
+
+                yield return _canvasGroup.ShiftAlpha(1, RunOptionsAnimationDuration, EasingFunction.Sin, AWDelta.DeltaType.Update);
+            }
+        #endregion
     }
 }

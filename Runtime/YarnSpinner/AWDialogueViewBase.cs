@@ -4,13 +4,14 @@ using UnityEngine;
 using Yarn.Unity;
 using TMPro;
 using System;
+using Sirenix.Utilities;
 
 namespace AWP
 {
     [RequireComponent(typeof(CanvasGroup))]
     public class AWDialogueViewBase : DialogueViewBase
     {
-        protected const float DefaultCharPrintDelay = .02f;
+        protected const float DefaultCharPrintDelay = .014f;
 
         protected CanvasGroup _canvasGroup;
         protected LocalizedLine _prevLine;
@@ -24,20 +25,29 @@ namespace AWP
             _canvasGroup = GetComponent<CanvasGroup>();
         }
 
-        public override void DialogueStarted()
-        {
+        // public override void DialogueStarted()
+        // {
             
-        }
+        // }
 
         public override void UserRequestedViewAdvancement()
         {
             _advanceHandler?.Invoke();
         }
 
+        public virtual void SetHidden(bool hidden)
+        {
+            if (hidden) _canvasGroup.alpha = 0;
+        }
+
         protected IEnumerator PrintText(TMP_Text tmp, string text, float charDelay = DefaultCharPrintDelay)
         {
+            if (tmp == null) yield break;
+            if (string.IsNullOrEmpty(text)) text = "";
+
             tmp.maxVisibleCharacters = 0;
             tmp.text = text;
+            tmp.ForceMeshUpdate();
 
             while (tmp.maxVisibleCharacters < tmp.text.Length)
             {
@@ -49,10 +59,18 @@ namespace AWP
 
         protected void InstantPrintText(TMP_Text tmp, string text)
         {
+            if (tmp == null) return;
+            if (string.IsNullOrEmpty(text)) text = "";
+
             tmp.maxVisibleCharacters = text.Length;
             tmp.text = text;
+            tmp.ForceMeshUpdate();
         }
 
+        /// <summary>
+        /// Starts a tracked routine that represents the current primary animation
+        /// </summary>
+        /// <param name="routine">Routine to call</param>
         protected void StartAnimationRoutine(IEnumerator routine)
         {
             StopAnimationRoutine();

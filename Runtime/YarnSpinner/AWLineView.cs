@@ -11,6 +11,8 @@ namespace AWP
     {
         [SerializeField]
         private TMP_Text _text;
+        [SerializeField]
+        private TMP_Text _nameText;
 
         [Header("Text Printing")]
         [SerializeField]
@@ -18,7 +20,14 @@ namespace AWP
         [SerializeField]
         private bool _useTypewriterEffect = true;
 
-        protected float DismissAnimationDuration => .5f;
+        protected float DismissAnimationDuration => .25f;
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            SetHidden(true);
+        }
 
         public override void DialogueStarted()
         {
@@ -34,6 +43,7 @@ namespace AWP
             {
                 yield return RunLineAnimation(dialogueLine);
                 if (!_waitForInput) onDialogueLineFinished?.Invoke();
+                _prevLine = dialogueLine;
             }
         }
 
@@ -43,6 +53,7 @@ namespace AWP
             {
                 StopAnimationRoutine();
                 InstantPrintText(_text, dialogueLine.TextWithoutCharacterName.Text);
+                InstantPrintText(_nameText, dialogueLine.CharacterName);
                 return;
             }
 
@@ -69,13 +80,20 @@ namespace AWP
         #region Animations
             protected virtual IEnumerator RunLineAnimation(LocalizedLine dialogueLine)
             {
+                bool typewriterBody = _useTypewriterEffect;
+                bool typewriterName = _useTypewriterEffect && (dialogueLine.CharacterName?.Equals(_prevLine.CharacterName) ?? false);
+
                 _canvasGroup.alpha = 1;
-                if (_useTypewriterEffect) yield return PrintText(_text, dialogueLine.TextWithoutCharacterName.Text);
+
+                yield return this.WaitOnRoutines(new IEnumerator[] {
+                    typewriterBody ? PrintText(_text, dialogueLine.TextWithoutCharacterName.Text) : null,
+                    typewriterName ? PrintText(_nameText, dialogueLine.CharacterName) : null
+                });
             }
 
             protected virtual IEnumerator DismissLineAnimation()
             {
-                yield return _canvasGroup.CanvasGroupShiftAlpha(0, DismissAnimationDuration, EasingFunction.Sin, AWDelta.DeltaType.Update);
+                yield return _canvasGroup.ShiftAlpha(0, DismissAnimationDuration, EasingFunction.Sin, AWDelta.DeltaType.Update);
             }
         #endregion
     }
