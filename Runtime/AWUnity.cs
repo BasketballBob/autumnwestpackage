@@ -56,6 +56,14 @@ namespace AWP
             }
         #endregion
 
+        #region Misc math
+            public static float SignWithZero(float value)
+            {
+                if (value == 0) return 0;
+                else return Mathf.Sign(value);
+            }
+        #endregion
+
         #region Physics
             
         #endregion
@@ -68,10 +76,37 @@ namespace AWP
         #endregion
 
         #region Quaternions
-            public static Quaternion Difference(this Quaternion from, Quaternion to)
+
+        #endregion
+
+        #region Eulers
+            /// <summary>
+            /// Gets the shortest rotation to make fromEulerDegrees face the same angle as toEulerDegrees
+            /// </summary>
+            /// <param name="fromEulerDegrees"></param>
+            /// <param name="toEulerDegrees"></param>
+            /// <returns></returns>
+            public static float GetShortestRotation(float fromEulerDegrees, float toEulerDegrees)
             {
-                return Quaternion.Inverse(from) * to;
+                float difference = Clamp0359(toEulerDegrees) - Clamp0359(fromEulerDegrees);
+                if (difference > 180) difference -= 360;
+                if (difference < -180) difference += 360;
+                //if (difference > 180) difference = 180 - difference;
+                //if (difference < -180) difference = 180 + difference;
+
+                return difference;
             }
+
+            public static float Clamp0359(float degrees)
+            {
+                while (degrees < 0) degrees += 360;
+                degrees %= 360;
+                return degrees;
+            }
+        #endregion
+
+
+        #region Debug
         #endregion
     }
 }
