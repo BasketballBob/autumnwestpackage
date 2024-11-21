@@ -83,14 +83,20 @@ namespace AWP
         #region Animations
             protected virtual IEnumerator RunLineAnimation(LocalizedLine dialogueLine)
             {
+                string bodyText = dialogueLine.TextWithoutCharacterName.Text;
+                string nameText = dialogueLine.CharacterName;
+
                 bool typewriterBody = _useTypewriterEffect;
                 bool typewriterName = false; //_useTypewriterEffect;
+
+                if (!typewriterBody) InstantPrintText(_text, bodyText);
+                if (!typewriterName) InstantPrintText(_nameText, nameText);
 
                 _canvasGroup.alpha = 1;
 
                 yield return this.WaitOnRoutines(new IEnumerator[] {
-                    typewriterBody ? PrintText(_text, dialogueLine.TextWithoutCharacterName.Text) : null,
-                    typewriterName ? PrintText(_nameText, dialogueLine.CharacterName) : null
+                    typewriterBody ? PrintText(_text, bodyText) : null,
+                    typewriterName ? PrintText(_nameText, nameText) : null
                 });
             }
 
@@ -99,7 +105,7 @@ namespace AWP
                 yield return this.WaitOnRoutines(new IEnumerator[]
                 {
                     _text.ShiftAlpha(0, DismissAnimationDuration, EasingFunction.Sin, AWDelta.DeltaType.Update),
-                   // _nameText.ShiftAlpha(0, DismissAnimationDuration, EasingFunction.Sin, AWDelta.DeltaType.Update)
+                    _nameText.ShiftAlpha(0, 0, EasingFunction.Sin, AWDelta.DeltaType.Update)
                 });
             }
         #endregion
