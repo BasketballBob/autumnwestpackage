@@ -64,10 +64,6 @@ namespace AWP
             }
         #endregion
 
-        #region Physics
-            
-        #endregion
-
         #region Colors
             public static Color SetAlpha(this Color color, float alpha)
             {
@@ -105,6 +101,20 @@ namespace AWP
             }
         #endregion
 
+        #region Particle Systems
+            public static void PlayAndDestroy(this ParticleSystem ps, bool withChildren = true, bool dropParent = true)
+            {
+                if (dropParent) ps.transform.parent = null;
+                ps.Play(withChildren);
+                ps.gameObject.AddComponent<AWEmpty>().StartCoroutine(Destroy());
+
+                IEnumerator Destroy()
+                {
+                    while (ps.IsAlive()) yield return null;
+                    GameObject.Destroy(ps.gameObject);
+                }
+            }
+        #endregion
 
         #region Debug
         #endregion
