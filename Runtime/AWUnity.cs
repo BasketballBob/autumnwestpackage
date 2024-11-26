@@ -116,6 +116,29 @@ namespace AWP
             }
         #endregion
 
+        #region Line Renderer
+            public static void PlotTrajectory(this LineRenderer lineRenderer, Rigidbody2D rb, Vector2 pos, Vector2 velocity, int steps, float maxXDist = 5)
+            {
+                lineRenderer.SetPositions(AWPhysics2D.PlotTrajectory(rb, pos, velocity, steps, maxXDist).ToVector3Array());
+            }
+        #endregion
+
+        #region Conversions
+            public static Vector3[] ToVector3Array(this Vector2[] array)
+            {
+                Vector3[] returnArray = new Vector3[array.Length];
+                for (int i = 0; i < returnArray.Length; i++) returnArray[i] = array[i];
+                return returnArray;
+            }
+
+            public static Vector2[] ToVector2Array(this Vector3[] array)
+            {
+                Vector2[] returnArray = new Vector2[array.Length];
+                for (int i = 0; i < returnArray.Length; i++) returnArray[i] = array[i];
+                return returnArray;
+            }
+        #endregion
+
         #region Debug
         #endregion
     }
