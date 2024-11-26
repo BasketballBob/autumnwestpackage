@@ -16,6 +16,7 @@ namespace AWP
         public static MenuManager MenuManager { get; private set; }
 
         protected virtual bool ResetScenePressed => false;
+        protected virtual bool DebugBreakPressed => false;
 
         #region Events
             protected virtual void Awake()
@@ -57,6 +58,7 @@ namespace AWP
             protected virtual void ManageDebugCommands()
             {
                 if (ResetScenePressed) ResetScene();
+                if (DebugBreakPressed) Debug.Break();
             }
         #endregion
     }

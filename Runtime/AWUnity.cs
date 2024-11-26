@@ -117,20 +117,23 @@ namespace AWP
         #endregion
 
         #region Line Renderer
-            public static void PlotTrajectory(this LineRenderer lineRenderer, Rigidbody2D rb, Vector2 pos, Vector2 velocity, int steps, float maxXDist = 5)
+            public static void PlotTrajectory(this LineRenderer lineRenderer, Rigidbody2D rb, Vector2 pos, Vector2 velocity, int steps, Vector2 maxExtents)
             {
-                lineRenderer.SetPositions(AWPhysics2D.PlotTrajectory(rb, pos, velocity, steps, maxXDist).ToVector3Array());
+                Vector3[] trajectory = AWPhysics2D.PlotTrajectory(rb, pos, velocity, steps, maxExtents).ToVector3Array();
+                lineRenderer.positionCount = trajectory.Length;
+                lineRenderer.SetPositions(trajectory);
+            }
+
+            public static void PlotFunc(this LineRenderer lineRenderer, PlotFunctionData initialData, Action<PlotFunctionData> func, Vector2 pos, int maxSteps, Vector2 maxExtents)
+            {
+                Vector3[] trajectory = AWPhysics2D.PlotFunc(initialData, func, pos, maxSteps, maxExtents).ToVector3Array();
+                lineRenderer.positionCount = trajectory.Length;
+                lineRenderer.SetPositions(trajectory);
+                Debug.Log(trajectory[0] + " " + trajectory[trajectory.Length - 1]);
             }
         #endregion
 
         #region Conversions
-            public static Vector3[] ToVector3Array(this Vector2[] array)
-            {
-                Vector3[] returnArray = new Vector3[array.Length];
-                for (int i = 0; i < returnArray.Length; i++) returnArray[i] = array[i];
-                return returnArray;
-            }
-
             public static Vector2[] ToVector2Array(this Vector3[] array)
             {
                 Vector2[] returnArray = new Vector2[array.Length];
