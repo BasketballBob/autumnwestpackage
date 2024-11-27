@@ -9,6 +9,11 @@ namespace AWP
 {
     public static class Vector2Extensions
     {
+        public static float GetEulerZ(this Vector2 vector)
+        {
+            return Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg;
+        }
+
         /// <summary>
         /// Rounds each axis of the Vector
         /// </summary>

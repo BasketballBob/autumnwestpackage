@@ -129,7 +129,6 @@ namespace AWP
                 Vector3[] trajectory = AWPhysics2D.PlotFunc(initialData, func, pos, maxSteps, maxExtents).ToVector3Array();
                 lineRenderer.positionCount = trajectory.Length;
                 lineRenderer.SetPositions(trajectory);
-                Debug.Log(trajectory[0] + " " + trajectory[trajectory.Length - 1]);
             }
         #endregion
 
