@@ -14,8 +14,8 @@ namespace AWP
         [SerializeField]
         private Animator _animator;
 
-        private CanvasGroup _canvasGroup;
-        private MenuState _currentMenuState;
+        protected CanvasGroup _canvasGroup;
+        protected MenuState _currentMenuState;
 
         public bool IsVisible => _currentMenuState != MenuState.Hidden;
 
@@ -23,7 +23,7 @@ namespace AWP
 
         private void Awake()
         {
-            _animator?.Play(ExitAnimation, 0, 1);
+            if (_animator != null) _animator.Play(ExitAnimation, 0, 1);
             _currentMenuState = MenuState.Hidden;
         }
 
@@ -45,12 +45,12 @@ namespace AWP
 
         public void PushSelf()
         {
-            BaseGameManager.MenuManager.Push(this);
+            AWGameManager.MenuManager.Push(this);
         }
 
         public void PopSelf()
         {
-            BaseGameManager.MenuManager.Pop(this);
+            AWGameManager.MenuManager.Pop(this);
         }
 
         public virtual IEnumerator PushAnimation()

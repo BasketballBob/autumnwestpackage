@@ -7,13 +7,17 @@ using UnityEngine.SceneManagement;
 namespace AWP
 {
     [DefaultExecutionOrder(AWExecutionOrder.BaseGameManager)]
-    public abstract class BaseGameManager : MonoBehaviour
+    public abstract class AWGameManager : MonoBehaviour
     {
         protected virtual string CameraRefName => "MainCamera";
         protected virtual string MenuManagerRefName => "EventSystem";
 
         public static Camera Camera { get; private set; }
         public static MenuManager MenuManager { get; private set; }
+        public static float TimeScale { get { return Time.timeScale; } set { Time.timeScale = value; }}
+        public static bool IsPaused { get; protected set; }
+
+        private static float _prePauseTimeScale;
 
         protected virtual bool ResetScenePressed => false;
         protected virtual bool DebugBreakPressed => false;
@@ -53,6 +57,13 @@ namespace AWP
 
         public static Scene GetCurrentScene() => SceneManager.GetActiveScene();
         public static void ResetScene() => SceneManager.LoadScene(GetCurrentScene().name);
+        public static void SetPaused(bool paused)
+        {
+            if (!IsPaused && paused) _prePauseTimeScale = TimeScale;
+
+            TimeScale = paused ? 0 : _prePauseTimeScale;
+            IsPaused = paused;
+        }
 
         #region Debug
             protected virtual void ManageDebugCommands()

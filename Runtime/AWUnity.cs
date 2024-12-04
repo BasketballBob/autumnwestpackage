@@ -10,7 +10,13 @@ namespace AWP
     public static class AWUnity
     {
         #region Traversal
-            public static void TraverseAllChildren(Transform parent, Action<Transform> action)
+            public static void TraverseSelfAndChildren(this Transform parent, Action<Transform> action)
+            {
+                action(parent);
+                TraverseAllChildren(parent, action);
+            }
+
+            public static void TraverseAllChildren(this Transform parent, Action<Transform> action)
             {
                 RecursiveTraversal(parent);
 

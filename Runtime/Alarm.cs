@@ -1,8 +1,9 @@
+using System;
 using UnityEngine;
 
 namespace AWP
 {
-    public class Alarm
+    public class Alarm : IFormattable
     {
         private float _remainingTime;
         private float _duration;
@@ -42,6 +43,14 @@ namespace AWP
             return _remainingTime <= 0;
         }
 
+        /// <summary>
+        /// Resets the RemainingTime to the Duration
+        /// </summary>
+        public void Reset()
+        {
+            _remainingTime = _duration;
+        }
+
         public bool RunWhileFinished(float timePassed)
         {
             Tick(timePassed);
@@ -52,6 +61,16 @@ namespace AWP
         {
             Tick(timePassed);
             return !IsFinished();
+        }
+
+        public float GetSmoothDelta(EasingFunction easingType)
+        {
+            return easingType.GetEasedDelta(Delta);
+        }
+
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            return $"Alarm {_remainingTime.ToString(format, formatProvider)}/{_duration.ToString(format, formatProvider)}";
         }
     }
 }
