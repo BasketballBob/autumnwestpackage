@@ -13,6 +13,7 @@ namespace AWP
         protected virtual string MenuManagerRefName => "EventSystem";
 
         public static Camera Camera { get; private set; }
+        public static AWCamera2D Camera2D { get; private set; }
         public static MenuManager MenuManager { get; private set; }
         public static float TimeScale { get { return Time.timeScale; } set { Time.timeScale = value; }}
         public static bool IsPaused { get; protected set; }
@@ -51,6 +52,7 @@ namespace AWP
             protected virtual void SyncReferences()
             {
                 Camera = GameObject.Find(CameraRefName)?.GetComponent<Camera>();
+                Camera2D = GameObject.Find(CameraRefName)?.GetComponent<AWCamera2D>();
                 MenuManager = GameObject.Find(MenuManagerRefName)?.GetComponent<MenuManager>();
             }
         #endregion

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
@@ -7,6 +8,7 @@ using UnityEngine.UI;
 
 namespace AWP
 {
+    [System.Serializable]
     public class ToggleButton : ButtonVariant
     {
         [SerializeField] [ShowIf("ShowToggleValue")]
@@ -15,7 +17,6 @@ namespace AWP
         private UnityEvent _onToggleTrue;
         [SerializeField] [ShowIf("ShowUnityEventsInInspector")]
         private UnityEvent _onToggleFalse;
-
 
         protected virtual bool ShowToggleValue => true;
         protected virtual bool ShowUnityEventsInInspector => true;

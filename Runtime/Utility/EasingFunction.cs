@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor.Internal;
 using UnityEngine;
 
@@ -31,5 +33,10 @@ namespace AWP
         {
             return Function(delta);
         }
+
+        public static IEnumerable GetAll = new ValueDropdownList<EasingFunction>()
+        {
+            Linear, Sin, EaseInQuint, EaseInExpo
+        };
     }
 }
