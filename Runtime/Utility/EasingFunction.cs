@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor.Internal;
 using UnityEngine;
@@ -9,34 +10,65 @@ namespace AWP
     /// <summary>
     /// Referenced: https://easings.net/#
     /// </summary>
+    [System.Serializable]
     public class EasingFunction
     {
-        public static EasingFunction Linear => new EasingFunction(LinearFunc);
-        public static EasingFunction Sin => new EasingFunction(SinFunc);
-        public static EasingFunction EaseInQuint => new EasingFunction(EaseInQuintFunc);
-        public static EasingFunction EaseInExpo => new EasingFunction(EaseInExpoFunc);
+        public static EasingFunction Linear => new EasingFunction(Items[0]);
+        public static EasingFunction Sin => new EasingFunction(Items[1]);
+        public static EasingFunction EaseInQuint => new EasingFunction(Items[2]);
+        public static EasingFunction EaseInExpo => new EasingFunction(Items[3]);
 
-        private static Func<float, float> LinearFunc => (x) => x;
-        private static Func<float, float> SinFunc => (x) => Mathf.Sin(x * Mathf.PI / 2);
-        private static Func<float, float> EaseInQuintFunc => (x) => Mathf.Pow(x, 5);
-        private static Func<float, float> EaseInExpoFunc => (x) => Mathf.Pow(2, 10 * x - 10);
-
-        public Func<float, float> Function { get { return _function; } private set { _function = value; }}
-        private Func<float, float> _function = LinearFunc;
-
-        private EasingFunction(Func<float, float> function)
+        public static EasingFunctionItem[] Items = new EasingFunctionItem[]
         {
-            Function = function;
+            new EasingFunctionItem("Linear", (x) => x),
+            new EasingFunctionItem("Sin", (x) => Mathf.Sin(x * Mathf.PI / 2)),
+            new EasingFunctionItem("EasingInQuint", (x) => Mathf.Pow(x, 5)),
+            new EasingFunctionItem("EaseInExpo", (x) => Mathf.Pow(2, 10 * x - 10))
+        };
+
+        [System.Serializable]
+        public delegate float Function(float x);
+
+        public Function Func 
+        { 
+            get 
+            { 
+                if (_func != null) return _func;
+                return Items[ItemIndex].Func; 
+            } 
+            set 
+            {
+                _func = value;
+            }
+        }
+        private Function _func;
+        public int ItemIndex;
+
+        private EasingFunction(Function function)
+        {
+            Func = function;
+        }
+
+        private EasingFunction(EasingFunctionItem item)
+        {
+            Func = item.Func;
         }
 
         public float GetEasedDelta(float delta)
         {
-            return Function(delta);
+            return Func(delta);
         }
 
-        public static IEnumerable GetAll = new ValueDropdownList<EasingFunction>()
+        public class EasingFunctionItem
         {
-            Linear, Sin, EaseInQuint, EaseInExpo
-        };
+            public string Name;
+            public Function Func;
+    
+            public EasingFunctionItem(string name, Function func)
+            {
+                Name = name;
+                Func = func;
+            }
+        }
     }
 }

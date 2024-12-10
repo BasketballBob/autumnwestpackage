@@ -5,9 +5,9 @@ using UnityEngine.Events;
 
 namespace AWP
 {
-    public class Camera2DAccessor : ComponentAccessor<AWCamera2D>
+    public class Camera2DAccessor : ComponentAccessor<Camera2D>
     {
-        protected override AWCamera2D Component => AWGameManager.Camera2D;
+        protected override Camera2D Component => AWGameManager.Camera2D;
 
         //public void MoveToCamPos(CameraPos2D camPos) => Component.MoveToCamPos(camPos);
     }

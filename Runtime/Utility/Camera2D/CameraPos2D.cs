@@ -13,6 +13,8 @@ namespace AWP
         [SerializeField]
         private Color _gizmoColor = Color.yellow;
 
+        public float OrthographicSize => _orthographicSize;
+
         private void OnDrawGizmos()
         {
             Gizmos.color = _gizmoColor;

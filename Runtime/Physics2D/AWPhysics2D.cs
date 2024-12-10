@@ -167,26 +167,35 @@ namespace AWP
 
                 bool CheckToClampFunc()
                 {;
-                    if (Mathf.Abs(data.LocalPos.x) < maxExtents.x && 
-                        Mathf.Abs(data.LocalPos.y) < maxExtents.y)
+                    float angle = Mathf.Atan2(data.LocalPos.y, data.LocalPos.x);
+                    float magnitude = maxExtents.x + (maxExtents.y - maxExtents.x) * Mathf.Cos(angle);
+                    Vector3 maxExtentPoint = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * magnitude;
+                    Vector3 absExtentPoint = new Vector2(Mathf.Abs(maxExtentPoint.x), Mathf.Abs(maxExtentPoint.y));
+
+                    Debug.Log("BLOO " + angle + " " + magnitude + " " + maxExtentPoint);
+                    Debug.DrawLine(Vector3.zero, Vector3.zero + maxExtentPoint, Color.black);
+                    Debug.DrawLine(Vector3.zero, Vector3.zero + (Vector3)data.LocalPos, Color.magenta);
+
+                    if (Mathf.Abs(data.LocalPos.x) < maxExtentPoint.x && 
+                        Mathf.Abs(data.LocalPos.y) < maxExtentPoint.y)
                         return false;
                     
-                    float xOutsideDist = Mathf.Abs(data.LocalPos.x) - maxExtents.x;
-                    float yOutsideDist = Mathf.Abs(data.LocalPos.y) - maxExtents.y;
+                    float xOutsideDist = Mathf.Abs(data.LocalPos.x) - absExtentPoint.x;
+                    float yOutsideDist = Mathf.Abs(data.LocalPos.y) - absExtentPoint.y;
 
                     if (xOutsideDist > yOutsideDist)
                     {
-                        float clampedY = maxExtents.x * (data.LocalPos.normalized.y / Mathf.Abs(data.LocalPos.normalized.x));
-                        clampedY = Mathf.Clamp(clampedY, -maxExtents.x, maxExtents.x);
+                        float clampedY = absExtentPoint.x * (data.LocalPos.normalized.y / Mathf.Abs(data.LocalPos.normalized.x));
+                        clampedY = Mathf.Clamp(clampedY, -absExtentPoint.x, absExtentPoint.x);
 
-                        results.Add(new Vector2(maxExtents.x * AWUnity.SignWithZero(data.LocalPos.x), clampedY) + results.FirstItem());
+                        results.Add(new Vector2(absExtentPoint.x * AWUnity.SignWithZero(data.LocalPos.x), clampedY) + results.FirstItem());
                     }
                     else
                     {
-                        float clampedX = maxExtents.y * (data.LocalPos.normalized.x / Mathf.Abs(data.LocalPos.normalized.y));
-                        clampedX = Mathf.Clamp(clampedX, -maxExtents.x, maxExtents.x);
+                        float clampedX = absExtentPoint.y * (data.LocalPos.normalized.x / Mathf.Abs(data.LocalPos.normalized.y));
+                        clampedX = Mathf.Clamp(clampedX, -absExtentPoint.x, absExtentPoint.x);
 
-                        results.Add(new Vector2(clampedX, maxExtents.y * AWUnity.SignWithZero(data.LocalPos.y)) + results.FirstItem());
+                        results.Add(new Vector2(clampedX, absExtentPoint.y * AWUnity.SignWithZero(data.LocalPos.y)) + results.FirstItem());
                     }
 
                     return true;

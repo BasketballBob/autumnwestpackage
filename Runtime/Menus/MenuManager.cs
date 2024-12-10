@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 
 namespace AWP
 {
@@ -13,14 +14,37 @@ namespace AWP
         private Menu _baseMenu;
 
         private EventSystem _eventSystem;
+        private InputSystemUIInputModule _uiModule;
         private AWStack<MenuItem> _menuStack = new AWStack<MenuItem>();
         private Coroutine _transitionRoutine;
         
+        public bool Interactable => !Disabled && EventSystemEnabled && !InTransition;
+        public bool Disabled 
+        { 
+            get { return _disabled; } 
+            set
+            {
+                _disabled = value;
+                SyncEventSystemEnabled();
+            }
+        }
+        private bool _disabled;
+        private bool EventSystemEnabled 
+        { 
+            get { return _eventSystemEnabled; }
+            set
+            {
+                _eventSystemEnabled = value;
+                SyncEventSystemEnabled();
+            }
+        }
+        private bool _eventSystemEnabled = true;
         public bool InTransition => _transitionRoutine != null;
 
         private void OnEnable()
         {
             _eventSystem = GetComponent<EventSystem>();
+            _uiModule = GetComponent<InputSystemUIInputModule>();
         }
 
         private void OnDisable()
@@ -30,7 +54,7 @@ namespace AWP
 
         public void Push(Menu menu)
         {
-            if (InTransition) return;
+            if (!Interactable) return;
 
             _menuStack.Push(new MenuItem()
             {
@@ -42,7 +66,7 @@ namespace AWP
 
         public void Pop()
         {
-            if (InTransition) return;
+            if (!Interactable) return;
 
             StartTransitionRoutine(_menuStack.TopItem.Menu.PopAnimation());
             _menuStack.Pop();
@@ -50,7 +74,7 @@ namespace AWP
 
         public void Pop(Menu menu)
         {
-            if (InTransition) return;
+            if (!Interactable) return;
             
             for (int i = _menuStack.Count - 1; i >= 0; i--)
             {
@@ -61,7 +85,14 @@ namespace AWP
             }
         }
 
-        public void SetEventSystemEnabled(bool enabled) => _eventSystem.enabled = enabled;
+        private void SyncEventSystemEnabled()
+        {
+            bool enabled = !Disabled && EventSystemEnabled;
+            
+            if (_eventSystem != null) _eventSystem.enabled = enabled;
+            if (_uiModule != null) _uiModule.enabled = enabled;
+            Debug.Log("EVENTSYS " + _eventSystem.enabled);
+        }
 
         private void StartTransitionRoutine(IEnumerator routine)
         {
@@ -69,9 +100,9 @@ namespace AWP
 
             IEnumerator TransitionRoutine()
             {
-                SetEventSystemEnabled(false);
+                EventSystemEnabled = false;
                 yield return routine;
-                SetEventSystemEnabled(true);
+                EventSystemEnabled = true;
                 _transitionRoutine = null;
             }
         }
