@@ -14,6 +14,12 @@ namespace AWP
             return Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg;
         }
 
+        public static Vector2 Inverse(this Vector2 vector)
+        {
+            return new Vector2(-vector.x, -vector.y);
+        }
+
+
         /// <summary>
         /// Rounds each axis of the Vector
         /// </summary>

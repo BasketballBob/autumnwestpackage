@@ -134,15 +134,14 @@ namespace AWP
             public static Vector2[] PlotTrajectory(Rigidbody2D rb, Vector2 pos, Vector2 velocity, int maxSteps, Vector2 maxExtents)
             {
                 float timestep = Time.fixedDeltaTime / Physics2D.velocityIterations;
-                Vector2 gravityAccel = Physics2D.gravity * rb.gravityScale * timestep * timestep;
+                Vector2 gravityAccel = Physics2D.gravity * rb.gravityScale * timestep;
                 float drag = 1f - timestep * rb.drag;
-
 
                 return PlotFunc(new PlotFunctionData(Vector2.zero, velocity), (data) => 
                 {
                     data.MoveStep += gravityAccel;
                     data.MoveStep *= drag;
-                    data.LocalPos += data.MoveStep;
+                    data.LocalPos += data.MoveStep * timestep;
                 }, pos, maxSteps, maxExtents);
             }
 
@@ -172,18 +171,17 @@ namespace AWP
                     Vector3 maxExtentPoint = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * magnitude;
                     Vector3 absExtentPoint = new Vector2(Mathf.Abs(maxExtentPoint.x), Mathf.Abs(maxExtentPoint.y));
 
-                    Debug.Log("BLOO " + angle + " " + magnitude + " " + maxExtentPoint);
-                    Debug.DrawLine(Vector3.zero, Vector3.zero + maxExtentPoint, Color.black);
-                    Debug.DrawLine(Vector3.zero, Vector3.zero + (Vector3)data.LocalPos, Color.magenta);
+                    //Debug.DrawLine(Vector3.zero, Vector3.zero + maxExtentPoint, Color.black);
+                    //Debug.DrawLine(Vector3.zero, Vector3.zero + (Vector3)data.LocalPos, Color.magenta);
 
-                    if (Mathf.Abs(data.LocalPos.x) < maxExtentPoint.x && 
-                        Mathf.Abs(data.LocalPos.y) < maxExtentPoint.y)
+                    if (Mathf.Abs(data.LocalPos.x) < absExtentPoint.x && 
+                        Mathf.Abs(data.LocalPos.y) < absExtentPoint.y)
                         return false;
                     
                     float xOutsideDist = Mathf.Abs(data.LocalPos.x) - absExtentPoint.x;
                     float yOutsideDist = Mathf.Abs(data.LocalPos.y) - absExtentPoint.y;
 
-                    if (xOutsideDist > yOutsideDist)
+                    if (absExtentPoint.x >= absExtentPoint.y)
                     {
                         float clampedY = absExtentPoint.x * (data.LocalPos.normalized.y / Mathf.Abs(data.LocalPos.normalized.x));
                         clampedY = Mathf.Clamp(clampedY, -absExtentPoint.x, absExtentPoint.x);

@@ -6,9 +6,6 @@ namespace AWP
 {
     public interface IResettable
     {
-        public void Reset()
-        {
-            
-        }
+        public void Reset();
     }
 }
