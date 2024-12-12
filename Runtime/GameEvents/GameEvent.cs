@@ -1,28 +1,34 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace AWP
 {
-    public class GameEvent : MonoBehaviour
+    
+    
+    [CreateAssetMenu(fileName = CreateItemName, menuName = CreateFolderName + CreateItemName)]
+    public class GameEvent : ScriptableObject
     {
-        private List<GameEventListener> listeners =
-        new List<GameEventListener>();
+        public const string CreateItemName = "GameEvent";
+        public const string CreateFolderName = "GameEvents/";
+
+        private List<Action> listeners = new List<Action>();
 
         public void Raise()
         {
             for (int i = listeners.Count - 1; i >= 0; i--)
             {
-                listeners[i].OnEventRaised();
+                listeners[i].Invoke();
             }
         }
 
-        public void RegisterListener(GameEventListener listener)
+        public void RegisterListener(Action listener)
         {
             listeners.Add(listener);
         }
 
-        public void UnregisterListener(GameEventListener listener)
+        public void UnregisterListener(Action listener)
         {
             listeners.Remove(listener);
         }

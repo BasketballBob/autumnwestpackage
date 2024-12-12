@@ -12,12 +12,12 @@ namespace AWP
 
         private void OnEnable() 
         {
-            Event.RegisterListener(this);
+            Event.RegisterListener(Response.Invoke);
         }
 
         private void OnDisable() 
         {
-            Event.UnregisterListener(this);
+            Event.UnregisterListener(Response.Invoke);
         }
 
         public void OnEventRaised()
