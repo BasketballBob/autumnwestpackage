@@ -9,13 +9,15 @@ namespace AWP
     public class CompoundBody2D : MonoBehaviour
     {
         [SerializeField]
-        private List<BodySegment> _segments;
+        private List<BodySegment> _segments = new List<BodySegment>();
 
         private Rigidbody2D _rb;
 
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
+
+            if (_segments.Count <= 0) return;
             UpdateCenterOfMass();
         }   
 
