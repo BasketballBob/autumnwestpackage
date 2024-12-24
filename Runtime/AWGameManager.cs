@@ -26,6 +26,7 @@ namespace AWP
         #region Events
             protected virtual void Awake()
             {
+                DontDestroyOnLoad(transform.gameObject);
                 OnSceneLoaded(GetCurrentScene(), default);
             }
 

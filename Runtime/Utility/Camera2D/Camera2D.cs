@@ -65,6 +65,8 @@ namespace AWP
         {
             float startSize = _camera.orthographicSize;
 
+            yield return null;
+
             yield return AnimationFX.DeltaRoutine((delta) =>
             {
                 SetSize(startSize + (func() - startSize) * delta);

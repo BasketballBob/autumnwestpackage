@@ -35,6 +35,8 @@ namespace AWP
 
         protected virtual void RemoveItem(T item)
         {
+            if (item == null) return;
+
             GameObject.Destroy(item.gameObject);
         }
     }
