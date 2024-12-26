@@ -20,5 +20,10 @@ namespace AWP
         {
             return new Vector3(vector2.x, vector2.y, vector3.z);
         }
+
+        public static Vector3 SetZ(this Vector3 vector3, float zPos)
+        {
+            return new Vector3(vector3.x, vector3.y, zPos);
+        }
     }
 }

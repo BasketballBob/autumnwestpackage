@@ -5,8 +5,8 @@ namespace AWP
 {
     public class Alarm : IFormattable
     {
-        private float _remainingTime;
-        private float _duration;
+        protected float _remainingTime;
+        protected float _duration;
 
         public float RemainingTime { get { return _remainingTime; } }
         public float Duration { get { return _duration; } }
@@ -28,7 +28,7 @@ namespace AWP
         /// Deducts alarm by an amount of time
         /// </summary>
         /// <param name="timePassed">Amount of time to deduct</param>
-        public void Tick(float timePassed)
+        public virtual void Tick(float timePassed)
         {
             _remainingTime -= timePassed;
             if (_remainingTime < 0) _remainingTime = 0;
@@ -38,7 +38,7 @@ namespace AWP
         /// If alarm has finished
         /// </summary>
         /// <returns></returns>
-        public bool IsFinished()
+        public virtual bool IsFinished()
         {
             return _remainingTime <= 0;
         }
@@ -46,7 +46,7 @@ namespace AWP
         /// <summary>
         /// Resets the RemainingTime to the Duration
         /// </summary>
-        public void Reset()
+        public virtual void Reset()
         {
             _remainingTime = _duration;
         }
@@ -68,7 +68,7 @@ namespace AWP
             return easingType.GetEasedDelta(Delta);
         }
 
-        public string ToString(string format, IFormatProvider formatProvider)
+        public virtual string ToString(string format, IFormatProvider formatProvider)
         {
             return $"Alarm {_remainingTime.ToString(format, formatProvider)}/{_duration.ToString(format, formatProvider)}";
         }
