@@ -21,19 +21,35 @@ namespace AWP
             UpdateCenterOfMass();
         }   
 
-        private void UpdateCenterOfMass()
+        public void SetCollidersActive(bool enabled)
+        {
+            _segments.ForEach((x) => 
+            {
+                Collider2D col = x.Trans.GetComponent<Collider2D>();
+                if (col == null) return;
+
+                col.enabled = enabled;
+            });
+        }
+
+        public void UpdateCenterOfMass()
         {
             Vector2 centerOfMass = Vector2.zero;
             float totalMass = 0;
 
             foreach (BodySegment segment in _segments)
             {
-                centerOfMass += (Vector2)(segment.Trans.position - _rb.transform.position)  * segment.Mass;
+                centerOfMass += (Vector2)(segment.Trans.position - _rb.transform.position) * segment.Mass;
                 totalMass += segment.Mass;
             }
 
             _rb.centerOfMass = centerOfMass / totalMass;
             _rb.mass = totalMass;
+        }
+
+        public void SetWorldCenterOfMass(Vector3 worldPos)
+        {
+            _rb.centerOfMass = Vector3.Cross(_rb.transform.TransformPoint(worldPos), _rb.transform.lossyScale);
         }
 
         [System.Serializable]
