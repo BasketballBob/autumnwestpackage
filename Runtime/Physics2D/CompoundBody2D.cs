@@ -49,7 +49,7 @@ namespace AWP
 
         public void SetWorldCenterOfMass(Vector3 worldPos)
         {
-            _rb.centerOfMass = Vector3.Cross(_rb.transform.TransformPoint(worldPos), _rb.transform.lossyScale);
+            _rb.centerOfMass = _rb.transform.InverseTransformPoint(worldPos); //Vector3.Cross(, _rb.transform.lossyScale);
         }
 
         [System.Serializable]
