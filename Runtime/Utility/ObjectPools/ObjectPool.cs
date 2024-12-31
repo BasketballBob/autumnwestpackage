@@ -1,0 +1,79 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace AWP
+{
+    [System.Serializable]
+    public abstract class ObjectPool<TObject> : MonoBehaviour where TObject : Component
+    {
+        [SerializeField]
+        private TObject _prefab;
+        [SerializeField]
+        private int _minItemCount = 5;
+        private List<TObject> _poolItems = new List<TObject>();
+
+        public void Start()
+        {
+            _poolItems.Clear();
+
+            // Add initial prefab object
+            AddObjectToPool(_prefab);
+            DisableObject(_prefab);
+
+            // Create remaining minimal item count
+            for (int i = 0; i < _minItemCount - 1; i++)
+            {
+                DisableObject(CreateObject());
+            }
+        }
+
+        public TObject PullObject()
+        {
+            for (int i = 0; i < _poolItems.Count; i++)
+            {
+                if (!ObjectIsActive(_poolItems[i])) 
+                {
+                    EnableObject(_poolItems[i]);
+                    return _poolItems[i];
+                }
+            }
+
+            return CreateObject();
+        }
+
+        public void PullObject(Action<TObject> action)
+        {
+            action(PullObject());
+        }
+
+        public void DisposeObject(TObject obj)
+        {
+            DisableObject(obj);
+        }
+
+        protected TObject CreateObject()
+        {
+            TObject newObject = Instantiate(_prefab, transform);
+            AddObjectToPool(newObject);
+
+            return newObject;
+        }
+
+        protected void AddObjectToPool(TObject obj)
+        {  
+            _poolItems.Add(obj);
+        }
+
+        protected void EnableObject(TObject obj)
+        {
+            obj.gameObject.SetActive(true);
+        }
+        protected void DisableObject(TObject obj)
+        {
+            obj.gameObject.SetActive(false);
+        }
+        protected abstract bool ObjectIsActive(TObject obj);
+    }
+}

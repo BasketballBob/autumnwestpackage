@@ -19,6 +19,10 @@ namespace AWP
             return new Vector2(-vector.x, -vector.y);
         }
 
+        public static Vector2 RotateZAxis(this Vector2 vector, float degrees)
+        {
+            return Quaternion.AngleAxis(degrees, Vector3.forward) * vector;
+        }
 
         /// <summary>
         /// Rounds each axis of the Vector
