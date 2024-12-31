@@ -8,12 +8,15 @@ namespace AWP
 {
     public class AWUnityTest : MonoBehaviour
     {
-        /// This class is designated for running test code in Unity
+        // This class is designated for running test code in Unity
+
+        [SerializeField]
+        private RandomCurve testCurve = new RandomCurve();
 
         [Button("Test")]
         private void Start()
         {
-            RoundTest();
+            testCurve.DebugDraw();
         }
 
         private void LineClosestPointTest()
@@ -26,9 +29,9 @@ namespace AWP
             Debug.Log(AWPhysics2D.LineClosestPoint(linePoint1, linePoint2, point));
         }
 
-        private void RoundTest()
+        private void RandomCurve()
         {
-
+        
         }
     }
 }

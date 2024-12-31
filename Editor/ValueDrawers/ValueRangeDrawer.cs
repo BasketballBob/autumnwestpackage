@@ -16,14 +16,14 @@ namespace AWPEditor
         private InspectorProperty _rangeMode;
         private InspectorProperty _minConstant;
         private InspectorProperty _maxConstant;
-        private InspectorProperty _testCurve;
+        private InspectorProperty _randomCurve;
 
         protected override void Initialize()
         {
             _rangeMode = this.Property.Children["Mode"];
             _minConstant = this.Property.Children["_minConstant"];
             _maxConstant = this.Property.Children["_maxConstant"];
-            _testCurve = this.Property.Children["_testCurve"];
+            _randomCurve = this.Property.Children["_randomCurve"];
         }
 
         protected override void DrawPropertyLayout(GUIContent label)
@@ -34,26 +34,31 @@ namespace AWPEditor
             {
                 case ValueRange.RangeMode.Constant:
                     _minConstant.Draw(null);
+                    DrawRange();
                     break;
                 case ValueRange.RangeMode.TwoConstants:
                     _minConstant.Draw(null);
                     _maxConstant.Draw(null);
+                    DrawRange();
+                    break;
+                case ValueRange.RangeMode.WeightedConstants:
+                    _minConstant.Draw(null);
+                    _maxConstant.Draw(null);
+                    DrawRange();
+                    SirenixEditorGUI.EndHorizontalPropertyLayout();
+                    SirenixEditorGUI.BeginHorizontalPropertyLayout(null);
+                    _randomCurve.Draw();
                     break;
             }   
 
-            _rangeMode.ValueEntry.WeakSmartValue = (ValueRange.RangeMode)EditorGUILayout.EnumPopup(
-                (ValueRange.RangeMode)_rangeMode.ValueEntry.WeakSmartValue, GUILayout.Width(20));
+            
             SirenixEditorGUI.EndHorizontalPropertyLayout();
 
-            _testCurve.ValueEntry.WeakSmartValue = (AnimationCurve)EditorGUILayout.CurveField((AnimationCurve)_testCurve.ValueEntry.WeakSmartValue);
-
-            //SirenixEditorGUI.BeginBox();
-            //_rangeMode.Draw();
-            //Debug.Log((float)_constant.ValueEntry.WeakSmartValue);
-            //_constant.Draw();
-            //_minConstant.Draw();
-            //this.CallNextDrawer(label);
-            //SirenixEditorGUI.EndBox();
+            void DrawRange()
+            {
+                _rangeMode.ValueEntry.WeakSmartValue = (ValueRange.RangeMode)EditorGUILayout.EnumPopup(
+                    (ValueRange.RangeMode)_rangeMode.ValueEntry.WeakSmartValue, GUILayout.Width(20));
+            }
         }
 
         public void PopulateGenericMenu(InspectorProperty property, GenericMenu genericMenu)

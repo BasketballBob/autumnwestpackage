@@ -17,7 +17,7 @@ namespace AWP
         [SerializeField]
         private TValue _maxConstant;
         [SerializeField]
-        private AnimationCurve _testCurve;
+        private RandomCurve _randomCurve;
 
         public TValue Constant => MinConstant;
         public TValue MinConstant
@@ -39,18 +39,25 @@ namespace AWP
                 case RangeMode.Constant:
                     return default;
                 case RangeMode.TwoConstants:
-                    dynamic min = _minConstant;
-                    dynamic max = _maxConstant;
-
-                    return min + (max - min) * UnityEngine.Random.Range(0f, 1f);
+                    return Lerp(AWRandom.Range01());
+                case RangeMode.WeightedConstants:
+                    return Lerp(_randomCurve.Evaluate());
             }
 
             throw new System.Exception("NO ENUM EXISTS");
+        }
+
+        private TValue Lerp(float delta)
+        {
+            dynamic min = _minConstant;
+            dynamic max = _maxConstant;
+
+            return min + (max - min) * delta;
         }
     }
 
     public class ValueRange
     {
-        public enum RangeMode { Constant, TwoConstants };
+        public enum RangeMode { Constant, TwoConstants, WeightedConstants };
     }
 }
