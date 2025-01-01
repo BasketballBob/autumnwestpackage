@@ -47,7 +47,7 @@ namespace AWPEditor
                     DrawRange();
                     SirenixEditorGUI.EndHorizontalPropertyLayout();
                     SirenixEditorGUI.BeginHorizontalPropertyLayout(null);
-                    _randomCurve.Draw();
+                    _randomCurve.Draw(null);
                     break;
             }   
 
