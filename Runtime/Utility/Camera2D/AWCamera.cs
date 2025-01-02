@@ -1,31 +1,41 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem.Utilities;
 
 namespace AWP
 {
     [RequireComponent(typeof(Camera))]
     [DefaultExecutionOrder(AWExecutionOrder.Camera2D)]
-    public class Camera2D : MonoBehaviour
+    public class AWCamera : MonoBehaviour
     {   
         private const AWDelta.DeltaType DefaultDeltaType = AWDelta.DeltaType.Update;
+
+        [SerializeField]
+        private PositionType _positionType;
+        [SerializeField]
+        private List<Camera> _syncedCameras;
 
         private Camera _camera;
         private Coroutine _moveRoutine;
         private Coroutine _sizeRoutine;
+
+        public enum PositionType { XY, XYZ }
 
         private void OnEnable()
         {
             _camera = GetComponent<Camera>();
         }
 
-        public void MoveToCamPos(CameraPos2D camPos, float duration, EasingFunction easing, AWDelta.DeltaType deltaType = DefaultDeltaType, Action onFinish = null)
+        public void MoveToCamPos(CameraPos camPos, float duration, EasingFunction easing, AWDelta.DeltaType deltaType = DefaultDeltaType, Action onFinish = null)
         {
             StartMoveRoutine(MoveToPositionRoutine(() => camPos.transform.position, duration, easing, deltaType, onFinish));
             StartSizeRoutine(MoveToSizeRoutine(() => camPos.OrthographicSize, duration, easing, deltaType));
         }
-        public void MoveToCamPosSin(CameraPos2D camPos, float duration, AWDelta.DeltaType deltaType = DefaultDeltaType)
+        public void MoveToCamPosSin(CameraPos camPos, float duration, AWDelta.DeltaType deltaType = DefaultDeltaType)
         {
             MoveToCamPos(camPos, duration, EasingFunction.Sin, deltaType);
         }
@@ -86,11 +96,25 @@ namespace AWP
 
         private void SetPosition(Vector3 position)
         {
-            transform.position = transform.position.SetXY(position);
+            switch (_positionType)
+            {
+                case PositionType.XY:
+                    transform.position = transform.position.SetXY(position);
+                    break;
+                case PositionType.XYZ:
+                    transform.position = transform.position = position;
+                    break;
+            }
         }
         private void SetSize(float size)
         {
-            _camera.orthographicSize = size;
+            ModifyCamera((x) => x.orthographicSize = size);
+        }
+
+        private void ModifyCamera(Action<Camera> action)
+        {
+            action(_camera);
+            _syncedCameras.ForEach((x) => action(x));
         }
     }
 }

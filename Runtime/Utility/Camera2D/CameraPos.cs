@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AWP
 {
-    public class CameraPos2D : MonoBehaviour
+    public class CameraPos : MonoBehaviour
     {
         [SerializeField]
         private Vector2 _referenceResolution = new Vector2(1600, 900);
