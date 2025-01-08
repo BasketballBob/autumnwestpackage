@@ -10,26 +10,31 @@ using UnityEngine;
 
 namespace AWPEditor
 {
-    public class AnimationCurve01Drawer : OdinValueDrawer<AnimationCurve01>
+    /*public class AnimationCurve01Drawer : OdinValueDrawer<AnimationCurve01>
     {
-        private PropertyValueEntry _self;
+        private InspectorProperty _self;
 
         protected override void Initialize()
         {
-            _self = this.Property.BaseValueEntry;
+            _self = this.Property;
         }
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
             SirenixEditorGUI.BeginHorizontalPropertyLayout(label);
 
-            // AnimationCurve curve = (AnimationCurve)EditorGUILayout.CurveField((AnimationCurve)_self.ValueEntry.WeakSmartValue, Color.red, new Rect(0, 0, 1, 1));
-            // if (curve.keys.Length > 1)
+            //EditorGUILayout.CurveField((AnimationCurve)_self.ValueEntry.WeakSmartValue);
+            //_self.
+
+
+            //_self.MarkSerializationRootDirty();
+
+            // if (((AnimationCurve01)_self.Property.ValueEntry).keys.Length > 1)
             // {
-            //     curve.keys[0].time = 0;
-            //     curve.keys[curve.keys.Length - 1].time = 1;
+            //     ((AnimationCurve01)_self.Property.ValueEntry).keys[0].time = 0;
+            //     ((AnimationCurve01)_self.Property.ValueEntry).keys[((AnimationCurve01)_self.Property.ValueEntry).keys.Length - 1].time = 1;
                 
-            //     curve.keys.ForEach((x) =>
+            //     ((AnimationCurve01)_self.Property.ValueEntry).keys.ForEach((x) =>
             //     {
             //         x.time = Mathf.Clamp01(x.time);
             //         x.value = Mathf.Clamp01(x.value);
@@ -37,11 +42,8 @@ namespace AWPEditor
 
             //     Debug.Log("EEEEE");
             // }
-
-            _self.WeakSmartValue = (AnimationCurve01)EditorGUILayout.CurveField((AnimationCurve)_self.WeakSmartValue, Color.red, new Rect(0, 0, 1, 1));
-            _self.Update();
             
             SirenixEditorGUI.EndHorizontalPropertyLayout();
         }
-    }
+    }*/
 }

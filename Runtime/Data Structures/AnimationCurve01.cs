@@ -9,4 +9,10 @@ namespace AWP
     {
         
     }
+
+    [System.Serializable]
+    public class TestCurve : AnimationCurve
+    {
+
+    }
 }

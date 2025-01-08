@@ -3,20 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using System;
+using AWPEditor;
+using Sirenix.Serialization;
 
 namespace AWP
 {
-    public class AWUnityTest : MonoBehaviour
+    public class AWUnityTest : SerializedMonoBehaviour
     {
         // This class is designated for running test code in Unity
 
+        [SerializeField] [ClampedAnimationCurve]
+        private AnimationCurve testCurve;
+        [OdinSerialize]
+        private SerializedAction testFunc2 = new SerializedAction();
         [SerializeField]
-        private RandomCurve testCurve = new RandomCurve();
+        private CameraPosRef _camPosRef;
+        [SerializeField]
+        private AWEvent _event;
+        [SerializeField] [TypeFilter(nameof(GetTypes))]
+        private ValueObject _valueObject;
+
+        [SerializeField]
+        private TestCurve _test;
+
+        public IEnumerable<Type> GetTypes() => ValueObject.GetTypes();
 
         [Button("Test")]
         private void Start()
         {
-            testCurve.DebugDraw();
+            //testCurve.DebugDraw();
         }
 
         private void LineClosestPointTest()

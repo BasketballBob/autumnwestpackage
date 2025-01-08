@@ -12,7 +12,7 @@ namespace AWP
     [DefaultExecutionOrder(AWExecutionOrder.Camera2D)]
     public class AWCamera : MonoBehaviour
     {   
-        private const AWDelta.DeltaType DefaultDeltaType = AWDelta.DeltaType.Update;
+        public const AWDelta.DeltaType DefaultDeltaType = AWDelta.DeltaType.Update;
 
         [SerializeField]
         private PositionType _positionType;
@@ -22,6 +22,7 @@ namespace AWP
         private Camera _camera;
         private Coroutine _moveRoutine;
         private Coroutine _sizeRoutine;
+        private Coroutine _rotationRoutine;
 
         public enum PositionType { XY, XYZ }
 
@@ -34,6 +35,7 @@ namespace AWP
         {
             StartMoveRoutine(MoveToPositionRoutine(() => camPos.transform.position, duration, easing, deltaType, onFinish));
             StartSizeRoutine(MoveToSizeRoutine(() => camPos.OrthographicSize, duration, easing, deltaType));
+            StartRotationRoutine(MoveToRotationRoutine(() => camPos.transform.rotation, duration, easing, deltaType));
         }
         public void MoveToCamPosSin(CameraPos camPos, float duration, AWDelta.DeltaType deltaType = DefaultDeltaType)
         {
@@ -75,8 +77,6 @@ namespace AWP
         {
             float startSize = _camera.orthographicSize;
 
-            yield return null;
-
             yield return AnimationFX.DeltaRoutine((delta) =>
             {
                 SetSize(startSize + (func() - startSize) * delta);
@@ -90,6 +90,32 @@ namespace AWP
             while (true)
             {
                 SetSize(func());
+                yield return deltaType.YieldNull();
+            }
+        }
+
+        public void StartRotationRoutine(IEnumerator routine)
+        {
+            if (_rotationRoutine != null) StopCoroutine(_rotationRoutine);
+            _rotationRoutine = StartCoroutine(routine);
+        }
+        private IEnumerator MoveToRotationRoutine(Func<Quaternion> func, float duration, EasingFunction easing, AWDelta.DeltaType deltaType, Action onFinish = null)
+        {
+            Quaternion startRotation = _camera.transform.rotation;
+
+            yield return AnimationFX.DeltaRoutine((delta) => 
+            {
+                SetRotation(Quaternion.Lerp(startRotation, func(), delta));
+            }, duration, easing, deltaType);
+
+            onFinish?.Invoke();
+            StartRotationRoutine(HoldRotationRoutine(func, deltaType));
+        }
+        private IEnumerator HoldRotationRoutine(Func<Quaternion> func, AWDelta.DeltaType deltaType = DefaultDeltaType)
+        {
+            while (true)
+            {
+                SetRotation(func());
                 yield return deltaType.YieldNull();
             }
         }
@@ -109,6 +135,10 @@ namespace AWP
         private void SetSize(float size)
         {
             ModifyCamera((x) => x.orthographicSize = size);
+        }
+        private void SetRotation(Quaternion quaternion)
+        {
+            transform.rotation = quaternion;
         }
 
         private void ModifyCamera(Action<Camera> action)
