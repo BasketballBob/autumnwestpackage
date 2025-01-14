@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
@@ -50,6 +51,54 @@ namespace AWP
         public void SetWorldCenterOfMass(Vector3 worldPos)
         {
             _rb.centerOfMass = _rb.transform.InverseTransformPoint(worldPos); //Vector3.Cross(, _rb.transform.lossyScale);
+        }
+
+        public void DestroySegment(Transform transform)
+        {
+            BodySegment segment = RemoveSegment(transform);
+            if (segment == null) return;
+
+            Destroy(segment.Trans.gameObject);
+        }
+
+        public void DisconnectSegment(Transform transform)
+        {
+            BodySegment segment = RemoveSegment(transform);
+            if (segment == null) return;
+
+            Rigidbody2D rb = segment.Trans.gameObject.AddComponent<Rigidbody2D>();
+            rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+            rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+            rb.mass = segment.Mass;
+            rb.transform.SetParent(null);
+        }
+
+        public BodySegment RemoveSegment(Transform transform)
+        {
+            BodySegment segment = GetSegment(transform);
+            if (segment == null) return null;
+
+            //Rigidbody2D rb = segment.Trans.gameObject.AddComponent<Rigidbody2D>();
+            //rb.mass = segment.Mass;
+            //rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+            //rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+            _segments.Remove(segment);
+            UpdateCenterOfMass();
+            return segment;
+        }
+
+        private BodySegment GetSegment(Transform transform)
+        {
+            for (int i = 0; i < _segments.Count; i++)
+            {
+                if (_segments[i].Trans == transform)
+                {
+                    return _segments[i];
+                }
+            }
+
+            return null;
         }
 
         [System.Serializable]

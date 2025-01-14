@@ -1,14 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace AWP
 {
-    [System.Serializable] [InlineProperty] [LabelWidth(100)]
+    [InlineProperty] [LabelWidth(100)]
     public class AWEvent
     {
-        [SerializeField] 
+        [OdinSerialize]
         private List<SerializedAction> _actions = new List<SerializedAction>();
 
         public void Invoke()
