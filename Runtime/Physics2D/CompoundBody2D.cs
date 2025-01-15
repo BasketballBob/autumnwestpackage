@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
@@ -14,11 +16,20 @@ namespace AWP
 
         private Rigidbody2D _rb;
 
+        private List<Collider2D> AttachedColliders 
+        {
+            get
+            {
+                return _segments.Where(x => x.Col != null).Select(x => x.Col).ToList();
+            }
+        }
+
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
 
             if (_segments.Count <= 0) return;
+            InitializeSegments();
             UpdateCenterOfMass();
         }   
 
@@ -70,6 +81,8 @@ namespace AWP
             rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             rb.interpolation = RigidbodyInterpolation2D.Interpolate;
             rb.mass = segment.Mass;
+            rb.velocity = _rb.velocity;
+            rb.angularVelocity = _rb.angularVelocity;
             rb.transform.SetParent(null);
         }
 
@@ -88,6 +101,29 @@ namespace AWP
             return segment;
         }
 
+        public List<Collider2D> OverlapColliders(ContactFilter2D contactFilter2D)
+        {
+            List<Collider2D> colliders = new List<Collider2D>();
+
+            AttachedColliders.ForEach(x => 
+            {
+                Debug.Log("TOUCH ATTACHED COLLIDERS " + x.name);
+                Collider2D[] results = new Collider2D[8];
+                Physics2D.OverlapCollider(x, contactFilter2D, results);
+                results.ForEach(x =>
+                {
+                    if (x == null) return;
+                    Debug.Log("COLLISION " + x.name);
+                    if (colliders.Contains(x)) return;
+                    colliders.Add(x);
+                });
+            });
+
+            Debug.Log("OVERLAP " + colliders.Count);
+
+            return colliders;
+        }
+
         private BodySegment GetSegment(Transform transform)
         {
             for (int i = 0; i < _segments.Count; i++)
@@ -101,11 +137,23 @@ namespace AWP
             return null;
         }
 
+        private void InitializeSegments()
+        {
+            _segments.ForEach(x => x.Initialize());
+        }
+
         [System.Serializable]
         public class BodySegment
         {
             public Transform Trans;
+            [ReadOnly]
+            public Collider2D Col;
             public float Mass;
+
+            public void Initialize()
+            {
+                Col = Trans.GetComponent<Collider2D>();
+            }
         }
 
         #if UNITY_EDITOR
