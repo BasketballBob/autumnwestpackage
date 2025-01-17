@@ -6,9 +6,27 @@ namespace AWP
 {
     public class UnparentOnStart : MonoBehaviour
     {
+        [SerializeField]
+        private UnparentType _unparentType;
+
+        private enum UnparentType { Self, Children };
+
         private void Start()
         {
-            transform.SetParent(null);
+            Unparent();
+        }
+
+        private void Unparent()
+        {
+            switch (_unparentType)
+            {
+                case UnparentType.Self:
+                    transform.SetParent(null);
+                    break;
+                case UnparentType.Children:
+                    transform.UnparentChildren();
+                    break;
+            }
         }
     }
 }
