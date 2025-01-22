@@ -10,6 +10,8 @@ public class ResettableBody2D : ResettableBody, IResettable
     private Vector3 _initialPosition;
     private Quaternion _initialRotation;
 
+    private bool _initialized;
+
     private void OnEnable()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -19,10 +21,13 @@ public class ResettableBody2D : ResettableBody, IResettable
     {
         _initialPosition = transform.position;
         _initialRotation = transform.rotation;
+        _initialized = true;
     }
 
     public void Reset()
     {
+        if (!_initialized) return;
+
         transform.position = _initialPosition;
         transform.rotation = _initialRotation;
         if (_zeroVelocity) _rb.velocity = Vector2.zero;
