@@ -5,5 +5,5 @@ using UnityEngine;
 
 public static class SCRIPT_NAME
 {
-    SCRIPT_DATA
+SCRIPT_DATA
 }

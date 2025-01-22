@@ -100,39 +100,31 @@ namespace AWP
             [Button()]
             private void GenerateAsset()
             {
-                // Debug.Log(AssetDatabase.GetAssetPath(testAsset));
-                // Debug.Log(TagCollectionBase);
-                // Debug.Log(AssetDatabase.AssetPathToGUID(TagCollectionBase));
-                // TextAsset template = AssetDatabase.LoadAssetAtPath<TextAsset>(TagCollectionBase);
-                // Debug.Log(template.text);
+                TextAsset template = AssetDatabase.LoadAssetAtPath<TextAsset>(TagCollectionBase);
+                System.IO.Directory.CreateDirectory(AssetFolder);
 
-                // System.IO.Directory.CreateDirectory(AssetFolder);
+                string newFileText = template.text;
+                string scriptName = name + "Tags";
+                string assetPath = AssetFolder + "/" + scriptName + ".cs";
+                newFileText = newFileText.Replace("SCRIPT_NAME", scriptName);
 
-                // string newFileText = template.text;
-                // string scriptName = name + "Tags";
-                // string assetPath = AssetFolder + "/" + scriptName + ".cs";
-                // newFileText = newFileText.Replace("SCRIPT_NAME", scriptName);
+                string variableText = "";
+                for (int i = 0; i < _tags.Length; i++)
+                {
+                    if (_tags[i].IsNullOrWhitespace()) continue;
+                    variableText += $"\tpublic const string {_tags[i]} = \"{_tags[i]}\";\n";
+                }
+                newFileText = newFileText.Replace("SCRIPT_DATA", variableText);
 
-                // string variableText = "";
+                Debug.Log(newFileText);
 
-                // for (int i = 0; i < _tags.Length; i++)
-                // {
-                //     if (_tags[i].IsNullOrWhitespace()) continue;
-                // }
-
-                // //AssetDatabase.CreateAsset(textAsset, AWPackage.RuntimePath + "/" + scriptName + ".cs");
-                // using (System.IO.StreamWriter sw = new System.IO.StreamWriter(assetPath, false))
-                // {
-                //     sw.Write(newFileText);
-                // }
+                using (System.IO.StreamWriter sw = new System.IO.StreamWriter(assetPath, false))
+                {
+                    sw.Write(newFileText);
+                }
                 
-
-                // //AssetDatabase.CreateAsset(textAsset, assetPath);
-                // var asset = AssetDatabase.LoadAssetAtPath<TextAsset>(assetPath);
-
-                // //EditorUtility.SetDirty(asset);
-                // //AssetDatabase.SaveAssets();
-                // //AssetDatabase.Refresh();
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
             }
         #endif
     }
