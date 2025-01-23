@@ -20,10 +20,10 @@ namespace AWP
 
         [SerializeField]
         private Object testAsset;
-        [SerializeField]
+        [SerializeField] [RequiredListLength(32)] [ListDrawerSettings(DraggableItems = false, HideAddButton = true, HideRemoveButton = true)]
         private string[] _tags = new string[32];
 
-        [ShowInInspector] [ReadOnly]
+        [ShowInInspector] [ReadOnly] 
         private Dictionary<string, List<AWTags>> _instances = new Dictionary<string, List<AWTags>>();
 
         public List<AWTags> GetInstances(string tag)
@@ -39,7 +39,14 @@ namespace AWP
 
         public string[] GetTags()
         {
-            return _tags;
+            List<string> validTags = new List<string>();
+            _tags.ForEach(x => 
+            {
+                if (x.IsNullOrWhitespace()) return;
+                validTags.Add(x);
+            });
+
+            return validTags.ToArray();
         }
 
         public void AddInstance(AWTags tags)
@@ -73,13 +80,18 @@ namespace AWP
 
         public bool ItemHasTag(GameObject gameObject, string tagName)
         {
+            return ItemFitsMask(gameObject, 1 << NameToTag(tagName));
+        }
+
+        public bool ItemFitsMask(GameObject gameObject, int mask)
+        {
             AWTags[] tagComponents = gameObject.GetComponents<AWTags>();
             if (tagComponents.IsNullOrEmpty()) return false;
 
             foreach (AWTags element in tagComponents)
             {
                 if (element.Collection != this) continue;
-                return (element.AppliedTags & (1 << NameToTag(tagName))) != 0;
+                return (element.AppliedTags & mask) != 0;
             }
 
             return false;
@@ -97,6 +109,11 @@ namespace AWP
         }
 
         #if UNITY_EDITOR
+            public int TagMaskDrawer(int value, GUIContent label)
+            {
+                return EditorGUILayout.MaskField(label, value, GetTags());
+            }
+
             [Button()]
             private void GenerateAsset()
             {

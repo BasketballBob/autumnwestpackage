@@ -6,10 +6,10 @@ using UnityEngine;
 
 namespace AWP
 {
-    [InlineProperty] [LabelWidth(100)]
+    [InlineProperty] [HideReferenceObjectPicker] [LabelWidth(100)]
     public class AWEvent
     {
-        [OdinSerialize]
+        [OdinSerialize] [HideReferenceObjectPicker] [InlineProperty] [ListDrawerSettings(CustomAddFunction = "CustomAddFunction", ShowFoldout = false)]
         private List<SerializedAction> _actions = new List<SerializedAction>();
 
         public void Invoke()
@@ -19,5 +19,7 @@ namespace AWP
                 action.Invoke();
             }
         }
+
+        private SerializedAction CustomAddFunction() => new SerializedAction();
     }
 }

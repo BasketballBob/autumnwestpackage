@@ -5,21 +5,17 @@ using Sirenix.OdinInspector;
 using System;
 using AWPEditor;
 using Sirenix.Serialization;
+using UnityEngine.Events;
 
 namespace AWP
 {
     public class AWUnityTest : SerializedMonoBehaviour
     {
         // This class is designated for running test code in Unity
-
-        [SerializeField] [ClampedAnimationCurve]
-        private AnimationCurve testCurve;
-        [OdinSerialize]
-        private SerializedAction testFunc2 = new SerializedAction();
-        [SerializeField]
-        private CameraPosRef _camPosRef;
-        [SerializeField]
+        [SerializeField] 
         private AWEvent _event;
+        [SerializeField]
+        private UnityEvent _unityEvent;
         [SerializeField] [TypeFilter(nameof(GetTypes))]
         private ValueObject _valueObject;
 

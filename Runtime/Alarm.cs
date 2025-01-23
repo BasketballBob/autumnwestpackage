@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace AWP
@@ -61,6 +62,16 @@ namespace AWP
         {
             Tick(timePassed);
             return !IsFinished();
+        }
+
+        public IEnumerator RunUntilFinishRoutine(AWDelta.DeltaType deltaType, bool reset = true)
+        {
+            if (reset) Reset();
+
+            while (RunWhileUnfinished(deltaType.GetDelta()))
+            {
+                yield return deltaType.YieldNull();
+            }
         }
 
         public float GetSmoothDelta(EasingFunction easingType)
