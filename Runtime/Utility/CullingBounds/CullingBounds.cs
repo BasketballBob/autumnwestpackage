@@ -6,18 +6,44 @@ namespace AWP
 {
     public abstract class CullingBounds : MonoBehaviour
     {
+        private List<CullingObject> _cullingObjects = new List<CullingObject>();
         private Coroutine _cullRoutine;
 
-        protected virtual float CullingRate => .1f;
+        protected virtual float CullingRate => .2f;
 
-        private void Start()
+        protected virtual void Start()
         {
+            InitializeVariables();
             _cullRoutine = this.RepeatCoroutineIndefinitely(Cull, AWDelta.DeltaType.FixedUpdate, CullingRate);
         }
 
-        private void Cull()
+        public void AddObject(CullingObject cullingObject)
         {
-            Debug.Log("CULL");
+            if (_cullingObjects.Contains(cullingObject)) return;
+            _cullingObjects.Add(cullingObject);
         }
+
+        public void RemoveObject(CullingObject cullingObject)
+        {
+            if (!_cullingObjects.Contains(cullingObject)) return;
+            _cullingObjects.Remove(cullingObject);
+        }
+
+        protected IEnumerator Cull()
+        {
+            for (int i = 0; i < _cullingObjects.Count; i++)
+            {
+                if (ShouldCull(_cullingObjects[i]))
+                {
+                    _cullingObjects[i].Cull();
+                    i--;
+                }
+            }
+
+            yield return null;
+        }
+
+        protected abstract void InitializeVariables();
+        protected abstract bool ShouldCull(CullingObject cullingObject);
     }
 }
