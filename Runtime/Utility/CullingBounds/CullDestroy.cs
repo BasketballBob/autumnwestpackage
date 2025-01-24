@@ -8,6 +8,7 @@ namespace AWP
     {
         public override void Cull()
         {
+            base.Cull();
             Destroy(gameObject);
         }
     }

@@ -17,6 +17,7 @@ namespace AWP
 
         public override void Cull()
         {
+            base.Cull();
             transform.position = _initialPosition;
             transform.rotation = _initialRotation;
         }

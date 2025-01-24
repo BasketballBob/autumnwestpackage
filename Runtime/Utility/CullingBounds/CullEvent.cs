@@ -12,6 +12,7 @@ namespace AWP
 
         public override void Cull()
         {
+            base.Cull();
             _event?.Invoke();
         }
     }
