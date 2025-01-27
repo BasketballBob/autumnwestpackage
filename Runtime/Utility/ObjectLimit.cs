@@ -9,12 +9,11 @@ namespace AWP
     {
         private int _maxCount;
         private Queue<T> _items = new Queue<T>();
-        private Action<T> _removeItemFunc;
+        private Action<T> _removeItemFunc = x => GameObject.Destroy(x.gameObject);
 
         public ObjectLimit(int maxCount) 
         { 
             _maxCount = maxCount;
-            _removeItemFunc = RemoveItem;
         }
 
         public ObjectLimit(int maxCount, Action<T> removeFunc)
@@ -37,7 +36,15 @@ namespace AWP
         {
             if (item == null) return;
 
-            GameObject.Destroy(item.gameObject);
+            _removeItemFunc(item);
+        }
+
+        protected virtual void RemoveAll()
+        {
+            while (_items.Count > 0)
+            {
+                RemoveItem(_items.Dequeue());
+            }
         }
     }
 }

@@ -16,9 +16,13 @@ namespace AWP
         public static Camera Camera { get; private set; }
         public static AWCamera AWCamera { get; private set; }
         public static MenuManager MenuManager { get; private set; }
+        public static AudioManager AudioManager { get; private set; }
         public static CullingBounds CullingBounds { get; private set; }
         public static float TimeScale { get { return Time.timeScale; } set { Time.timeScale = value; }}
         public static bool IsPaused { get; protected set; }
+
+        [SerializeField]
+        private AudioManager _audioManager;
 
         private static float _prePauseTimeScale;
 
@@ -57,6 +61,7 @@ namespace AWP
                 Camera = GameObject.Find(CameraRefName)?.GetComponent<Camera>();
                 AWCamera = GameObject.Find(CameraRefName)?.GetComponent<AWCamera>();
                 MenuManager = GameObject.Find(MenuManagerRefName)?.GetComponent<MenuManager>();
+                AudioManager = _audioManager;
                 CullingBounds = GameObject.Find(CullingBoundsRefName)?.GetComponent<CullingBounds>();
             }
         #endregion

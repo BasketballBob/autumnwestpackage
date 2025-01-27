@@ -28,5 +28,20 @@ namespace AWP
 
 
         }
+
+        public static void BalanceCenterOfMass(this Rigidbody2D rb, List<Tuple<Transform, float>> massPoints)
+        {
+            Vector2 centerOfMass = Vector2.zero;
+            float totalMass = 0;
+
+            massPoints.ForEach(x => 
+            {
+                centerOfMass += (Vector2)(x.Item1.transform.position - rb.transform.position) * x.Item2;
+                totalMass += x.Item2;
+            });
+
+            rb.centerOfMass = centerOfMass;
+            rb.mass = totalMass;
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.Utilities;
 using UnityEngine;
 
 public class IgnoreCollision2D : MonoBehaviour
@@ -12,9 +13,21 @@ public class IgnoreCollision2D : MonoBehaviour
 
     private void OnEnable()
     {
-        foreach (Collider2D element in _ignoredColliders)
+        IgnoreCollisions(_callingCollider);
+    }
+
+    public void IgnoreCollisions(Collider2D col)
+    {
+        IgnoreCollisions(col, _ignoredColliders);
+    }
+
+    public static void IgnoreCollisions(Collider2D col, List<Collider2D> ignoredColliders)
+    {
+        if (ignoredColliders.IsNullOrEmpty()) return;
+
+        foreach (Collider2D element in ignoredColliders)
         {
-            Physics2D.IgnoreCollision(_callingCollider, element, true);
+            Physics2D.IgnoreCollision(col, element, true);
         }
     }
 }

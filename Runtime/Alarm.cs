@@ -25,6 +25,13 @@ namespace AWP
             _remainingTime = remainingTime;
         }
 
+        public void ModifyDuration(float newDuration)
+        {
+            float difference = newDuration - Duration;
+            _duration = newDuration;
+            if (difference < 0) Tick(-difference);
+        }
+
         /// <summary>
         /// Deducts alarm by an amount of time
         /// </summary>
@@ -33,6 +40,7 @@ namespace AWP
         {
             _remainingTime -= timePassed;
             if (_remainingTime < 0) _remainingTime = 0;
+            if (_remainingTime > Duration) _remainingTime = Duration;
         }
 
         /// <summary>
@@ -82,6 +90,11 @@ namespace AWP
         public virtual string ToString(string format, IFormatProvider formatProvider)
         {
             return $"Alarm {_remainingTime.ToString(format, formatProvider)}/{_duration.ToString(format, formatProvider)}";
+        }
+
+        public override string ToString()
+        {
+            return $"Alarm {_remainingTime.ToString()}/{_duration.ToString()}";
         }
     }
 }

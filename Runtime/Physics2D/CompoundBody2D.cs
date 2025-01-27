@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,17 +47,7 @@ namespace AWP
 
         public void UpdateCenterOfMass()
         {
-            Vector2 centerOfMass = Vector2.zero;
-            float totalMass = 0;
-
-            foreach (BodySegment segment in _segments)
-            {
-                centerOfMass += (Vector2)(segment.Trans.position - _rb.transform.position) * segment.Mass;
-                totalMass += segment.Mass;
-            }
-
-            _rb.centerOfMass = centerOfMass / totalMass;
-            _rb.mass = totalMass;
+            _rb.BalanceCenterOfMass(_segments.Select(x => new Tuple<Transform, float>(x.Trans, x.Mass)).ToList());
         }
 
         public void SetWorldCenterOfMass(Vector3 worldPos)
