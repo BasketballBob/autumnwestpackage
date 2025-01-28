@@ -2,10 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 namespace AWP
 {
-    public abstract class AWScriptableObject : ScriptableObject, IFormattable
+    public abstract class AWScriptableObject : SerializedScriptableObject, IFormattable
     {
         public Action OnValueChanged;
 
