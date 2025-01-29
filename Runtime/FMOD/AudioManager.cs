@@ -63,7 +63,7 @@ namespace AWP
         private void Awake()
         {
             Current = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
 
             _bankLoader.Load();
 

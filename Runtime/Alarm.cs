@@ -53,6 +53,15 @@ namespace AWP
         }
 
         /// <summary>
+        /// If remainingTime is equal to duration
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool IsFullyUnfinished()
+        {
+            return _remainingTime >= Duration;
+        }
+
+        /// <summary>
         /// Resets the RemainingTime to the Duration
         /// </summary>
         public virtual void Reset()

@@ -17,6 +17,8 @@ namespace AWP
             return animator.GetUpdatedCurrentClipInfo(0)[0].clip.length * animator.speed;
         }
 
+        public static void ResetSpeed(this Animator animator) => animator.speed = 1;
+
         public static void SetSpeedForDuration(this Animator animator, float duration, int layerIndex = 0)
         {
             animator.speed = animator.GetUpdatedCurrentClipInfo(layerIndex)[0].clip.length / duration;
