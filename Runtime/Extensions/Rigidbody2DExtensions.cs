@@ -40,7 +40,7 @@ namespace AWP
                 totalMass += x.Item2;
             });
 
-            rb.centerOfMass = centerOfMass;
+            rb.centerOfMass = centerOfMass / totalMass;
             rb.mass = totalMass;
         }
     }

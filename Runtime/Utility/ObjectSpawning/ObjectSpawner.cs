@@ -10,6 +10,8 @@ namespace AWP
     {
         [SerializeField] [VerticalGroup("Selector")]
         protected ItemSelector<TObjectType> _objectSelector;
+        [SerializeField] [VerticalGroup("Position")]
+        protected PointArea _pointArea;
         [SerializeField] [VerticalGroup("Spawn")]
         private int _spawnLimit = 5;
         [SerializeField] [VerticalGroup("Delay")]
@@ -22,17 +24,26 @@ namespace AWP
         private Coroutine _spawningRoutine;
 
         public bool CanSpawn => _delayAlarm.IsFinished();
+        public int CurrentObjectCount => _objectLimit.CurrentCount;
         public bool SpawnRoutineActive => _spawningRoutine != null;
         protected virtual float DelayAlarmSpeed => 1;
         public virtual AWDelta.DeltaType DeltaType => AWDelta.DeltaType.FixedUpdate;
         protected virtual bool CanStartRoutineImmediately => true;
 
-        protected virtual void Start()
+        protected virtual void Awake()
         {
             _objectLimit = new ObjectLimit<TObjectType>(_spawnLimit);
             _delayAlarm = new Alarm(_spawnDelay, 0);
+        }
 
+        protected virtual void Start()
+        {
             if (_startRoutineImmediately) SetSpawningActive(true);
+        }
+
+        protected virtual void OnDrawGizmosSelected()
+        {
+            _pointArea.DrawGizmos(transform.position);
         }
 
         public void Spawn() => Spawn(null);
@@ -71,7 +82,7 @@ namespace AWP
         protected void StartSpawningRoutine(IEnumerator routine)
         {
             StopSpawningRoutine();
-            _spawningRoutine =  StartCoroutine(routine);
+            _spawningRoutine = StartCoroutine(routine);
         }
         protected void StopSpawningRoutine()
         {
