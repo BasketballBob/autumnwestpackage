@@ -23,6 +23,8 @@ namespace AWP
         protected Alarm _delayAlarm;
         private Coroutine _spawningRoutine;
 
+
+        public ObjectLimit<TObjectType> ObjectLimit => _objectLimit;
         public bool CanSpawn => _delayAlarm.IsFinished();
         public int CurrentObjectCount => _objectLimit.CurrentCount;
         public bool SpawnRoutineActive => _spawningRoutine != null;

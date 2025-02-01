@@ -55,17 +55,17 @@ namespace AWP
             _rb.centerOfMass = _rb.transform.InverseTransformPoint(worldPos); //Vector3.Cross(, _rb.transform.lossyScale);
         }
 
-        public void DestroySegment(Transform transform)
+        public void DestroySegment(Transform transform, bool updateCenterOfMass = true)
         {
-            BodySegment segment = RemoveSegment(transform);
+            BodySegment segment = RemoveSegment(transform, updateCenterOfMass);
             if (segment == null) return;
 
             Destroy(segment.Trans.gameObject);
         }
 
-        public void DisconnectSegment(Transform transform)
+        public void DisconnectSegment(Transform transform, bool updateCenterOfMass = true)
         {
-            BodySegment segment = RemoveSegment(transform);
+            BodySegment segment = RemoveSegment(transform, updateCenterOfMass);
             if (segment == null) return;
 
             Rigidbody2D rb = segment.Trans.gameObject.AddComponent<Rigidbody2D>();
@@ -77,7 +77,19 @@ namespace AWP
             rb.transform.SetParent(null);
         }
 
-        public BodySegment RemoveSegment(Transform transform)
+        public void AddSegment(Transform transform, float mass, bool updateCenterOfMass = true)
+        {
+            BodySegment newSegment = new BodySegment()
+            {
+                Trans = transform,
+                Mass = mass
+            };
+
+            _segments.Add(newSegment);
+            if (updateCenterOfMass) UpdateCenterOfMass();
+        }
+
+        public BodySegment RemoveSegment(Transform transform, bool updateCenterOfMass = true)
         {
             BodySegment segment = GetSegment(transform);
             if (segment == null) return null;
@@ -88,7 +100,7 @@ namespace AWP
             //rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 
             _segments.Remove(segment);
-            UpdateCenterOfMass();
+            if (updateCenterOfMass) UpdateCenterOfMass();
             return segment;
         }
 

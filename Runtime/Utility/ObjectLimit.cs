@@ -8,12 +8,15 @@ namespace AWP
 {
     public class ObjectLimit<T> where T : Component
     {
+        public static Action<T> DefaultRemoveFunction = x => GameObject.Destroy(x.gameObject);
+
         private int _maxCount;
         private List<T> _items = new List<T>();
-        private Action<T> _removeItemFunc = x => GameObject.Destroy(x.gameObject);
+        private Action<T> _removeItemFunc = DefaultRemoveFunction;
 
         public int CurrentCount => _items.Count;
         public int MaxCount => _maxCount;
+        public Action<T> DefaultRemoveFunc => DefaultRemoveFunction;
 
         public ObjectLimit(int maxCount) 
         { 
@@ -57,5 +60,12 @@ namespace AWP
                 RemoveItem(_items[0]);
             }
         }
+
+        public void SetRemoveItemFunc(Action<T> func)
+        {
+            _removeItemFunc = func;
+        }
+
+        public void ResetRemoveItemFunc() => _removeItemFunc = DefaultRemoveFunc;
     }
 }
