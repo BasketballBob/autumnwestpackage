@@ -76,6 +76,7 @@ namespace AWP
             rb.angularVelocity = _rb.angularVelocity;
             rb.transform.SetParent(null);
         }
+        public void DisconnectSegment(Transform transform) => DisconnectSegment(transform, updateCenterOfMass: true);
 
         public void AddSegment(Transform transform, float mass, bool updateCenterOfMass = true)
         {

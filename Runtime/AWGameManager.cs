@@ -66,8 +66,19 @@ namespace AWP
             }
         #endregion
 
-        public static Scene GetCurrentScene() => SceneManager.GetActiveScene();
-        public static void ResetScene() => SceneManager.LoadScene(GetCurrentScene().name);
+        #region Scene Management
+            public static void LoadScene(string sceneName, LoadSceneMode loadMode = LoadSceneMode.Single)
+            {
+                SceneManager.LoadScene(sceneName, loadMode);
+            }
+            public static void LoadSceneAdditive(string sceneName)
+            {
+                LoadScene(sceneName, LoadSceneMode.Additive);
+            }
+            public static Scene GetCurrentScene() => SceneManager.GetActiveScene();
+            public static void ResetScene() => LoadScene(GetCurrentScene().name);
+        #endregion
+
         public static void SetPaused(bool paused)
         {
             if (!IsPaused && paused) _prePauseTimeScale = TimeScale;
