@@ -43,5 +43,17 @@ namespace AWP
             rb.centerOfMass = centerOfMass / totalMass;
             rb.mass = totalMass;
         }
+
+        public static Vector2 GetPointCentripetalForce(this Rigidbody2D rb, Vector2 point)
+        {
+            Vector2 pointVelocity = rb.GetPointVelocity(point);
+            Vector2 centripetalForce = pointVelocity.PerpendicularClockwise();
+            if (rb.angularVelocity > 0) centripetalForce = pointVelocity.PerpendicularCounterClockwise();
+            
+            Debug.DrawRay(point, pointVelocity, Color.red);
+            Debug.DrawRay(point, centripetalForce, Color.green);
+
+            return default;
+        }
     }
 }

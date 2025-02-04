@@ -59,6 +59,26 @@ namespace AWP
             return new Vector2(func(vector1.x, vector2.x), func(vector1.y, vector2.y));
         }
 
+        /// <summary>
+        /// Gets the vector2 perpendicular to this one in a clock-wise direction
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        public static Vector2 PerpendicularClockwise(this Vector2 vector)
+        {
+            return new Vector2(vector.y, -vector.x);
+        }
+
+        /// <summary>
+        /// Gets the vector2 perpendicular to this one in a counter clock-wise direction
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        public static Vector2 PerpendicularCounterClockwise(this Vector2 vector)
+        {
+            return new Vector2(-vector.y, vector.x);
+        }
+
         public static Vector3[] ToVector3Array(this Vector2[] array)
         {
             Vector3[] returnArray = new Vector3[array.Length];

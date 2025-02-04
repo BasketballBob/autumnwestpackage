@@ -50,7 +50,9 @@ namespace AWP
         {
             if (item == null) return;
 
+            _items.Remove(item);
             _removeItemFunc(item);
+
         }
 
         protected virtual void RemoveAll()
