@@ -17,10 +17,22 @@ namespace AWP
         private AWDelta.DeltaType _deltaType;
         [SerializeField]
         private float _startDelay = 0;
+        [SerializeField]
+        private bool _immediatelyDestroy;
         [SerializeField] 
         private List<DestroyEvent> _destroyEvents;
 
         private bool _setToDestroy;
+
+        protected virtual void OnEnable()
+        {
+            if (_immediatelyDestroy) Destroy();
+        }
+
+        protected virtual void OnDisable()
+        {
+            _setToDestroy = false;
+        }
 
         public void Destroy()
         {
