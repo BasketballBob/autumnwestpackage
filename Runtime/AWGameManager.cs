@@ -13,6 +13,7 @@ namespace AWP
         protected virtual string MenuManagerRefName => "EventSystem";
         protected virtual string CullingBoundsRefName => "CullingBounds";
 
+        public static AWGameManager Current { get; private set; }
         public static Camera Camera { get; private set; }
         public static AWCamera AWCamera { get; private set; }
         public static MenuManager MenuManager { get; private set; }
@@ -38,11 +39,13 @@ namespace AWP
 
             protected virtual void OnEnable()
             {
+                Current = this;
                 SceneManager.sceneLoaded += OnSceneLoaded;
             }
 
             protected virtual void OnDisable()
             {
+                if (Current == this) Current = null;
                 SceneManager.sceneLoaded -= OnSceneLoaded;
             }
 

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1285614129474002108}
   - component: {fileID: 5603982766985912158}
-  - component: {fileID: 71258910579810344}
+  - component: {fileID: 1242634113185310825}
   - component: {fileID: 6959616193829470467}
   - component: {fileID: 1502364860492410463}
   - component: {fileID: 4001031417628579239}
@@ -56,7 +56,7 @@ MonoBehaviour:
   yarnProject: {fileID: 7545569452688597077, guid: 71776635ddd1d4c4192159a91103a48c, type: 3}
   _variableStorage: {fileID: 0}
   dialogueViews:
-  - {fileID: 71258910579810344}
+  - {fileID: 1242634113185310825}
   - {fileID: 4698052348848200590}
   - {fileID: 736488618698022511}
   startNode: DialogueStatsDemo
@@ -79,7 +79,7 @@ MonoBehaviour:
   onCommand:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &71258910579810344
+--- !u!114 &1242634113185310825
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -88,7 +88,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3780612768186908833}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87494fd17d211c842bc30d8f8ad27d43, type: 3}
+  m_Script: {fileID: 11500000, guid: e9cc71f72aa5a1142a7c0f03c81d8b78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 4001031417628579239}

@@ -23,6 +23,8 @@ namespace AWP
         protected bool _enterBodyText;
         protected bool _enterNameText;
 
+        public TMP_Text Text => _text;
+        public TMP_Text NameText => _nameText;
         protected float DismissAnimationDuration => .25f;
 
         protected override void OnEnable()

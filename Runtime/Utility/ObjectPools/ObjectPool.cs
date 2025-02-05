@@ -9,12 +9,12 @@ namespace AWP
     public abstract class ObjectPool<TObject> : MonoBehaviour where TObject : Component
     {
         [SerializeField]
-        private TObject _prefab;
+        protected TObject _prefab;
         [SerializeField]
-        private int _minItemCount = 5;
-        private List<TObject> _poolItems = new List<TObject>();
+        protected int _minItemCount = 5;
+        protected List<TObject> _poolItems = new List<TObject>();
 
-        public void Start()
+        protected virtual void Start()
         {
             _poolItems.Clear();
 

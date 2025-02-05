@@ -5,6 +5,7 @@ using Yarn.Unity;
 using TMPro;
 using System;
 using Sirenix.Utilities;
+using Sirenix.OdinInspector;
 
 namespace AWP
 {
@@ -19,12 +20,18 @@ namespace AWP
         private Animator _animator;
 
         private DialogueRunner _dialogueRunner;
+        [ShowInInspector]
+        private RunnerState _currentState;
         private bool _startAutomatically;
         private string _startNode;
 
+        public enum RunnerState { Off, EnterAnimation, RunningLine, ExitAnimation };
+
+        public bool IsRunning => _currentState != RunnerState.Off;
+
         protected void Awake()
         {
-
+            
         }
 
         protected override void OnEnable()
@@ -49,8 +56,6 @@ namespace AWP
         {
             StartAnimationRoutine(StartDialogueRoutine());
 
-            Debug.Log("START");
-
             IEnumerator StartDialogueRoutine()
             {   
                 yield return EnterAnimation();
@@ -60,6 +65,7 @@ namespace AWP
 
         public override void RunLine(LocalizedLine dialogueLine, Action onDialogueLineFinished)
         {
+            _currentState = RunnerState.RunningLine;
             StartAnimationRoutine(RunLineRoutine());
 
             IEnumerator RunLineRoutine()
@@ -103,15 +109,28 @@ namespace AWP
             });
         }
 
+        #region Events
+            public IEnumerator WaitUntilComplete()
+            {
+                while (IsRunning)
+                {
+                    yield return null;
+                }
+            }
+        #endregion
+
         #region Custom animations
             protected IEnumerator EnterAnimation()
             {
+                _currentState = RunnerState.EnterAnimation;
                 yield return _animator?.WaitForAnimationToComplete(EnterAnim);
             }
 
             protected IEnumerator ExitAnimation()
             {
+                _currentState = RunnerState.ExitAnimation;
                 yield return _animator?.WaitForAnimationToComplete(ExitAnim);
+                _currentState = RunnerState.Off;
             }
         #endregion
     }
