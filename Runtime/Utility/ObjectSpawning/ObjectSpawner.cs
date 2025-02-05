@@ -22,7 +22,7 @@ namespace AWP
         private ObjectLimit<TObjectType> _objectLimit;
         protected Alarm _delayAlarm;
         private Coroutine _spawningRoutine;
-
+        private bool _spawningOverridden;
 
         public ObjectLimit<TObjectType> ObjectLimit => _objectLimit;
         public bool CanSpawn => _delayAlarm.IsFinished();
@@ -52,14 +52,25 @@ namespace AWP
         public void Spawn(Action<TObjectType> modificationAction)
         {
             if (!CanSpawn) return;
+            TObjectType newObject = ForceSpawn(modificationAction);
+            StartCoroutine(_delayAlarm.RunUntilFinishRoutine(DeltaType));
+        }
+        /// <summary>
+        /// Spawns regardless of conditions of object spawners
+        /// For internal use with overriding spawning
+        /// </summary>
+        /// <returns></returns>
+        protected TObjectType ForceSpawn(Action<TObjectType> modificationAction)
+        {
             TObjectType newObject = CreateObject();
             _objectLimit.AddItem(newObject);
             modificationAction?.Invoke(newObject);
-            StartCoroutine(_delayAlarm.RunUntilFinishRoutine(DeltaType));
+            return newObject;
         }
 
         public void SetSpawningActive(bool active)
         {
+            if (_spawningOverridden) return;
             if (SpawnRoutineActive == active) return;
 
             if (active)
@@ -89,7 +100,38 @@ namespace AWP
         protected void StopSpawningRoutine()
         {
             if (_spawningRoutine != null) StopCoroutine(_spawningRoutine);
+            _spawningOverridden = false;
             _spawningRoutine = null;
+        }
+
+        protected void StartSpawningOverride(IEnumerator routine)
+        {
+            StopSpawningRoutine();
+            _spawningOverridden = true;
+            _spawningRoutine = StartCoroutine(OverrideRoutine());
+
+            IEnumerator OverrideRoutine()
+            {
+                yield return routine;
+                _spawningOverridden = false;
+            }   
+        }
+
+        public void OverrideSpawnForCount(int count, float delay, Action<TObjectType> modificationAction = null)
+        {
+            StartSpawningOverride(SpawnForCount());
+
+            IEnumerator SpawnForCount()
+            {
+                int remainingSpawn = count;
+
+                while (remainingSpawn > 0)
+                {
+                    ForceSpawn(modificationAction);
+                    remainingSpawn--;
+                    yield return DeltaType.WaitForSeconds(delay);
+                }
+            }
         }
 
         protected abstract TObjectType CreateObject();

@@ -44,16 +44,33 @@ namespace AWP
             rb.mass = totalMass;
         }
 
-        public static Vector2 GetPointCentripetalForce(this Rigidbody2D rb, Vector2 point)
+        /// <summary>
+        /// THIS IS A PSEUDO CALCULATION FOR CENTRIPETAL FORCE
+        /// </summary>
+        /// <param name="rb"></param>
+        /// <param name="point"></param>
+        /// <returns></returns>lForceDirection(this Rigidbody2D rb, Vector2 point)
+        public static Vector2 GetPseudoCentripetalForce(this Rigidbody2D rb, Vector2 point)
         {
             Vector2 pointVelocity = rb.GetPointVelocity(point);
             Vector2 centripetalForce = pointVelocity.PerpendicularClockwise();
             if (rb.angularVelocity > 0) centripetalForce = pointVelocity.PerpendicularCounterClockwise();
             
             Debug.DrawRay(point, pointVelocity, Color.red);
-            Debug.DrawRay(point, centripetalForce, Color.green);
+            Debug.DrawRay(point, -centripetalForce, Color.green);
 
-            return default;
+            return centripetalForce;
+        }
+
+        /// <summary>
+        /// THIS IS A PSEUDO CALCULATION FOR CENTRIFUGAL FORCE
+        /// </summary>
+        /// <param name="rb"></param>
+        /// <param name="point"></param>
+        /// <returns></returns>lForceDirection(this Rigidbody2D rb, Vector2 point)
+        public static Vector2 GetPseudoCentrifugalForce(this Rigidbody2D rb, Vector2 point)
+        {
+            return -rb.GetPseudoCentripetalForce(point);
         }
     }
 }
