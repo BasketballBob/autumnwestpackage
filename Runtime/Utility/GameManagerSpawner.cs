@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace AWP
 {
+    [DefaultExecutionOrder(AWExecutionOrder.GameManagerSpawner)]
     public class GameManagerSpawner : MonoBehaviour
     {
         [SerializeField]

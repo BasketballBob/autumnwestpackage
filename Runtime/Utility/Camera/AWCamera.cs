@@ -10,7 +10,7 @@ namespace AWP
 {
     [RequireComponent(typeof(Camera))]
     [DefaultExecutionOrder(AWExecutionOrder.Camera2D)]
-    public class AWCamera : MonoBehaviour, IAWCameraReference
+    public class AWCamera : MonoBehaviour
     {   
         public const AWDelta.DeltaType DefaultDeltaType = AWDelta.DeltaType.Update;
 
@@ -26,7 +26,7 @@ namespace AWP
 
         public enum PositionType { XY, XYZ }
 
-        public AWCamera Camera => this;
+        public Camera Camera => _camera;
 
         private void OnEnable()
         {
@@ -148,28 +148,5 @@ namespace AWP
             action(_camera);
             _syncedCameras.ForEach((x) => action(x));
         }
-    }
-
-    public interface IAWCameraReference
-    {
-        public AWCamera Camera { get; }
-    }
-
-    [System.Serializable]
-    public sealed class AWCameraReference : IAWCameraReference
-    {
-        [SerializeField]
-        private AWCamera _camera;
-
-        public AWCamera Camera => _camera;
-    }
-
-    [System.Serializable]
-    public sealed class AWCameraObjectReference : IAWCameraReference
-    {
-        [SerializeField]
-        private AWCameraObject _camera;
-
-        public AWCamera Camera => _camera.Reference;
     }
 }

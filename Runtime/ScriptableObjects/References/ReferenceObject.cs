@@ -12,7 +12,7 @@ namespace AWP
         [SerializeField]
         private TReference _reference;
 
-        public TReference Reference
+        public virtual TReference Reference
         {
             get { return _reference; }
             set
