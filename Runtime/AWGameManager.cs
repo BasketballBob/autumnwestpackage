@@ -61,11 +61,11 @@ namespace AWP
 
             protected virtual void SyncReferences()
             {
-                Camera = GameObject.Find(CameraRefName)?.GetComponent<Camera>();
-                AWCamera = GameObject.Find(CameraRefName)?.GetComponent<AWCamera>();
-                MenuManager = GameObject.Find(MenuManagerRefName)?.GetComponent<MenuManager>();
-                AudioManager = _audioManager;
-                CullingBounds = GameObject.Find(CullingBoundsRefName)?.GetComponent<CullingBounds>();
+                if (Camera == null) Camera = GameObject.Find(CameraRefName)?.GetComponent<Camera>();
+                if (AWCamera == null) AWCamera = GameObject.Find(CameraRefName)?.GetComponent<AWCamera>();
+                if (MenuManager == null) MenuManager = GameObject.Find(MenuManagerRefName)?.GetComponent<MenuManager>();
+                if (AudioManager == null) AudioManager = _audioManager;
+                if (CullingBounds == null) CullingBounds = GameObject.Find(CullingBoundsRefName)?.GetComponent<CullingBounds>();
             }
         #endregion
 

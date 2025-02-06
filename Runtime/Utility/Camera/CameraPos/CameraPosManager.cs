@@ -9,8 +9,8 @@ namespace AWP
 {
     public class CameraPosManager : MonoBehaviour
     {
-        [SerializeField]
-        private AWCamera _cameraRef;
+        [SerializeReference]
+        private IAWCameraReference _cameraRef;
         [SerializeField]
         private List<CameraPosData> _positions = new List<CameraPosData>();
 
@@ -33,7 +33,7 @@ namespace AWP
         {
             bool finished = false;
 
-            _cameraRef.MoveToCamPos(camPos, duration, easing, deltaType, () => 
+            _cameraRef.Camera.MoveToCamPos(camPos, duration, easing, deltaType, () => 
             {
                 onFinish?.Invoke();
                 OnMoveFinish?.Invoke(camPos);
