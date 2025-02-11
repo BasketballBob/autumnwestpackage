@@ -13,8 +13,6 @@ namespace AWP
         private float _speed;
         [SerializeField]
         private TreadmillDirection _direction;
-        [SerializeReference]
-        private ICleanable _test;
 
         protected enum TreadmillDirection { X, Y, Z };
 

@@ -9,6 +9,7 @@ using UnityEngine.InputSystem.Utilities;
 namespace AWP
 {
     [RequireComponent(typeof(Camera))]
+    [RequireComponent(typeof(Animator))]
     [DefaultExecutionOrder(AWExecutionOrder.Camera2D)]
     public class AWCamera : MonoBehaviour
     {   
@@ -20,17 +21,26 @@ namespace AWP
         private List<Camera> _syncedCameras;
 
         private Camera _camera;
+        private Animator _animator;
         private Coroutine _moveRoutine;
         private Coroutine _sizeRoutine;
         private Coroutine _rotationRoutine;
+        private Coroutine _animationRoutine;
 
         public enum PositionType { XY, XYZ }
 
         public Camera Camera => _camera;
+        public Animator Animator => _animator;
 
         private void OnEnable()
         {
             _camera = GetComponent<Camera>();
+            _animator = GetComponent<Animator>();
+        }
+
+        private void Start()
+        {
+            _animator.enabled = false;
         }
 
         public void MoveToCamPos(CameraPos camPos, float duration, EasingFunction easing, AWDelta.DeltaType deltaType = DefaultDeltaType, Action onFinish = null)
@@ -46,8 +56,12 @@ namespace AWP
         
         public void StartMoveRoutine(IEnumerator routine)
         {
-            if (_moveRoutine != null) StopCoroutine(_moveRoutine);
+            StopMoveRoutine();
             _moveRoutine = StartCoroutine(routine);
+        }
+        private void StopMoveRoutine() 
+        {
+            if (_moveRoutine != null) StopCoroutine(_moveRoutine);
         }
         private IEnumerator MoveToPositionRoutine(Func<Vector3> func, float duration, EasingFunction easing, AWDelta.DeltaType deltaType = DefaultDeltaType, Action onFinish = null)
         {
@@ -65,15 +79,27 @@ namespace AWP
         {
             while (true)
             {
-                SetPosition(func());
+                try 
+                {
+                    SetPosition(func());
+                }
+                catch
+                {
+                    yield break;
+                }
+
                 yield return deltaType.YieldNull();
             }
         }
 
         public void StartSizeRoutine(IEnumerator routine)
         {
-            if (_sizeRoutine != null) StopCoroutine(_sizeRoutine);
+            StopSizeRoutine();
             _sizeRoutine = StartCoroutine(routine);
+        }
+        private void StopSizeRoutine() 
+        {
+            if (_sizeRoutine != null) StopCoroutine(_sizeRoutine);
         }
         private IEnumerator MoveToSizeRoutine(Func<float> func, float duration, EasingFunction easing, AWDelta.DeltaType deltaType, Action onFinish = null)
         {
@@ -81,6 +107,12 @@ namespace AWP
 
             yield return AnimationFX.DeltaRoutine((delta) =>
             {
+                if (func == null) 
+                {
+                    StopSizeRoutine();
+                    return;
+                }
+
                 SetSize(startSize + (func() - startSize) * delta);
             }, duration, easing, deltaType);
 
@@ -91,6 +123,7 @@ namespace AWP
         {
             while (true)
             {
+                if (func == null) yield break;
                 SetSize(func());
                 yield return deltaType.YieldNull();
             }
@@ -98,8 +131,12 @@ namespace AWP
 
         public void StartRotationRoutine(IEnumerator routine)
         {
-            if (_rotationRoutine != null) StopCoroutine(_rotationRoutine);
+            StopRotationRoutine();
             _rotationRoutine = StartCoroutine(routine);
+        }
+        public void StopRotationRoutine() 
+        {
+            if (_rotationRoutine != null) StopCoroutine(_rotationRoutine);
         }
         private IEnumerator MoveToRotationRoutine(Func<Quaternion> func, float duration, EasingFunction easing, AWDelta.DeltaType deltaType, Action onFinish = null)
         {
@@ -117,9 +154,19 @@ namespace AWP
         {
             while (true)
             {
-                SetRotation(func());
+                try { SetRotation(func()); }
+                catch { yield break; }
+
                 yield return deltaType.YieldNull();
             }
+        }
+
+        public void StopAllShiftRoutines()
+        {
+            StopMoveRoutine();
+            StopSizeRoutine();
+            StopRotationRoutine();
+            StopAnimationRoutine();
         }
 
         private void SetPosition(Vector3 position)
@@ -142,6 +189,32 @@ namespace AWP
         {
             transform.rotation = quaternion;
         }
+
+        #region Animation override
+            public void StartAnimationRoutine(IEnumerator routine)
+            {
+                StopAllShiftRoutines();
+                _animator.enabled = true;
+                _animationRoutine = StartCoroutine(routine);
+            }
+            public void StopAnimationRoutine()
+            {
+                if (_animationRoutine != null) StopCoroutine(_animationRoutine);
+                _animator.enabled = false;
+            }
+            public Coroutine OneShotPlayAnimation(string animation)
+            {
+                StartAnimationRoutine(OneShotPlay());
+                return _animationRoutine;
+
+                IEnumerator OneShotPlay()
+                {
+                    _animator.Play(animation);
+                    yield return _animator.WaitForAnimationToComplete();
+                    StopAnimationRoutine();
+                }
+            }
+        #endregion
 
         private void ModifyCamera(Action<Camera> action)
         {

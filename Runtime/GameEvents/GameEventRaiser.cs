@@ -6,9 +6,12 @@ namespace AWP
 {
     public class GameEventRaiser : MonoBehaviour
     {
-        public void RaiseGameEvent(GameEvent gameEvent)
+        [SerializeField]
+        private GameEvent _gameEvent;
+
+        public void RaiseGameEvent()
         {
-            gameEvent.Raise();
+            _gameEvent.Raise();
         }
     }
 }

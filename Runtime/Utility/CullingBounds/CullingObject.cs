@@ -18,7 +18,7 @@ namespace AWP
 
         protected virtual void OnDisable()
         {
-            AWGameManager.CullingBounds.RemoveObject(this);
+            AWGameManager.CullingBounds?.RemoveObject(this);
         }
 
         public virtual void Cull()

@@ -27,40 +27,45 @@ namespace AWP
         public Action<CameraPos> OnMoveStart;
         public Action<CameraPos> OnMoveFinish;
 
+        private bool _moving;
+
         public CameraPos CurrentPos { get; private set; }
 
-        public IEnumerator MoveToCamPos(CameraPos camPos, float duration, EasingFunction easing, AWDelta.DeltaType deltaType = AWCamera.DefaultDeltaType, Action onFinish = null)
+        public void MoveToCamPos(CameraPos camPos, float duration, EasingFunction easing, AWDelta.DeltaType deltaType = AWCamera.DefaultDeltaType, Action onFinish = null)
         {
-            bool finished = false;
+            _moving = true; 
 
             _cameraRef.Camera.MoveToCamPos(camPos, duration, easing, deltaType, () => 
             {
                 onFinish?.Invoke();
                 OnMoveFinish?.Invoke(camPos);
-                finished = true;
+                _moving = false;
             });
             CurrentPos = camPos;
 
             OnMoveStart?.Invoke(CurrentPos);
+        }
+        private void MoveToCamPos(CameraPosData data)
+        {
+            MoveToCamPos(data.CameraPos, data.ShiftSettings.Duration, data.ShiftSettings.EasingMode);
+        }
+        public void MoveToCamPos(CameraPos camPos)
+        {
+            CameraPosData data = GetCameraPosData(camPos);
+            MoveToCamPos(data);
+        }
+        public void MoveToCamPos(string camPos)
+        {
+            CameraPosData camPosData = GetCameraPosData(camPos);
+            MoveToCamPos(camPosData);
+        }
 
-            while (!finished)
+        public IEnumerator WaitForMoveToFinish()
+        {
+            while (_moving)
             {
                 yield return null;
             }
-        }
-        private IEnumerator MoveToCamPos(CameraPosData data)
-        {
-            return MoveToCamPos(data.CameraPos, data.ShiftSettings.Duration, data.ShiftSettings.EasingMode);
-        }
-        public IEnumerator MoveToCamPos(CameraPos camPos)
-        {
-            CameraPosData data = GetCameraPosData(camPos);
-            return MoveToCamPos(data);
-        }
-        public IEnumerator MoveToCamPos(string camPos)
-        {
-            CameraPosData camPosData = GetCameraPosData(camPos);
-            return MoveToCamPos(camPosData);
         }
 
         public IEnumerable GetAllPositions()

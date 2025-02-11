@@ -34,9 +34,11 @@ namespace AWP
             {
                 case PriorityType.Old: 
                     HandleDuplicate(newValue);
+                    HandleCurrentValue(Reference);
                     return Reference;
                 case PriorityType.New:
                     HandleDuplicate(Reference);
+                    HandleCurrentValue(newValue);
                     return newValue;
             }
 
@@ -45,14 +47,22 @@ namespace AWP
 
         private void HandleDuplicate(TReference duplicate)
         {
+            if (duplicate == null) return;
+
             switch (_duplicateAction)
             {
                 case DuplicateAction.DestroyRoot:
-                    Destroy(duplicate.transform.root.gameObject);
+                    Destroy(duplicate.transform.gameObject);
                     return;
             }
 
             throw new NotImplementedException();
+        }
+
+        private void HandleCurrentValue(TReference current)
+        {
+            current.transform.SetParent(null);
+            DontDestroyOnLoad(current.gameObject);
         }
     }
 }

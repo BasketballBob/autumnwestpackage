@@ -19,8 +19,8 @@ namespace AWP
         private void OnDrawGizmos()
         {
             Gizmos.color = _gizmoColor;
-            Gizmos.matrix = Matrix4x4.Rotate(transform.rotation);
-            Gizmos.DrawWireCube(transform.position, new Vector2(_orthographicSize * 
+            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.DrawWireCube(Vector3.zero, new Vector2(_orthographicSize * 
                 (_referenceResolution.x / _referenceResolution.y), _orthographicSize) * 2);
         }
     }

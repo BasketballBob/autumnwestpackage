@@ -17,9 +17,9 @@ namespace AWP
 
         public static AWGameManager Current { get; private set; }
         public static AudioManager AudioManager { get; private set; }
-        public static AWCamera AWCamera => Current._refAWCamera.Reference;
-        public static MenuManager MenuManager => Current._refMenuManager.Reference;
-        public static CullingBounds CullingBounds => Current._refCullingBounds.Reference;
+        public static AWCamera AWCamera => Current?._refAWCamera.Reference;
+        public static MenuManager MenuManager => Current?._refMenuManager.Reference;
+        public static CullingBounds CullingBounds => Current?._refCullingBounds.Reference;
         public static float TimeScale { get { return Time.timeScale; } set { Time.timeScale = value; }}
         public static bool IsPaused { get; protected set; }
 
@@ -86,6 +86,7 @@ namespace AWP
             {
                 LoadScene(sceneName, LoadSceneMode.Additive);
             }
+
             /// <summary>
             /// Referenced: https://stackoverflow.com/questions/78875238/unity-how-to-call-a-function-after-a-scene-is-loaded-but-before-awake-or-onenabl
             /// .9 is evidently a magic number that even Unity uses in official documentation: https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AsyncOperation-allowSceneActivation.html
@@ -105,6 +106,14 @@ namespace AWP
 
                 operation.allowSceneActivation = true;
             }
+            public static IEnumerator LoadSceneAsyncAdditive(string sceneName) => LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+
+            public static IEnumerator UnloadSceneAsync(string sceneName)
+            {
+                AsyncOperation operation = SceneManager.UnloadSceneAsync(sceneName);
+                while (!operation.isDone) yield return null;
+            }
+
             public static Scene GetCurrentScene() => SceneManager.GetActiveScene();
             public static void ResetScene() => LoadScene(GetCurrentScene().name);
         #endregion
