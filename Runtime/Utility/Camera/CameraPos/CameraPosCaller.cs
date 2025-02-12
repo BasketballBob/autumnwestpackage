@@ -35,5 +35,10 @@ namespace AWP
             }
             else camPosRef.Manager.MoveToCamPos(camPosRef.Position);
         }
+
+        public void SetCameraPosRef(CameraPosRef newRef) => _cameraPosRef = newRef;
+        public CameraPosRef GetCameraPosRef() => _cameraPosRef;
+        public void SetAlreadyAtRef(CameraPosRef newRef) => _ifAlreadyAt = newRef; 
+        public CameraPosRef GetAlreadyAtRef() => _ifAlreadyAt;
     }
 }
