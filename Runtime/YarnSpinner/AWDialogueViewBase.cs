@@ -19,6 +19,7 @@ namespace AWP
         protected Coroutine _animationRoutine;
 
         public bool AnimationActive => _animationRoutine != null;
+        public virtual bool Paused { get; set; }
 
         protected virtual void OnEnable()
         {
@@ -49,6 +50,7 @@ namespace AWP
             tmp.text = text;
             tmp.ForceMeshUpdate();
 
+            while (Paused) yield return null;
             while (tmp.maxVisibleCharacters < tmp.text.Length)
             {
                 tmp.maxVisibleCharacters++;

@@ -37,21 +37,32 @@ namespace AWP
             _canvasGroup.alpha = visible ? 1 : 0;
         }
 
-        public void PushSelfInstant()
+        public void SetInteractable(bool interactable)
         {
-            PushSelf();
-            _animator?.Play(EnterAnimation, 0, 1);
+            _canvasGroup.interactable = interactable;
         }
 
         public void PushSelf()
         {
             AWGameManager.MenuManager.Push(this);
         }
+        public void PushSelfInstant()
+        {
+            _animator?.Play(EnterAnimation, 0, 1);
+            PushSelf();
+        }
 
         public void PopSelf()
         {
             AWGameManager.MenuManager.Pop(this);
         }
+        public void PopSelfInstant() 
+        {
+            _animator?.Play(ExitAnimation, 0, 1);
+            PopSelf();  
+        }
+
+        public IEnumerator WaitOnMenuTransition() => AWGameManager.MenuManager.WaitOnTransition();
 
         public virtual IEnumerator PushAnimation()
         {   

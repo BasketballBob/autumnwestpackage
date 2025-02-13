@@ -60,12 +60,28 @@ namespace AWP
             MoveToCamPos(camPosData);
         }
 
+        /// <summary>
+        /// Moves to position if it isn't the previously moved to CameraPos
+        /// </summary>
+        /// <param name="camPos"></param>
+        public void TryMoveToCamPos(CameraPos camPos)
+        {
+            if (camPos == CurrentPos) return;
+            MoveToCamPos(camPos);
+        }
+        public void TryMoveToCamPos(string camPos) => TryMoveToCamPos(GetCameraPosData(camPos).CameraPos);
+
         public IEnumerator WaitForMoveToFinish()
         {
             while (_moving)
             {
                 yield return null;
             }
+        }
+
+        public bool IsCurrentPos(string camPos)
+        {
+            return CurrentPos == GetCameraPosData(camPos).CameraPos;
         }
 
         public IEnumerable GetAllPositions()

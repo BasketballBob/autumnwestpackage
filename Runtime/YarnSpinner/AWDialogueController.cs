@@ -6,6 +6,7 @@ using TMPro;
 using System;
 using Sirenix.Utilities;
 using Sirenix.OdinInspector;
+using System.Linq;
 
 namespace AWP
 {
@@ -18,27 +19,48 @@ namespace AWP
 
         [SerializeField]
         private Animator _animator;
-
-        private DialogueRunner _dialogueRunner;
         [ShowInInspector]
         private RunnerState _currentState;
+
+        public Action OnStartDialogue;
+        public Action<LocalizedLine, Action> OnRunLine;
+        public Action<LocalizedLine, Action> OnInterruptLine;
+        public Action<Action> OnDismissLine;
+        public Action<DialogueOption[], Action<int>> OnRunOptions;
+        public Action OnUserRequestedViewAdvancement;
+        public Action OnDialogueComplete;
+
+        private DialogueRunner _dialogueRunner;
         private bool _startAutomatically;
         private string _startNode;
+        private List<AWDialogueViewBase> _childViews = new List<AWDialogueViewBase>();
 
         public enum RunnerState { Off, EnterAnimation, RunningLine, ExitAnimation };
 
+        public override bool Paused
+        { 
+            get => base.Paused; 
+            set 
+            {
+                _childViews.ForEach(x => x.Paused = value);
+                base.Paused = value; 
+            }
+        }
         public bool IsRunning => _currentState != RunnerState.Off;
 
         protected void Awake()
         {
-            
+            _dialogueRunner = GetComponent<DialogueRunner>();
+            foreach (DialogueViewBase view in _dialogueRunner.dialogueViews)
+            {
+                if (view == this) continue;
+                _childViews.Add(view as AWDialogueViewBase);
+            }
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-
-            _dialogueRunner = GetComponent<DialogueRunner>();
 
             _startAutomatically = _dialogueRunner.startAutomatically;
             _startNode = _dialogueRunner.startNode;
@@ -61,6 +83,8 @@ namespace AWP
                 yield return EnterAnimation();
                 _dialogueRunner.StartDialogue(_startNode);
             }
+
+            OnStartDialogue?.Invoke();
         }
 
         public override void RunLine(LocalizedLine dialogueLine, Action onDialogueLineFinished)
@@ -73,6 +97,8 @@ namespace AWP
                 while (AnimationActive) yield return null;
                 base.RunLine(dialogueLine, onDialogueLineFinished);
             }
+
+            OnRunLine?.Invoke(dialogueLine, onDialogueLineFinished);
         }
 
         public override void DialogueComplete()
@@ -83,30 +109,37 @@ namespace AWP
             {
                 yield return ExitAnimation();
             }
+
+            OnDialogueComplete?.Invoke();
         }
 
-        // public override void InterruptLine(LocalizedLine dialogueLine, Action onDialogueLineFinished)
-        // {
+        public override void InterruptLine(LocalizedLine dialogueLine, Action onDialogueLineFinished)
+        {
+            base.InterruptLine(dialogueLine, onDialogueLineFinished);
 
-        // }
+            OnInterruptLine?.Invoke(dialogueLine, onDialogueLineFinished);
+        }
 
-        // public override void DismissLine(Action onDismissalComplete)
-        // {
-        //     onDismissalComplete?.Invoke();
-        // }
+        public override void DismissLine(Action onDismissalComplete)
+        {
+            base.DismissLine(onDismissalComplete);
 
-        // public override void RunOptions(DialogueOption[] dialogueOptions, Action<int> onOptionSelected)
-        // {
-        //     //onOptionSelected(0);
-        // }
+            OnDismissLine?.Invoke(onDismissalComplete);
+        }
+
+        public override void RunOptions(DialogueOption[] dialogueOptions, Action<int> onOptionSelected)
+        {
+            base.RunOptions(dialogueOptions, onOptionSelected);
+
+            OnRunOptions(dialogueOptions, onOptionSelected);
+        }
 
         public override void UserRequestedViewAdvancement()
         {
-            _dialogueRunner.dialogueViews.ForEach((x) => 
-            {
-                if (x == this) return;
-                x.UserRequestedViewAdvancement();
-            });
+            if (Paused) return;
+
+            _childViews.ForEach(x => x.UserRequestedViewAdvancement());
+            OnUserRequestedViewAdvancement?.Invoke();
         }
 
         #region Events

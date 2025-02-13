@@ -22,5 +22,25 @@ namespace AWP
         {
             list[list.Count - 1] = newValue;
         }
+        public static void RemoveLastItem<T>(this List<T> list)
+        {
+            list.RemoveAt(list.Count - 1);
+        }
+
+        #region Stack functionality
+            public static void StackPush<T>(this List<T> list, T newValue)
+            {
+                list.Add(newValue);
+            }
+
+            public static T StackPop<T>(this List<T> list)
+            {
+                T returnItem = list.LastItem();
+                list.RemoveLastItem();
+                return returnItem;
+            }
+
+            public static T StackPeek<T>(this List<T> list) => list.LastItem();
+        #endregion
     }
 }

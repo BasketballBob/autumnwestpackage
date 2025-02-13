@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
@@ -15,7 +16,7 @@ namespace AWP
 
         private EventSystem _eventSystem;
         private InputSystemUIInputModule _uiModule;
-        private AWStack<MenuItem> _menuStack = new AWStack<MenuItem>();
+        private List<MenuItem> _menuStack = new List<MenuItem>();
         private Coroutine _transitionRoutine;
         
         public bool Interactable => !Disabled && EventSystemEnabled && !InTransition;
@@ -52,26 +53,33 @@ namespace AWP
             
         }
 
+        private void Start()
+        {
+            SyncInteractableMenu();
+        }
+
+        private void Update()
+        {
+            //Debug.Log($"Disabled:{Disabled} EventSystemEnabled:{EventSystemEnabled} InTransition:{InTransition} Interactable:{Interactable}");
+        }
+
         public void Push(Menu menu)
         {
             if (!Interactable) return;
 
-            _menuStack.Push(new MenuItem()
+            _menuStack.StackPush(new MenuItem()
             {
                 Menu = menu
             });
+            SyncInteractableMenu();
             
-            StartTransitionRoutine(_menuStack.TopItem.Menu.PushAnimation());
+            StartTransitionRoutine(_menuStack.StackPeek().Menu.PushAnimation());
         }
 
         public void Pop()
         {
-            if (!Interactable) return;
-
-            StartTransitionRoutine(_menuStack.TopItem.Menu.PopAnimation());
-            _menuStack.Pop();
+            Pop(_menuStack.StackPeek().Menu);
         }
-
         public void Pop(Menu menu)
         {
             if (!Interactable) return;
@@ -81,8 +89,14 @@ namespace AWP
                 if (_menuStack[i].Menu != menu) continue;
                 StartTransitionRoutine(_menuStack[i].Menu.PopAnimation());
                 _menuStack.RemoveAt(i);
-                break;
+                SyncInteractableMenu();
             }
+        }
+
+        public IEnumerator WaitOnTransition()
+        {
+            if (!InTransition) yield break; 
+            yield return _transitionRoutine;
         }
 
         private void SyncEventSystemEnabled()
@@ -92,6 +106,27 @@ namespace AWP
             if (_eventSystem != null) _eventSystem.enabled = enabled;
             if (_uiModule != null) _uiModule.enabled = enabled;
             Debug.Log("EVENTSYS " + _eventSystem.enabled);
+        }
+
+        private void SyncInteractableMenu()
+        {
+            // Manage base menu
+            if (_menuStack.IsNullOrEmpty()) 
+            {
+                _baseMenu?.SetInteractable(true);
+                return;
+            }
+            else _baseMenu?.SetInteractable(false);
+
+            // Manage stack
+            for (int i = 0; i < _menuStack.Count; i++)
+            {
+                if (i == _menuStack.Count - 1)
+                {
+                    _menuStack[i].Menu.SetInteractable(true);
+                }   
+                else _menuStack[i].Menu.SetInteractable(false);
+            }
         }
 
         private void StartTransitionRoutine(IEnumerator routine)
