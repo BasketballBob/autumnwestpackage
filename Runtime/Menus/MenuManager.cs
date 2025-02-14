@@ -11,9 +11,6 @@ namespace AWP
     [RequireComponent(typeof(EventSystem))]
     public class MenuManager : MonoBehaviour
     {
-        [SerializeField]
-        private Menu _baseMenu;
-
         private EventSystem _eventSystem;
         private InputSystemUIInputModule _uiModule;
         private List<MenuItem> _menuStack = new List<MenuItem>();
@@ -66,6 +63,7 @@ namespace AWP
         public void Push(Menu menu)
         {
             if (!Interactable) return;
+            if (StackContainsMenu(menu)) return;
 
             _menuStack.StackPush(new MenuItem()
             {
@@ -110,14 +108,6 @@ namespace AWP
 
         private void SyncInteractableMenu()
         {
-            // Manage base menu
-            if (_menuStack.IsNullOrEmpty()) 
-            {
-                _baseMenu?.SetInteractable(true);
-                return;
-            }
-            else _baseMenu?.SetInteractable(false);
-
             // Manage stack
             for (int i = 0; i < _menuStack.Count; i++)
             {
@@ -127,6 +117,16 @@ namespace AWP
                 }   
                 else _menuStack[i].Menu.SetInteractable(false);
             }
+        }
+
+        private bool StackContainsMenu(Menu menu)
+        {
+            for (int i = 0; i < _menuStack.Count; i++)
+            {
+                if (_menuStack[i].Menu == menu) return true;
+            }
+
+            return false;
         }
 
         private void StartTransitionRoutine(IEnumerator routine)
@@ -142,6 +142,7 @@ namespace AWP
             }
         }
 
+        [System.Serializable]
         private class MenuItem
         {
             public Menu Menu;

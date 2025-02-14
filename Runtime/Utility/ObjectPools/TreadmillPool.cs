@@ -50,6 +50,16 @@ namespace AWP
             Gizmos.DrawWireCube(GetItemPosition(_minItemCount - 1, 1), ItemSize);
         }
 
+        public IEnumerator ShiftSpeed(float newSpeed, float duration, EasingFunction easing)
+        {
+            float oldSpeed = _speed;
+
+            yield return AnimationFX.DeltaRoutine(x =>
+            {
+                _speed = Mathf.Lerp(oldSpeed, newSpeed, x);
+            }, duration, easing);
+        }
+
         protected override void ActiveModification(Renderer obj, int index)
         {
             obj.transform.localPosition = GetItemPosition(index, OffsetDelta);
