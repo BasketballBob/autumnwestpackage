@@ -32,6 +32,11 @@ namespace AWP
             if (difference < 0) Tick(-difference);
         }
 
+        public void SetRemainingTime(float newTime)
+        {
+            _remainingTime = Mathf.Clamp(newTime, 0, Duration);
+        }
+
         /// <summary>
         /// Deducts alarm by an amount of time
         /// </summary>
@@ -42,6 +47,17 @@ namespace AWP
             if (_remainingTime < 0) _remainingTime = 0;
             if (_remainingTime > Duration) _remainingTime = Duration;
         }
+
+        /// <summary>
+        /// Ticks the time at a speed relative to the given duration
+        /// </summary>
+        /// <param name="timePassed"></param>
+        /// <param name="duration"></param>
+        public virtual void TickForDuration(float timePassed, float duration)
+        {
+            float durationRatio = Duration / duration;
+            Tick(timePassed * durationRatio);
+        }   
 
         /// <summary>
         /// If alarm has finished

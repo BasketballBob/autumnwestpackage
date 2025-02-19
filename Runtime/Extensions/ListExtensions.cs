@@ -13,6 +13,10 @@ namespace AWP
         {
             list[0] = newValue;
         }
+        public static void RemoveFirstItem<T>(this List<T> list)
+        {
+            list.RemoveAt(0);
+        }
 
         public static T LastItem<T>(this List<T> list)
         {
@@ -41,6 +45,18 @@ namespace AWP
             }
 
             public static T StackPeek<T>(this List<T> list) => list.LastItem();
+        #endregion
+
+        #region Queue functionality
+            public static void Enqueue<T>(this List<T> list, T newValue)
+            {
+                list.Insert(0, newValue);
+            }
+
+            public static T Dequeue<T>(this List<T> list)
+            {
+                return list.StackPop();
+            }
         #endregion
     }
 }

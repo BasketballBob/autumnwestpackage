@@ -9,7 +9,7 @@ namespace AWP
         protected override Rigidbody2D CreateObject()
         {
             Rigidbody2D rb = Instantiate(_objectSelector.GetItem(), (Vector2)transform.position +
-                _pointArea.GetLocalPoint(), Quaternion.identity); 
+                _pointArea.GetLocalPoint(), Quaternion.identity, SpawnParent); 
             return rb;
         }
 
