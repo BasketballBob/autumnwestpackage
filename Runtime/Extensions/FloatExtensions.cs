@@ -10,5 +10,10 @@ namespace AWP
         {
             return val1 + (val2 - val1) * Mathf.Clamp01(delta);
         }
+
+        public static float GetDelta(this float value, float min, float max)
+        {
+            return Mathf.Clamp01((value - min) / (max - min));
+        }
     }
 }

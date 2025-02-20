@@ -11,6 +11,7 @@ namespace AWP
 {
     public class AudioManager : MonoBehaviour
     {
+        private const float DefaultVolume = 1;
         private const float DefaultFadeOutDuration = .3f;
         private const float DefaultFadeInDuration = .3f;
 
@@ -52,10 +53,15 @@ namespace AWP
         [SerializeField]
         private EventInstance _snapshotInstance;
 
+        [Header("Scene Audio")]
+        [SerializeField]
+        private bool _useSceneAudio;
+
         private List<EventInstance> _eventList;
         private List<StudioEventEmitter> _emitterList;
-        private Coroutine _musicFadeRoutine;
-        private Coroutine _ambienceFadeRoutine;
+        private SingleCoroutine _musicRoutine;
+        private SingleCoroutine _ambienceRoutine;
+        private SceneAudio _currentSceneAudio;
 
         public static AudioManager Current { get; private set; }
         public enum EventPlayType { Music, Ambience, Snapshot };
@@ -96,7 +102,7 @@ namespace AWP
             return value;
         }
 
-        public void SetGlobalLabeledParameterByName(string name, string label)
+        public static void SetGlobalLabeledParameterByName(string name, string label)
         {
             FMODUnity.RuntimeManager.StudioSystem.setParameterByNameWithLabel(name, label);
         }
@@ -178,12 +184,12 @@ namespace AWP
 
         public void OnBeginLoadScene(string nextScene, float fadeDuration = DefaultFadeInDuration)
         {
-            
+            PrepareForNewSceneAudio(nextScene, fadeDuration);
         }
 
         public void OnSceneLoaded(string currentLevel)
         {
-
+            LoadNewSceneAudio(currentLevel);
         }
 
         private void UpdateVolumes()
@@ -193,22 +199,71 @@ namespace AWP
             _musicBus.setVolume(MusicVolume);
         }
 
-        public void PlayMusic(EventReference eventRef, float fadeDuration = DefaultFadeInDuration)
+        public void PlayMusic(EventReference eventRef, float fadeDuration = DefaultFadeInDuration, float volume = DefaultVolume)
         {
             if (eventRef.Guid == _currentMusic.Guid) return;
 
             _musicInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
             _musicInstance.release();
             _currentMusic = eventRef;
-            
 
             if (eventRef.IsNull) return;
             _musicInstance = CreateEvent(eventRef);
             _musicInstance.start();
             _musicInstance.setVolume(0);
-            // FadeMusicSFX
+            _musicRoutine.StartRoutine(FadeMusic(fadeDuration, volume));
         }
 
-       
+        public void PlayAmbience(EventReference eventRef, float fadeDuration = DefaultFadeInDuration, float volume = DefaultVolume)
+        {
+
+        }
+
+        #region Scene Audio
+            private void PrepareForNewSceneAudio(string scene, float fadeDuration)
+            {
+                if (!_useSceneAudio) return;
+
+                SceneAudio newAudio = SceneAudio.LoadSceneAudio(scene);
+                if (newAudio == null) return;
+                if (newAudio == _currentSceneAudio) return;
+
+                if (newAudio.Music != _currentSceneAudio.Music) 
+                    _musicRoutine.StartRoutine(FadeMusic(0, fadeDuration));
+                if (newAudio.Ambience != _currentSceneAudio.Ambience)
+                    _ambienceRoutine.StartRoutine(FadeAmbience(0, fadeDuration));
+            }
+
+            private void LoadNewSceneAudio(string scene)
+            {
+                if (!_useSceneAudio) return;
+
+                SceneAudio newAudio = SceneAudio.LoadSceneAudio(scene);
+                if (newAudio == null) return;
+                if (newAudio == _currentSceneAudio) return;
+
+                if (newAudio.Music != _currentSceneAudio.Music)
+                    PlayMusic(newAudio.Music.EventReference, newAudio.Music.Volume);
+                if (newAudio.Ambience != _currentSceneAudio.Ambience)
+                    PlayAmbience(newAudio.Ambience.EventReference, newAudio.Ambience.Volume);
+            }
+        #endregion
+
+        #region Helper functions
+            private IEnumerator FadeMusic(float endVolume, float duration) => FadeSFXRoutine(_musicInstance, endVolume, duration);
+            private IEnumerator FadeAmbience(float endVolume, float duration) => FadeSFXRoutine(_ambienceInstance, endVolume, duration);
+            private IEnumerator FadeSFXRoutine(EventInstance instance, float endVolume, float duration)
+            {
+                float startVolume;
+                instance.getVolume(out startVolume);
+
+                yield return AnimationFX.DeltaRoutine(x =>
+                {
+                    instance.setVolume(startVolume.Lerp(endVolume, x));
+                }, duration, EasingFunction.Sin);
+
+                instance.setVolume(endVolume);
+            }
+        #endregion
     }
 }

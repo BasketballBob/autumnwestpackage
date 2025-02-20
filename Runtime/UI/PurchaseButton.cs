@@ -19,6 +19,7 @@ namespace AWP
         protected UnityEvent _onPurchaseFail;
 
         public T Cost { get { return _cost; } set { _cost = value; } }
+        public bool CanAfford => _currency.CanAfford(Cost);
 
         protected override void OnEnable()
         {
@@ -60,8 +61,7 @@ namespace AWP
 
         protected virtual void SyncVisuals()
         {
-            bool canAfford = _currency.CanAfford(Cost);
-            _button.interactable = canAfford;
+            _button.interactable = CanAfford;
         }
     }
 }

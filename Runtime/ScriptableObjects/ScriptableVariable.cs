@@ -8,7 +8,7 @@ namespace AWP
 {
     public abstract class ScriptableVariable<T> : AWScriptableObject, ISerializationCallbackReceiver
     {
-        protected const string CreateFolderName = "Scriptable Variables/";
+        public const string CreateFolderName = "Scriptable Variables/";
 
         public T InitialValue;
 
