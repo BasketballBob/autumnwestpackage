@@ -3,16 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.WSA;
 
 namespace AWP
 {
     [System.Serializable]
-    public class WeightedItemPool<T>
+    public class WeightedItemPool<T> : WeightedItemPool
     {
         [SerializeField]
         protected List<WeightedItem> itemList = new List<WeightedItem>();
-
-        public int CurrentIndex { get; protected set; }
 
         [System.Serializable]
         protected class WeightedItem
@@ -23,21 +22,7 @@ namespace AWP
 
         public T PullItem()
         {
-            float randomWeight = UnityEngine.Random.Range(0, GetWeightTotal());
-            float currentWeight = 0;
-
-            for (int i = 0; i < itemList.Count; i++)
-            {
-                currentWeight += itemList[i].Weight;
-
-                if (randomWeight <= currentWeight)
-                {
-                    CurrentIndex = i;
-                    return itemList[i].Value;
-                }
-            }
-
-            throw new System.Exception("ERROR: Was unable to find an item!");
+            return PullItem(itemList, (x) => x.Weight).Value; // );
         }
 
         public T PullItemConditionally(Func<T, bool> func)
@@ -67,19 +52,50 @@ namespace AWP
 
         private float GetWeightTotal()
         {
-            float weightTotal = 0;
-
-            for (int i = 0; i < itemList.Count; i++)
-            {
-                if (itemList[i] == null) continue;
-
-                weightTotal += itemList[i].Weight;
-            }
-
-            return weightTotal;
+            return GetWeightTotal(itemList, (x) => x.Weight);
         }
 
         public bool IsEmpty => itemList.Count <= 0;
         public int Count => itemList.Count;
+    }
+
+    public abstract class WeightedItemPool
+    {
+        /// <summary>
+        /// Pulls an item from a list using a func to determine item weight
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="weightFunc"></param>
+        /// <returns></returns>
+        public static TItem PullItem<TItem>(List<TItem> list, Func<TItem, float> weightFunc)
+        {
+            float randomWeight = UnityEngine.Random.Range(0, GetWeightTotal(list, weightFunc));
+            float currentWeight = 0;
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                currentWeight += weightFunc(list[i]);
+
+                if (randomWeight <= currentWeight)
+                {
+                    return list[i];
+                }
+            }
+
+            throw new System.Exception("ERROR: Was unable to find an item!");
+        }
+
+        public static float GetWeightTotal<TItem>(List<TItem> list, Func<TItem, float> weightFunc)
+        {
+            float weightTotal = 0;
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                weightTotal += weightFunc(list[i]);
+            }
+
+            return weightTotal;
+        }
     }
 }

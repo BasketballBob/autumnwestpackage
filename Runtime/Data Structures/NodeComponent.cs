@@ -12,7 +12,7 @@ namespace AWP
     public abstract class NodeComponent<TNode, TData> : MonoBehaviour where TNode : NodeComponent<TNode, TData>
     {
         public TData Data;
-        [OnCollectionChanged("SyncConnections")]
+        [OnCollectionChanged("SyncConnections")] [ListDrawerSettings(CustomRemoveElementFunction = "RemoveElement")]
         public List<TNode> Connections = new List<TNode>();
 
         public abstract void Initialize();
@@ -27,6 +27,12 @@ namespace AWP
                     Undo.RecordObject(x, "Added connection");
                     EditorUtility.SetDirty(x);
                 });
+            }
+
+            protected void RemoveElement(TNode element)
+            {
+                element.Connections.Remove(this as TNode);
+                Connections.Remove(element);
             }
         #endif
     }

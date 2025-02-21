@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace AWP
@@ -32,5 +33,10 @@ namespace AWP
         {
             listeners.Remove(listener);
         }
+
+        #if UNITY_EDITOR
+            [Button("Test Raise")]
+            private void TestRaise() => Raise();
+        #endif
     }
 }

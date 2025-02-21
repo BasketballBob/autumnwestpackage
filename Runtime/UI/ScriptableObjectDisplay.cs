@@ -18,6 +18,10 @@ namespace AWP
         private bool _useFormat = false;
         [SerializeField] [ShowIf("_useFormat")]
         private string _format;
+        [SerializeField]
+        private string _openText;
+        [SerializeField]
+        private string _closeText;
 
         private void OnEnable()
         {
@@ -33,7 +37,7 @@ namespace AWP
 
         private void UpdateDisplay()
         {
-            _text.text = _scriptableObject.ToString(_useFormat ? _format : null);
+            _text.text = _openText + _scriptableObject.ToString(_useFormat ? _format : null) + _closeText;
         }
     }
 }

@@ -53,7 +53,7 @@ namespace AWP
 
         protected virtual void OnDrawGizmosSelected()
         {
-            _pointArea.DrawGizmos(transform.position);
+            _pointArea.DrawGizmos(transform);
         }
 
         public void Spawn() => Spawn(null);

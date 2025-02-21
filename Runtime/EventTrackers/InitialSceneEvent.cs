@@ -7,6 +7,7 @@ namespace AWP
 {
     public class InitialSceneEvent : MonoBehaviour
     {
+        private const float EventDelay = .25f;
         private static bool IsInitialScene = true;
 
         [Header("THIS EVENT IS DELAYED BY .1f SECONDS")]
@@ -20,7 +21,7 @@ namespace AWP
                 StartCoroutine(DelayedEvent());
                 IEnumerator DelayedEvent()
                 {   
-                    yield return new WaitForSeconds(.1f);
+                    yield return new WaitForSeconds(EventDelay);
                     _onInitialScene?.Invoke();
                     IsInitialScene = false;
                 }

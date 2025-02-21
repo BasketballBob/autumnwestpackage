@@ -16,7 +16,7 @@ namespace AWP
         public const AWDelta.DeltaType DefaultDeltaType = AWDelta.DeltaType.Update;
 
         [SerializeField]
-        private PositionType _positionType;
+        private DimensionType _positionType;
         [SerializeField]
         private List<Camera> _syncedCameras;
 
@@ -26,8 +26,6 @@ namespace AWP
         private Coroutine _sizeRoutine;
         private Coroutine _rotationRoutine;
         private Coroutine _animationRoutine;
-
-        public enum PositionType { XY, XYZ }
 
         public Camera Camera => _camera;
         public Animator Animator => _animator;
@@ -173,10 +171,10 @@ namespace AWP
         {
             switch (_positionType)
             {
-                case PositionType.XY:
+                case DimensionType.XY:
                     transform.position = transform.position.SetXY(position);
                     break;
-                case PositionType.XYZ:
+                case DimensionType.XYZ:
                     transform.position = transform.position = position;
                     break;
             }
