@@ -14,7 +14,7 @@ namespace AWP
         [SerializeField]
         private TreadmillDirection _direction;
 
-        protected enum TreadmillDirection { X, Y, Z };
+        public enum TreadmillDirection { X, Y, Z };
 
         public float OffsetDelta
         {
