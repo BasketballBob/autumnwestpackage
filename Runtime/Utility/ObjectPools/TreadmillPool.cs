@@ -16,6 +16,11 @@ namespace AWP
 
         public enum TreadmillDirection { X, Y, Z };
 
+        public float Speed 
+        {
+            get { return _speed; }
+            set { _speed = value; }
+        }
         public float OffsetDelta
         {
             get { return _offsetDelta; }

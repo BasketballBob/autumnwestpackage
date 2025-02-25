@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -14,71 +15,190 @@ namespace AWP
         [SerializeField]
         private ItemSelector<Decoration> _items;
 
-        private List<Decoration> _decorationItems;
+        [Header("Initial variation")]
+        [SerializeField]
+        private Vector3 _positionOffsetRange;
+
+        [Header("Delta Animation")]
+        [SerializeField]
+        private bool _useDeltaAnimation;
+        [SerializeField] [ShowIf("_useDeltaAnimation")]
+        private AnimationCurve _xScaleCurve = AnimationCurve.Constant(0, 1, 1);
+        [SerializeField] [ShowIf("_useDeltaAnimation")]
+        private AnimationCurve _yScaleCurve = AnimationCurve.Constant(0, 1, 1);
+        [SerializeField] [ShowIf("_useDeltaAnimation")]
+        private AnimationCurve _zScaleCurve = AnimationCurve.Constant(0, 1, 1);
+
+        private List<Decoration> _decorationItems = new List<Decoration>();
         private float _currentLength;
         private float _offset;
 
+        public float Speed 
+        {
+            get { return _speed; }
+            set { _speed = value; }
+        }
+
+        private void Start()
+        {
+            Initialize();
+        }
+
         private void Update()
         {
-            UpdateDecorations(0);
+            UpdateDecorations(_speed * Time.deltaTime);
         }
 
         private void OnDrawGizmos()
         {
-            
+            Gizmos.color = Color.yellow;
+            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.DrawWireCube(Vector3.zero + new Vector3(0, 0, _length / 2), new Vector3(1, 1, _length));
+        }
+
+        private void Initialize()
+        {
+            while (_currentLength < _length)
+            {
+                AddItem(false);
+            }
+
+            _offset = 0;
         }
 
         private void UpdateDecorations(float shiftDistance)
         {
-            //float currentPos = _offset;
+            CheckToCullDecorations(shiftDistance);
+            SyncDecorationStates(shiftDistance);
+
+            _offset += shiftDistance;
+        }
+
+        private void CheckToCullDecorations(float shiftDistance)
+        {
             float currentPos = _offset + shiftDistance;
+            bool shiftingBackwards = shiftDistance < 0;
 
             for (int i = 0; i < _decorationItems.Count; i++)
             {
-                // // Cull items below length
-                // if (currentPos < -_decorationItems[i].Extent)
-                // {
-                //     CullItem();
-                // }
-                // // Cull items above length
-                // else if (currentPos - _length > _decorationItems[i].Extent)
-                // {
-                //     CullItem();
-                // }
+                if (ItemShouldBeCulled())
+                {
+                    RemoveItem(_decorationItems[i], shiftingBackwards);
+                }
+                else currentPos += _decorationItems[i].Length;
 
-                // void CullItem()
-                // {
-                //     _decorationItems.RemoveAt(i);
-                //     i--;
-                // }
+                bool ItemShouldBeCulled()
+                {
+                    if (currentPos + _decorationItems[i].Extent < 0) 
+                    {
+                        currentPos += _decorationItems[i].Length;
+                        return true;
+                    }
+                    if (currentPos - _decorationItems[i].Extent > _length) 
+                    {
+                        return true;
+                    }
 
-                //_totalLength += _decorationItems[i].Length; THIS THIS THIS THIS THIS THIS THIS THIS THIS THIS THIS THIS
+                    return false;
+                }
             }
 
             while (_currentLength < _length)
             {
-                AddItem();
+                AddItem(shiftingBackwards);
             }
         }
 
-        private void AddItem()
+        private void SyncDecorationStates(float shiftDistance)
         {
-            Decoration decor = _items.GetItem();
-            _currentLength += decor.Length;
-            _decorationItems.Add(decor);
+            float currentPos = _offset + shiftDistance;
+
+            for (int i = 0; i < _decorationItems.Count; i++)
+            {
+                _decorationItems[i].SetLocalPosition(CurrentToLocalPos(currentPos));
+                ApplyDeltaAnimation(_decorationItems[i], Mathf.Clamp01(currentPos / _length));
+                currentPos += _decorationItems[i].Length;
+            }
         }
 
+        private void AddItem(bool shiftingBackwards)
+        {
+            Decoration pulledData = _items.GetItem();
+            Decoration decor = new Decoration();
+            decor.Component = pulledData.Component != null ? Instantiate(pulledData.Component, transform) : null;
+            decor.Length = pulledData.Length;
+            InitializeDecor(decor);
+
+            decor.SetLocalPosition(CurrentToLocalPos(_currentLength));
+            _currentLength += decor.Length;
+            if (shiftingBackwards) 
+            {
+                _decorationItems.Add(decor);
+            }
+            else 
+            {
+                _decorationItems.Insert(0, decor);
+                _offset -= decor.Length;
+            }
+        }
+
+        private void RemoveItem(Decoration decor, bool shiftingBackwards)
+        {
+            _currentLength -= decor.Length;
+            _decorationItems.Remove(decor);
+            DestroyItem(decor);
+
+            if (shiftingBackwards) _offset += decor.Length;
+        }
+
+        protected virtual void DestroyItem(Decoration decor)
+        {
+            if (decor.Component == null) return;
+            Destroy(decor.Component.gameObject);
+        }
+
+        private Vector3 CurrentToLocalPos(float currentPos)
+        {
+            return new Vector3(0, 0, 1) * currentPos;
+        }
+
+        #region Initial variation
+            private void InitializeDecor(Decoration decor)
+            {
+                decor.Offset = new Vector3(_positionOffsetRange.x * AWRandom.RangeSigned1(), 
+                    _positionOffsetRange.y * AWRandom.RangeSigned1(), 
+                    _positionOffsetRange.z * AWRandom.RangeSigned1());
+            }
+        #endregion
+
+        #region Delta animation
+            private void ApplyDeltaAnimation(Decoration decor, float delta)
+            {
+                if (!_useDeltaAnimation) return;
+                if (decor.Component == null) return;
+
+                decor.Component.transform.localScale = new Vector3(_xScaleCurve.Evaluate(delta),
+                    _yScaleCurve.Evaluate(delta), _zScaleCurve.Evaluate(delta));
+            }
+        #endregion
+
+        [System.Serializable]
         protected class Decoration
         {
             public TComponent Component;
             public float Length;
+            [HideInInspector]
+            public Vector3 Offset;
 
-            public Decoration (TComponent component)
-            {
-                Component = component;
-            }
+            public Decoration () { }
 
             public float Extent => Length / 2;
+
+            public void SetLocalPosition(Vector3 localPos)
+            {
+                if (Component == null) return;
+                Component.transform.localPosition = localPos + Offset;
+            }
         }
     }
 }
