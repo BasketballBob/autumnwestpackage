@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using AWP;
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
-
 
 #if UNITY_EDITOR
 using UnityEditor;

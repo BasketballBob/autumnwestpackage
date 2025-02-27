@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Codice.Client.BaseCommands.BranchExplorer;
 using UnityEngine;
-using UnityEngine.Animations;
 
 namespace AWP
 {

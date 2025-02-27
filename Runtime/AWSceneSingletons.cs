@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
-using UnityEditor;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace AWP
 {
@@ -20,7 +23,9 @@ namespace AWP
 
         protected void Reset()
         {
+            #if UNITY_EDITOR
             SetDefaultReferences();
+            #endif
         }
 
         #if UNITY_EDITOR
