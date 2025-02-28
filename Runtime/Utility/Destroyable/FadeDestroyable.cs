@@ -8,6 +8,8 @@ namespace AWP
     {
         [SerializeField]
         private SpriteRenderer _sr;
+        [SerializeField]
+        private List<SpriteRenderer> _additionalSpriteRenderers = new List<SpriteRenderer>();
 
         private float _startAlpha;
 
@@ -19,6 +21,14 @@ namespace AWP
         protected override void DeltaAction(float delta)
         {
             _sr.color = _sr.color.SetA(_startAlpha * (1 - delta));
+            if (_additionalSpriteRenderers != null)
+            {
+                _additionalSpriteRenderers?.ForEach(x => 
+                {
+                    if (x == null) return;
+                    x.color = _sr.color;
+                });
+            }
         }
     }
 }

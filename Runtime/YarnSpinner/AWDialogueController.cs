@@ -21,6 +21,8 @@ namespace AWP
         private Animator _animator;
         [ShowInInspector]
         private RunnerState _currentState;
+        [SerializeField]
+        private string _startNode;
 
         public Action OnStartDialogue;
         public Action<LocalizedLine, Action> OnRunLine;
@@ -32,7 +34,6 @@ namespace AWP
 
         private DialogueRunner _dialogueRunner;
         private bool _startAutomatically;
-        private string _startNode;
         private List<AWDialogueViewBase> _childViews = new List<AWDialogueViewBase>();
 
         public enum RunnerState { Off, EnterAnimation, RunningLine, ExitAnimation };
@@ -63,7 +64,6 @@ namespace AWP
             base.OnEnable();
 
             _startAutomatically = _dialogueRunner.startAutomatically;
-            _startNode = _dialogueRunner.startNode;
 
             if (!_startAutomatically) _animator?.Play(ExitAnim, 0, 1);
             _dialogueRunner.startAutomatically = false;
@@ -131,7 +131,7 @@ namespace AWP
         {
             base.RunOptions(dialogueOptions, onOptionSelected);
 
-            OnRunOptions(dialogueOptions, onOptionSelected);
+            OnRunOptions?.Invoke(dialogueOptions, onOptionSelected);
         }
 
         public override void UserRequestedViewAdvancement()

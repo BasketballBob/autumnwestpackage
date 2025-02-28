@@ -11,7 +11,7 @@ namespace AWP
         [SerializeField]
         private float _destroyDuration = 1;
         [SerializeField]
-        private EasingFunction _easingMode;
+        private EasingFunction _easingMode = EasingFunction.Sin;
         [SerializeField]
         private AWDelta.DeltaType _deltaType;
         [SerializeField]
@@ -50,7 +50,7 @@ namespace AWP
             LaunchDestroyEvents();
             yield return AnimationFX.DeltaRoutine(DeltaAction, _destroyDuration, _easingMode, _deltaType);
 
-            Destroy(gameObject);
+            GameObject.Destroy(gameObject);
         }
 
         public static void Destroy(GameObject gameObject)
