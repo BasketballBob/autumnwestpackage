@@ -23,6 +23,19 @@ namespace AWP
             return anim.WaitForAnimationToComplete();
         }
 
+        public static IEnumerator WaitForTransitionToFinish(this Animator anim, int layer = 0)
+        {
+            // Wait for transition to start
+            anim.Update(0);
+            while (anim.IsInTransition(layer)) yield return null;
+
+            // Wait for transition to end
+            while (anim.IsInTransition(layer))
+            {
+                yield return null;
+            }
+        }
+
         #region Canvas group
             public static IEnumerator ShiftAlpha(this CanvasGroup canvasGroup, float endAlpha, float duration, EasingFunction easingFunc, AWDelta.DeltaType deltaType = AWDelta.DeltaType.Update)
             {

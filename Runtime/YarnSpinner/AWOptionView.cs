@@ -35,6 +35,7 @@ namespace AWP
 
             IEnumerator RunOptionsRoutine()
             {
+                while (Paused) yield return null;
                 SyncButtonCount(dialogueOptions.Length);
                 SyncButtonValues(dialogueOptions, onOptionSelected);
 
@@ -78,6 +79,7 @@ namespace AWP
         private void DisableButtons()
         {
             _optionButtons.ForEach((x) => x.Disable());
+            
         }
 
         #region Custom animations

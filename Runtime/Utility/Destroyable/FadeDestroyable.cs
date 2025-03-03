@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace AWP
@@ -15,7 +16,7 @@ namespace AWP
 
         private void Start()
         {
-            _startAlpha = _sr.color.a;
+            if (_sr != null) _startAlpha = _sr.color.a;
         }
 
         protected override void DeltaAction(float delta)
@@ -28,6 +29,19 @@ namespace AWP
                     if (x == null) return;
                     x.color = _sr.color;
                 });
+            }
+        }
+
+        public void SetSprites(List<SpriteRenderer> sprites)
+        {
+            if (sprites.IsNullOrEmpty()) return;
+            _sr = sprites[0];
+            _startAlpha = _sr.color.a;
+
+            _additionalSpriteRenderers.Clear();
+            for (int i = 1; i < sprites.Count; i++)
+            {
+                _additionalSpriteRenderers.Add(sprites[i]);
             }
         }
     }

@@ -27,5 +27,10 @@ namespace AWP
         {
             _cullingObjects.ForEach(x => x.CullSilently());
         }
+
+        public void SetEnabled(bool enabled)
+        {
+            _cullingObjects.ForEach(x => x.enabled = enabled);
+        }
     }
 }

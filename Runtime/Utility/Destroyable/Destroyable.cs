@@ -62,7 +62,7 @@ namespace AWP
 
         private void LaunchDestroyEvents()
         {
-            _destroyEvents.ForEach(x => ActivateDestroyEvent(x));
+            _destroyEvents?.ForEach(x => ActivateDestroyEvent(x));
         }
 
         private void ActivateDestroyEvent(DestroyEvent destroyEvent)
@@ -75,6 +75,11 @@ namespace AWP
                 destroyEvent.Event?.Invoke();
             }
         }   
+
+        public void SetEasingFunction(EasingFunction easingFunc)
+        {
+            _easingMode = easingFunc;
+        }
 
         [System.Serializable]
         private struct DestroyEvent

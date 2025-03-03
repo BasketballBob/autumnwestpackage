@@ -26,7 +26,8 @@ namespace AWP
         {
             gameObject.SetActive(true);
             _tmp.text = dialogueOption.Line.Text.Text;
-            _button.onClick.AddOneShotListener(onOptionSelected);
+            _button.onClick.RemoveAllListeners();
+            _button.onClick.AddListener(() => onOptionSelected());
         }
 
         public void Disable()
