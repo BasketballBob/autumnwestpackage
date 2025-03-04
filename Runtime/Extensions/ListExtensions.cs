@@ -31,6 +31,13 @@ namespace AWP
             list.RemoveAt(list.Count - 1);
         }
 
+        public static T RemoveAndReturn<T>(this List<T> list, int index)
+        {
+            T returnVal = list[index];
+            list.RemoveAt(index);
+            return returnVal;
+        }
+
         #region Stack functionality
             public static void StackPush<T>(this List<T> list, T newValue)
             {

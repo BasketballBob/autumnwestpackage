@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace AWP
@@ -86,7 +87,7 @@ namespace AWP
 
         public IEnumerable GetAllPositions()
         {
-            if (_positions == null) return null;
+            if (_positions.IsNullOrEmpty()) return null;
             return _positions.Select(x => new ValueDropdownItem(x.CameraPos.name, x.CameraPos));
         }
 

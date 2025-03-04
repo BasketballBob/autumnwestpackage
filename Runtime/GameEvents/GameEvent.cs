@@ -29,6 +29,18 @@ namespace AWP
             listeners.Add(listener);
         }
 
+        public void RegisterOneShotListener(Action listener)
+        {
+            Action oneShot = null;
+            oneShot = () =>
+            {
+                listener.Invoke();
+                UnregisterListener(oneShot);
+            };
+
+            RegisterListener(oneShot);
+        }
+
         public void UnregisterListener(Action listener)
         {
             listeners.Remove(listener);

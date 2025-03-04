@@ -35,12 +35,12 @@ namespace AWP
             private void SetTestValue() => RuntimeValue = testValue;
         #endif
 
-        public void OnAfterDeserialize()
+        protected override void OnAfterDeserialize()
         {
             _runtimeValue = InitialValue;
         }
 
-        public void OnBeforeSerialize() { }
+        protected override void OnBeforeSerialize() { }
 
         public override string ToString(string format, IFormatProvider formatProvider)
         {

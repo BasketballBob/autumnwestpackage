@@ -9,6 +9,11 @@ namespace AWP
         private MonoBehaviour _mono;
         private Coroutine _routine;
 
+        public SingleCoroutine(MonoBehaviour mono)
+        {
+            _mono = mono;
+        }
+
         public bool RoutineActive { get; private set; }
 
         public void StartRoutine(IEnumerator routine)
