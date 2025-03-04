@@ -15,6 +15,8 @@ namespace AWP
         protected virtual string MenuManagerRefName => "EventSystem";
         protected virtual string CullingBoundsRefName => "CullingBounds";
 
+        public static DeveloperMode DevMode { get { return _devMode; } private set {_devMode = value; } }
+        private static DeveloperMode _devMode = DeveloperMode.Developer;
         public static AWGameManager Current { get; private set; }
         public static AudioManager AudioManager { get; private set; }
         public static AWCamera AWCamera => Current?._refAWCamera.Reference;

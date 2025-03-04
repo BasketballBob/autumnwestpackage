@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace AWP
 {
+    public enum DeveloperMode { Build, TestBuild, Developer }
     public enum DimensionType { XY, XYZ, XZ };
     public enum SpaceType { WorldSpace, LocalSpace };
 
