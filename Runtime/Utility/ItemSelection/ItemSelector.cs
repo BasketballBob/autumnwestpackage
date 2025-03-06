@@ -6,7 +6,7 @@ using Sirenix.OdinInspector;
 namespace AWP
 {
     [System.Serializable] [InlineProperty] [HideLabel]
-    public class ItemSelector<TItem>
+    public class ItemSelector<TItem> : IEnumerable<TItem>
     {
         [OnValueChanged("OnSelectionTypeChange")] [HideLabel]
         public SelectorType SelectionType;
@@ -32,6 +32,31 @@ namespace AWP
             }
 
             throw new System.NotImplementedException();
+        }
+
+        public IEnumerable<TItem> GetEnumerable()
+        {
+            switch (SelectionType)
+            {
+                case SelectorType.Single:
+                    return new TItem[] { _single };
+                case SelectorType.List:
+                    return _list;
+                case SelectorType.WeightedPool:
+                    return _weightedPool.GetEnumerable();
+            }
+        
+            throw new System.Exception();
+        }
+
+        public IEnumerator<TItem> GetEnumerator()
+        {
+            return GetEnumerable().GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
 
         #if UNITY_EDITOR

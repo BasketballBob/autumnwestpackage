@@ -97,6 +97,24 @@ namespace AWP
             return !IsFinished();
         }
 
+        /// <summary>
+        /// Runs once on finish of timer
+        /// </summary>
+        /// <param name="timePassed"></param>
+        /// <returns></returns>
+        public bool RunOnFinish(float timePassed)
+        {
+            if (IsFinished()) return false;
+
+            Tick(timePassed);
+
+            if (IsFinished())
+            {
+                return true;
+            }
+            else return false;
+        }
+
         public IEnumerator RunUntilFinishRoutine(AWDelta.DeltaType deltaType, bool reset = true)
         {
             if (reset) Reset();

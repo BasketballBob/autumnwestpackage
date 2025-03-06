@@ -12,22 +12,11 @@ namespace AWP
     public class AWUnityTest : SerializedMonoBehaviour
     {
         // This class is designated for running test code in Unity
-        [SerializeField] 
-        private AWEvent _event;
-        [SerializeField]
-        private UnityEvent _unityEvent;
-        [SerializeField] [TypeFilter(nameof(GetTypes))]
-        private ValueObject _valueObject;
-
-        [SerializeField]
-        private TestCurve _test;
-
-        public IEnumerable<Type> GetTypes() => ValueObject.GetTypes();
 
         [Button("Test")]
         private void Start()
         {
-            //testCurve.DebugDraw();
+            ConditionAllTest();
         }
 
         private void LineClosestPointTest()
@@ -43,6 +32,14 @@ namespace AWP
         private void RandomCurve()
         {
         
+        }
+
+        private void ConditionAllTest()
+        {
+            List<int> ints = new List<int>() {1};
+
+            Debug.Log($"Any {ints.ConditionAny(x => x == 1)}");
+            Debug.Log($"All {ints.ConditionAll(x => x == 1)}");
         }
     }
 }

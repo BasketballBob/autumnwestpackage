@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -47,6 +48,11 @@ namespace AWP
             }
 
             return returnList;
+        }
+
+        public IEnumerable<T> GetEnumerable()
+        {
+            return itemList.Select(x => x.Value);
         }
 
         private float GetWeightTotal()
