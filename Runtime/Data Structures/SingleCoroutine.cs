@@ -15,11 +15,12 @@ namespace AWP
         }
 
         public bool RoutineActive { get; private set; }
+        public Coroutine Routine => _routine;
 
-        public void StartRoutine(IEnumerator routine)
+        public Coroutine StartRoutine(IEnumerator routine)
         {
             StopRoutine();
-            _mono.StartCoroutine(TrackingRoutine());
+            return _mono.StartCoroutine(TrackingRoutine());
 
             IEnumerator TrackingRoutine()
             {
