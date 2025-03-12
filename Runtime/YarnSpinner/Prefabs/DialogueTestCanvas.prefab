@@ -273,6 +273,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: DialogueController
       objectReference: {fileID: 0}
+    - target: {fileID: 7329059122576879751, guid: 594752acd69020c46bf8eba7358b74b1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329059122576879751, guid: 594752acd69020c46bf8eba7358b74b1, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329059122576879751, guid: 594752acd69020c46bf8eba7358b74b1, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7329059122576879751, guid: 594752acd69020c46bf8eba7358b74b1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

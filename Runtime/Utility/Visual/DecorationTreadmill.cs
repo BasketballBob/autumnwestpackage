@@ -11,6 +11,8 @@ namespace AWP
         [SerializeField]
         private float _speed;
         [SerializeField]
+        private float _speedMultiplier = 1;
+        [SerializeField]
         private float _length = 10;
         [SerializeField]
         private ItemSelector<Decoration> _items;
@@ -46,14 +48,16 @@ namespace AWP
 
         private void Update()
         {
-            UpdateDecorations(_speed * Time.deltaTime);
+            UpdateDecorations(_speed * _speedMultiplier * Time.deltaTime);
         }
 
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.yellow;
             Gizmos.matrix = transform.localToWorldMatrix;
-            Gizmos.DrawWireCube(Vector3.zero + new Vector3(0, 0, _length / 2), new Vector3(1, 1, _length));
+            Gizmos.DrawWireCube(Vector3.zero + new Vector3(0, 0, _length / 2), 
+                new Vector3(Mathf.Max(1, _positionOffsetRange.x * 2), 
+                Mathf.Max(1, _positionOffsetRange.y * 2), _length));
         }
 
         private void Initialize()

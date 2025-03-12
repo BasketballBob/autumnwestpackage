@@ -31,7 +31,7 @@ namespace AWP
         {
             base.OnEnable();
 
-            SetHidden(true);
+            //SetHidden(true);
         }
 
         public override void DialogueStarted()
@@ -46,6 +46,7 @@ namespace AWP
             
             IEnumerator RunLineRoutine()
             {
+                while (Paused) yield return null;
                 yield return RunLineAnimation(dialogueLine);
                 if (!_waitForInput) onDialogueLineFinished?.Invoke();
                 _prevLine = dialogueLine;
@@ -109,6 +110,9 @@ namespace AWP
                     _text.ShiftAlpha(0, DismissAnimationDuration, EasingFunction.Sin, AWDelta.DeltaType.Update),
                     _nameText.ShiftAlpha(0, 0, EasingFunction.Sin, AWDelta.DeltaType.Update)
                 });
+
+                _text.text = "";
+                if (_nameText != null) _nameText.text = "";
             }
         #endregion
     }

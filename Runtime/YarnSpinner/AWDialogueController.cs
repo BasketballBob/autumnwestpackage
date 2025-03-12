@@ -16,6 +16,8 @@ namespace AWP
     {
         protected const string EnterAnim = "DialogueController_Enter";
         protected const string ExitAnim = "DialogueController_Exit";
+        protected const string TextboxEnterAnim = "Textbox_Enter";
+        protected const string TextboxExitAnim = "Textbox_Exit";
 
         [SerializeField]
         private Animator _animator;
@@ -38,6 +40,9 @@ namespace AWP
 
         public enum RunnerState { Off, EnterAnimation, RunningLine, ExitAnimation };
 
+        /// <summary>
+        /// Used to halt the automatic progression of the dialogue (add custom animations / waiting)
+        /// </summary>
         public override bool Paused
         { 
             get => base.Paused; 
@@ -48,6 +53,8 @@ namespace AWP
             }
         }
         public bool IsRunning => _currentState != RunnerState.Off;
+        protected virtual bool EnterTextboxAutomatically => true;
+        protected bool TextboxVisible { get; private set; }
 
         protected void Awake()
         {
@@ -65,7 +72,11 @@ namespace AWP
 
             _startAutomatically = _dialogueRunner.startAutomatically;
 
-            if (!_startAutomatically) _animator?.Play(ExitAnim, 0, 1);
+            if (!_startAutomatically) 
+            {
+                _animator?.Play(ExitAnim, 0, 1);
+                _animator?.Play(TextboxExitAnim, 1, 1);
+            }
             _dialogueRunner.startAutomatically = false;
         }
 
@@ -81,6 +92,7 @@ namespace AWP
             IEnumerator StartDialogueRoutine()
             {   
                 yield return EnterAnimation();
+                if (EnterTextboxAutomatically) yield return EnterTextboxAnimation();
                 _dialogueRunner.StartDialogue(_startNode);
             }
 
@@ -94,7 +106,9 @@ namespace AWP
 
             IEnumerator RunLineRoutine()
             {
-                while (AnimationActive) yield return null;
+                while (Paused) yield return null;
+                if (!TextboxVisible) yield return EnterTextboxAnimation();
+
                 base.RunLine(dialogueLine, onDialogueLineFinished);
             }
 
@@ -107,6 +121,7 @@ namespace AWP
 
             IEnumerator DialogueCompleteRoutine()
             {
+                yield return ExitTextboxAnimation();
                 yield return ExitAnimation();
             }
 
@@ -164,6 +179,18 @@ namespace AWP
                 _currentState = RunnerState.ExitAnimation;
                 yield return _animator?.WaitForAnimationToComplete(ExitAnim);
                 _currentState = RunnerState.Off;
+            }
+
+            protected IEnumerator EnterTextboxAnimation()
+            {
+                TextboxVisible = true;
+                yield return _animator?.WaitForAnimationToComplete(TextboxEnterAnim, 1);
+            }
+
+            protected IEnumerator ExitTextboxAnimation()
+            {
+                TextboxVisible = false;
+                yield return _animator?.WaitForAnimationToComplete(TextboxExitAnim, 1);
             }
         #endregion
     }

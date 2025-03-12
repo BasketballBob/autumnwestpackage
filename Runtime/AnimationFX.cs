@@ -8,11 +8,11 @@ namespace AWP
 {
     public static class AnimationFX
     {
-        public static IEnumerator WaitForAnimationToComplete(this Animator anim)
+        public static IEnumerator WaitForAnimationToComplete(this Animator anim, int layer = 0)
         {
             yield return null;
 
-            while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
+            while (anim.GetCurrentAnimatorStateInfo(layer).normalizedTime < 1)
             {
                 yield return null;
             }
@@ -20,14 +20,14 @@ namespace AWP
         public static IEnumerator WaitForAnimationToComplete(this Animator anim, string animName, int layer = 0)
         {
             anim.Play(animName, layer);
-            return anim.WaitForAnimationToComplete();
+            return anim.WaitForAnimationToComplete(layer);
         }
 
         public static IEnumerator WaitForTransitionToFinish(this Animator anim, int layer = 0)
         {
             // Wait for transition to start
             anim.Update(0);
-            while (anim.IsInTransition(layer)) yield return null;
+            while (!anim.IsInTransition(layer)) yield return null;
 
             // Wait for transition to end
             while (anim.IsInTransition(layer))
