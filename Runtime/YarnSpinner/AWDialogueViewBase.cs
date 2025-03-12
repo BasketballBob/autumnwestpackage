@@ -41,34 +41,6 @@ namespace AWP
             if (hidden) _canvasGroup.alpha = 0;
         }
 
-        protected IEnumerator PrintText(TMP_Text tmp, string text, float charDelay = DefaultCharPrintDelay)
-        {
-            if (tmp == null) yield break;
-            if (string.IsNullOrEmpty(text)) text = "";
-
-            tmp.maxVisibleCharacters = 0;
-            tmp.text = text;
-            tmp.ForceMeshUpdate();
-
-            while (Paused) yield return null;
-            while (tmp.maxVisibleCharacters < tmp.text.Length)
-            {
-                tmp.maxVisibleCharacters++;
-                if (tmp.maxVisibleCharacters < tmp.text.Length)
-                    yield return new WaitForSeconds(charDelay);
-            }
-        }
-
-        protected void InstantPrintText(TMP_Text tmp, string text)
-        {
-            if (tmp == null) return;
-            if (string.IsNullOrEmpty(text)) text = "";
-
-            tmp.maxVisibleCharacters = text.Length;
-            tmp.text = text;
-            tmp.ForceMeshUpdate();
-        }
-
         /// <summary>
         /// Starts a tracked routine that represents the current primary animation
         /// </summary>

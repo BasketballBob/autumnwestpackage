@@ -4,15 +4,17 @@ using UnityEngine;
 using Yarn.Unity;
 using TMPro;
 using System;
+using Febucci.UI;
+using Febucci.UI.Core;
 
 namespace AWP
 {
     public class AWLineView : AWDialogueViewBase
     {
         [SerializeField]
-        private TMP_Text _text;
+        private TypewriterCore _text;
         [SerializeField]
-        private TMP_Text _nameText;
+        private TypewriterCore _nameText;
 
         [Header("Text Printing")]
         [SerializeField]
@@ -23,8 +25,6 @@ namespace AWP
         protected bool _enterBodyText;
         protected bool _enterNameText;
 
-        public TMP_Text Text => _text;
-        public TMP_Text NameText => _nameText;
         protected float DismissAnimationDuration => .25f;
 
         protected override void OnEnable()
@@ -47,7 +47,9 @@ namespace AWP
             IEnumerator RunLineRoutine()
             {
                 while (Paused) yield return null;
-                yield return RunLineAnimation(dialogueLine);
+
+                yield return RunLineAnimation(dialogueLine); 
+
                 if (!_waitForInput) onDialogueLineFinished?.Invoke();
                 _prevLine = dialogueLine;
             }
@@ -58,8 +60,8 @@ namespace AWP
             if (AnimationActive)
             {
                 StopAnimationRoutine();
-                InstantPrintText(_text, dialogueLine.TextWithoutCharacterName.Text);
-                InstantPrintText(_nameText, dialogueLine.CharacterName);
+                _text.SkipTypewriter();
+                if (_nameText != null) _nameText.SkipTypewriter();
                 return;
             }
 
@@ -89,17 +91,14 @@ namespace AWP
                 string bodyText = dialogueLine.TextWithoutCharacterName.Text;
                 string nameText = dialogueLine.CharacterName;
 
-                bool typewriterBody = _useTypewriterEffect;
-                bool typewriterName = false; //_useTypewriterEffect;
-
-                if (!typewriterBody) InstantPrintText(_text, bodyText);
-                if (!typewriterName) InstantPrintText(_nameText, nameText);
-
                 _canvasGroup.alpha = 1;
 
+                _text.ShowText(bodyText);
+                if (_nameText != null) _nameText.ShowText(nameText);
+
                 yield return this.WaitOnRoutines(new IEnumerator[] {
-                    typewriterBody ? PrintText(_text, bodyText) : null,
-                    typewriterName ? PrintText(_nameText, nameText) : null
+                    _text.WaitUntilTextShown(),
+                    _nameText != null ? _nameText.WaitUntilTextShown() : null
                 });
             }
 
@@ -107,12 +106,12 @@ namespace AWP
             {
                 yield return this.WaitOnRoutines(new IEnumerator[]
                 {
-                    _text.ShiftAlpha(0, DismissAnimationDuration, EasingFunction.Sin, AWDelta.DeltaType.Update),
-                    _nameText.ShiftAlpha(0, 0, EasingFunction.Sin, AWDelta.DeltaType.Update)
+                    //_text.ShiftAlpha(0, DismissAnimationDuration, EasingFunction.Sin, AWDelta.DeltaType.Update),
+                    //_nameText.ShiftAlpha(0, 0, EasingFunction.Sin, AWDelta.DeltaType.Update)
                 });
 
-                _text.text = "";
-                if (_nameText != null) _nameText.text = "";
+                _text.ShowText("");
+                if (_nameText != null) _nameText.ShowText("");
             }
         #endregion
     }
