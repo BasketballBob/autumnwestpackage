@@ -32,9 +32,10 @@ namespace AWP
         private ReferenceObject<MenuManager> _refMenuManager;
         [SerializeField]
         private ReferenceObject<CullingBounds> _refCullingBounds;
-
         [SerializeField]
         private AudioManager _audioManager;
+        [SerializeField]
+        private SceneTransition _defaultSceneTransition;
 
         private static float _prePauseTimeScale;
 
@@ -118,6 +119,15 @@ namespace AWP
 
             public static Scene GetCurrentScene() => SceneManager.GetActiveScene();
             public static void ResetScene() => LoadScene(GetCurrentScene().name);
+        #endregion
+
+        #region Scene transition
+            public static void TransitionScene(string scene) => TransitionScene(Current._defaultSceneTransition, scene);
+            public static void TransitionScene(SceneTransition transition, string scene)
+            {
+                SceneTransition instance = Instantiate(transition);
+                instance.Transition(scene);
+            }
         #endregion
 
         public static void SetPaused(bool paused)

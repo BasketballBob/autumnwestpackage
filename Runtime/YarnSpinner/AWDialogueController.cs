@@ -53,6 +53,7 @@ namespace AWP
             }
         }
         public bool IsRunning => _currentState != RunnerState.Off;
+        public string StartNode { get => _startNode; set { _startNode = value; }}
         protected virtual bool EnterTextboxAutomatically => true;
         protected bool TextboxVisible { get; private set; }
 
