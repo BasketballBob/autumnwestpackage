@@ -9,6 +9,43 @@ namespace AWP
 {
     public static class FMODExtensions
     {
+        #region Event instances
+            public static EventInstance EnsureInstance(this EventInstance instance, EventReference eventRef)
+            {
+                if (instance.isValid()) return instance;
+                instance = AWGameManager.AudioManager.CreateInstance(eventRef);
+                return instance;
+            }
+
+            public static EventInstance EnsureAttachedInstance(this EventInstance instance, EventReference eventRef, GameObject attachedObject)
+            {
+                if (instance.isValid()) return instance;
+                instance = AWGameManager.AudioManager.CreateAttachedInstance(eventRef, attachedObject);
+                return instance;
+            }
+
+            public static void StartIfNotPlaying(this EventInstance instance)
+            {
+                if (!instance.isValid()) return;
+                if (instance.GetPlaybackState() == PLAYBACK_STATE.PLAYING) return;
+                instance.start();
+            }
+
+            public static void StopIfPlaying(this EventInstance instance, FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.ALLOWFADEOUT)
+            {
+                if (!instance.isValid()) return;
+                if (instance.GetPlaybackState() != PLAYBACK_STATE.PLAYING) return;
+                instance.stop(stopMode);
+            }
+
+            public static PLAYBACK_STATE GetPlaybackState(this EventInstance instance)
+            {
+                PLAYBACK_STATE returnState;
+                instance.getPlaybackState(out returnState);
+                return returnState;
+            }
+        #endregion
+
         public static FMOD.VECTOR ConvertToFMOD(this Vector3 vector)
         {
             FMOD.VECTOR fmodVector;

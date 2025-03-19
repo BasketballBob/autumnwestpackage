@@ -41,6 +41,10 @@ namespace AWP
 
         protected virtual bool ResetScenePressed => false;
         protected virtual bool DebugBreakPressed => false;
+        public virtual bool Debug1Pressed => false;
+        public virtual bool Debug2Pressed => false;
+        protected virtual Action OnDebug1 => null;
+        protected virtual Action OnDebug2 => null;
 
         #region Events
             protected virtual void Awake()
@@ -143,6 +147,8 @@ namespace AWP
             {
                 if (ResetScenePressed) ResetScene();
                 if (DebugBreakPressed) Debug.Break();
+                if (Debug1Pressed) OnDebug1?.Invoke();
+                if (Debug2Pressed) OnDebug2?.Invoke();
             }
         #endregion
     }
