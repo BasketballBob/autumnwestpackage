@@ -27,14 +27,19 @@ namespace AWP
             public static void StartIfNotPlaying(this EventInstance instance)
             {
                 if (!instance.isValid()) return;
-                if (instance.GetPlaybackState() == PLAYBACK_STATE.PLAYING) return;
+                PLAYBACK_STATE playbackState = instance.GetPlaybackState();
+                if (playbackState == PLAYBACK_STATE.STARTING) return;
+                if (playbackState == PLAYBACK_STATE.PLAYING) return;
+                if (playbackState == PLAYBACK_STATE.SUSTAINING) return;
                 instance.start();
             }
 
             public static void StopIfPlaying(this EventInstance instance, FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.ALLOWFADEOUT)
             {
                 if (!instance.isValid()) return;
-                if (instance.GetPlaybackState() != PLAYBACK_STATE.PLAYING) return;
+                PLAYBACK_STATE playbackState = instance.GetPlaybackState();
+                if (playbackState == PLAYBACK_STATE.STOPPED) return;
+                if (playbackState == PLAYBACK_STATE.STOPPING) return;
                 instance.stop(stopMode);
             }
 
