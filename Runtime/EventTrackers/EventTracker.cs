@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace AWP
 {
@@ -9,7 +10,7 @@ namespace AWP
     {
         protected bool _active = true;
 
-        protected void ActivateAction(Action action)
+        protected void ActivateAction(UnityEvent action)
         {
             if (!_active) return;
             action?.Invoke();

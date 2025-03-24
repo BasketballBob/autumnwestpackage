@@ -19,6 +19,8 @@ namespace AWP
 
         public Coroutine StartRoutine(IEnumerator routine)
         {
+            if (_mono == null) return null;
+
             StopRoutine();
             return _mono.StartCoroutine(TrackingRoutine());
 
@@ -32,6 +34,7 @@ namespace AWP
 
         public void StopRoutine()
         {
+            if (_mono == null) return;
             if (_routine == null) return;
             _mono.StopCoroutine(_routine);
         }

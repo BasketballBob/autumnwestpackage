@@ -52,7 +52,25 @@ namespace AWP
         }   
 
         #region Collider2D
+            //public static Vector2 ClosestPoint(this Collider2D col, Vector2 nearPosition, Vector2 colPosition, )
+        #endregion
 
+        #region Rigidbody
+            public static Vector2 GetPointVelocity(this Rigidbody2D rb, Vector2 pos, Vector2 velocity, float angularVelocity)
+            {
+                Vector2 oldVelocity = rb.velocity;
+                float oldAngularVelocity = rb.angularVelocity;
+
+                rb.velocity = velocity;
+                rb.angularVelocity = angularVelocity;
+
+                Vector2 pointVelocity = rb.GetPointVelocity(pos);
+
+                rb.velocity = oldVelocity;
+                rb.angularVelocity = oldAngularVelocity;
+
+                return pointVelocity;
+            }
         #endregion
 
         #region Collision detections
