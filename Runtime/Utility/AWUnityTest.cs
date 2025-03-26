@@ -13,6 +13,8 @@ namespace AWP
     {
         // This class is designated for running test code in Unity
 
+        public AWComparison<float> _test = new AWComparison<float>();
+
         [Button("Test")]
         private void Start()
         {
