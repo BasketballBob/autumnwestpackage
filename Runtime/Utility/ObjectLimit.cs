@@ -10,6 +10,8 @@ namespace AWP
     {
         public static Action<T> DefaultRemoveFunction = x => GameObject.Destroy(x.gameObject);
 
+        public Action<T> OnRemove;
+
         private int _maxCount;
         private List<T> _items = new List<T>();
         private Action<T> _removeItemFunc = DefaultRemoveFunction;
@@ -53,6 +55,7 @@ namespace AWP
             _items.Remove(item);
             _removeItemFunc(item);
 
+            OnRemove?.Invoke(item);
         }
 
         protected virtual void RemoveAll()
