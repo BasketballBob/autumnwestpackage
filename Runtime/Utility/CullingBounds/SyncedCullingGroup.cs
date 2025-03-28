@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,8 @@ namespace AWP
         [SerializeField]
         private List<CullingObject> _cullingObjects = new List<CullingObject>();
 
+        public Action OnCull;
+
         private void OnEnable()
         {
             _cullingObjects.ForEach(x => x.OnCull += CullAll);
@@ -26,6 +29,7 @@ namespace AWP
         private void CullAll()
         {
             _cullingObjects.ForEach(x => x.CullSilently());
+            OnCull?.Invoke();
         }
 
         public void SetEnabled(bool enabled)

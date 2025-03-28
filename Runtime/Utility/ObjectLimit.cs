@@ -37,7 +37,7 @@ namespace AWP
             if (destroyTracker == null) destroyTracker = item.gameObject.AddComponent<OnDestroyTracker>();
             destroyTracker.OnInvoke.AddListener(() => 
             {
-                if (_items.Contains(item)) _items.Remove(item);
+                if (_items.Contains(item)) RemoveItem(item);
             });
             
             _items.Add(item);

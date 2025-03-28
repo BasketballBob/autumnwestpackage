@@ -11,6 +11,9 @@ namespace AWP
 
         private bool _invokeCullEvent = true;
 
+        public bool Enabled { get { return _enabled; } set { _enabled = value; } }
+        private bool _enabled = true;
+
         protected virtual void OnEnable()
         {
             AWGameManager.CullingBounds.AddObject(this);

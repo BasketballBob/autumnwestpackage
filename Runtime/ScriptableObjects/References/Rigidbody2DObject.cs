@@ -16,20 +16,22 @@ namespace AWP
     }
 
     [System.Serializable]
-    public sealed class RigidbodyReference : IRigidbody2DReference
+    public sealed class RigidbodyReference : IRigidbody2DReference, ITransformReference
     {
         [SerializeField]
         private Rigidbody2D _rigidbody2D;
 
         public Rigidbody2D Rigidbody2D => _rigidbody2D;
+        public Transform Transform => _rigidbody2D == null ? null : _rigidbody2D.transform;
     }
 
     [System.Serializable]
-    public sealed class Rigidbody2DObjectReference : IRigidbody2DReference
+    public sealed class Rigidbody2DObjectReference : IRigidbody2DReference, ITransformReference
     {
         [SerializeField]
         private Rigidbody2DObject _rigidbody2D;
 
         public Rigidbody2D Rigidbody2D => _rigidbody2D.Reference;
+        public Transform Transform => _rigidbody2D.Reference == null ? null : _rigidbody2D.Reference.transform;
     }
 }

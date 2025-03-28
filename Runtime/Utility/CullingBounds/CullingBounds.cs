@@ -33,6 +33,8 @@ namespace AWP
         {
             for (int i = 0; i < _cullingObjects.Count; i++)
             {
+                if (!_cullingObjects[i].Enabled) continue;
+                
                 if (ShouldCull(_cullingObjects[i]))
                 {
                     _cullingObjects[i].Cull();

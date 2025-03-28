@@ -16,7 +16,7 @@ namespace AWP
     }
 
     [System.Serializable]
-    public sealed class MenuManageReferece : IMenuManagerReference
+    public sealed class MenuManageReference : IMenuManagerReference
     {
         [SerializeField]
         private MenuManager _menuManager;
