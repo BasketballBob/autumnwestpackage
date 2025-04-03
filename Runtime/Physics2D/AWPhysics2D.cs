@@ -9,24 +9,22 @@ namespace AWP
     public static class AWPhysics2D
     {
         public static void Explosion(Vector2 point, float radius, float magnitude) => Explosion(point, radius, magnitude, ~0);
-        public static void Explosion(Vector2 point, float radius, float magnitude, LayerMask layerMask, Action<Rigidbody2D, Vector2> hitAction = null)
+        public static void Explosion(Vector2 point, float radius, float magnitude, LayerMask layerMask, Action<Collider2D, Vector2> hitAction = null)
         {
             Collider2D[] colArray = Physics2D.OverlapCircleAll(point, radius, layerMask);
-            Debug.Log("POINT " + point + " " + radius);
             Debug.DrawLine(point, point - Vector2.right * radius, Color.red, 1);
 
             foreach (Collider2D col in colArray)
             {
+                Vector2 difference = (Vector2)col.bounds.center - point;
+                if (difference.magnitude == 0) continue;
+                Vector2 appliedForce = difference.normalized * magnitude;
+
+                hitAction?.Invoke(col, appliedForce);
+
                 Rigidbody2D rb = col.attachedRigidbody;
                 if (rb == null) continue;
-
-                Vector2 difference = rb.position - point;
-                if (difference.magnitude == 0) continue;
-
-                Vector2 appliedForce = difference.normalized * magnitude;
-                Debug.Log("COL ARRAY " + col.name + " " + magnitude + " " + difference + " " + appliedForce);
                 rb.AddForceAtPosition(appliedForce, col.ClosestPoint(point), ForceMode2D.Impulse);
-                hitAction?.Invoke(rb, appliedForce);
             }
         }
     
@@ -58,6 +56,8 @@ namespace AWP
         #region Rigidbody
             public static Vector2 GetPointVelocity(this Rigidbody2D rb, Vector2 pos, Vector2 velocity, float angularVelocity)
             {
+                if (rb.bodyType != RigidbodyType2D.Dynamic) return default;
+
                 Vector2 oldVelocity = rb.velocity;
                 float oldAngularVelocity = rb.angularVelocity;
 

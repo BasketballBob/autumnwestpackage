@@ -41,6 +41,7 @@ namespace AWP
 
         protected virtual bool ResetScenePressed => false;
         protected virtual bool DebugBreakPressed => false;
+        public virtual Vector2 MousePosition => default;
         public virtual bool Debug1Pressed => false;
         public virtual bool Debug2Pressed => false;
         protected virtual Action OnDebug1 => null;

@@ -10,7 +10,7 @@ namespace AWP
     {
         public bool CanAfford(T cost)
         {   
-            return RuntimeValue.CompareTo(cost) > 0;
+            return RuntimeValue.CompareTo(cost) >= 0;
             //float
         }
 
