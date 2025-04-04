@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -63,6 +64,25 @@ namespace AWP
             public static T Dequeue<T>(this List<T> list)
             {
                 return list.StackPop();
+            }
+        #endregion
+
+        #region Item parsing
+            public static T PullPriorityItem<T>(this List<T> list, Func<T, float> priorityFunc)
+            {
+                T currentItem = default;
+                float currentPriority = float.MinValue;
+
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (priorityFunc(list[i]) > currentPriority)
+                    {
+                        currentItem = list[i];
+                        currentPriority = priorityFunc(list[i]);
+                    }
+                }
+
+                return currentItem;
             }
         #endregion
     }

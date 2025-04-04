@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace AWP
 {
@@ -18,9 +20,21 @@ namespace AWP
             return raycastResults;
         }
 
-        // public static RaycastResult GetCurrentRaycastResult(this EventSystem eventSystem, Vector2 mousePos)
-        // {
-        //     return GetCurrentRaycastResults(eventSystem, mousePos)
-        // }
+        public static Selectable GetTopRaycastSelectable(this EventSystem eventSystem, Vector2 mousePos)
+        {
+            List<RaycastResult> results = eventSystem.GetCurrentRaycastResults(mousePos);
+            if (results.IsNullOrEmpty()) return null;
+            Selectable selectableResult;
+
+            for (int i = 0; i < results.Count; i++)
+            {
+                if (!results[i].isValid) continue;
+
+                selectableResult = results[i].gameObject.transform.GetRootComponent<Selectable>();
+                if (selectableResult != null) return selectableResult;
+            }
+
+            return null;
+        }
     }
 }

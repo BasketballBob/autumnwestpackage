@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using AWP;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace AWP
@@ -39,11 +40,15 @@ namespace AWP
 
         private static float _prePauseTimeScale;
 
-        protected virtual bool ResetScenePressed => false;
-        protected virtual bool DebugBreakPressed => false;
         public virtual Vector2 MousePosition => default;
+        public virtual UnityEngine.InputSystem.InputAction Mouse1 => default;
+        public bool Mouse1Pressed => Mouse1.WasPerformedThisFrame();
+        public bool Mouse1Held => Mouse1.IsPressed();
         public virtual bool Debug1Pressed => false;
         public virtual bool Debug2Pressed => false;
+
+        protected virtual bool ResetScenePressed => false;
+        protected virtual bool DebugBreakPressed => false;
         protected virtual Action OnDebug1 => null;
         protected virtual Action OnDebug2 => null;
 
