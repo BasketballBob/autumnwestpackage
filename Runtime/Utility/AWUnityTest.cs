@@ -15,12 +15,6 @@ namespace AWP
 
         public AWComparison<float> _test = new AWComparison<float>();
 
-        [Button("Test")]
-        private void Start()
-        {
-            ConditionAllTest();
-        }
-
         private void LineClosestPointTest()
         {
             Vector2 point = new Vector2(2, 3);
@@ -43,5 +37,7 @@ namespace AWP
             Debug.Log($"Any {ints.ConditionAny(x => x == 1)}");
             Debug.Log($"All {ints.ConditionAll(x => x == 1)}");
         }
+
+        public Sprite TestSprite;
     }
 }

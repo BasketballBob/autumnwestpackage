@@ -24,12 +24,16 @@ namespace AWP
         [Header("Delta Animation")]
         [SerializeField]
         private bool _useDeltaAnimation;
+        [Header("Scale")]
         [SerializeField] [ShowIf("_useDeltaAnimation")]
         private AnimationCurve _xScaleCurve = AnimationCurve.Constant(0, 1, 1);
         [SerializeField] [ShowIf("_useDeltaAnimation")]
         private AnimationCurve _yScaleCurve = AnimationCurve.Constant(0, 1, 1);
         [SerializeField] [ShowIf("_useDeltaAnimation")]
         private AnimationCurve _zScaleCurve = AnimationCurve.Constant(0, 1, 1);
+        [Header("Position")]
+        [SerializeField] [ShowIf("_useDeltaAnimation")]
+        private AnimationCurve _yPosCurve = AnimationCurve.Constant(0, 1, 1);
 
         private List<Decoration> _decorationItems = new List<Decoration>();
         private float _currentLength;
@@ -93,12 +97,12 @@ namespace AWP
 
                 bool ItemShouldBeCulled()
                 {
-                    if (currentPos + _decorationItems[i].Extent < 0) 
+                    if (currentPos + _decorationItems[i].Extent < 0 && shiftingBackwards) 
                     {
                         currentPos += _decorationItems[i].Length;
                         return true;
                     }
-                    if (currentPos - _decorationItems[i].Extent > _length) 
+                    if (currentPos - _decorationItems[i].Extent > _length && !shiftingBackwards) 
                     {
                         return true;
                     }
@@ -152,7 +156,10 @@ namespace AWP
             _decorationItems.Remove(decor);
             DestroyItem(decor);
 
-            if (shiftingBackwards) _offset += decor.Length;
+            if (shiftingBackwards) 
+            {
+                _offset += decor.Length;
+            }
         }
 
         protected virtual void DestroyItem(Decoration decor)
@@ -183,6 +190,8 @@ namespace AWP
 
                 decor.Component.transform.localScale = new Vector3(_xScaleCurve.Evaluate(delta),
                     _yScaleCurve.Evaluate(delta), _zScaleCurve.Evaluate(delta));
+                
+                decor.Component.transform.position += new Vector3(0, _yPosCurve.Evaluate(delta), 0);
             }
         #endregion
 
