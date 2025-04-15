@@ -25,5 +25,10 @@ namespace AWP
         {
             return new Color(color.r, color.g, color.b, a);
         }
+
+        public static Color Lerp(this Color startColor, Color endColor, float delta)
+        {
+            return startColor + (endColor - startColor) * Mathf.Clamp01(delta);
+        }
     }
 }
