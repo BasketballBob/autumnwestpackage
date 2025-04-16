@@ -5,20 +5,18 @@ using UnityEngine;
 namespace AWP
 {
     [ExecuteInEditMode]
-    public class FlickeringLight : LightControls
+    public class FlickeringLight : AnimatedLight
     {
-        
         [SerializeField]
-        private AnimationCurve _testCurve;
+        private float _minIntensity = 5;
+        [SerializeField]
+        private float _maxIntensity = 10;
+        [SerializeField] 
+        private float _perlinNoiseScale = 1;
 
-        private float _timeDelta;
-
-        private void Update()
+        protected override void OnDeltaChange(float delta)
         {
-            _timeDelta += Time.deltaTime;
-            _timeDelta = _timeDelta % 1;
-
-            _light.intensity = Mathf.PerlinNoise1D(_timeDelta); //_testCurve.Evaluate(_timeDelta) * _intensity;
+            _light.intensity = Mathf.Lerp(_minIntensity, _maxIntensity, Mathf.PerlinNoise1D(delta * _perlinNoiseScale));
         }
     }
 }

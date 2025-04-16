@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace AWP
 {
-    public abstract class LightControls : MonoBehaviour
+    [ExecuteInEditMode]
+    public abstract class AnimatedLight : EditorActiveAnimator
     {
         [SerializeField]
         protected Light _light;
