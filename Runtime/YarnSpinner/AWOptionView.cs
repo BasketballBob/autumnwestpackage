@@ -36,6 +36,16 @@ namespace AWP
             IEnumerator RunOptionsRoutine()
             {
                 while (Paused) yield return null;
+                
+                //Remove unavailable options
+                List<DialogueOption> availableOptions = new List<DialogueOption>();
+                for (int i = 0; i < dialogueOptions.Length; i++)
+                {
+                    if (!dialogueOptions[i].IsAvailable) continue;
+                    availableOptions.Add(dialogueOptions[i]);
+                }
+                dialogueOptions = availableOptions.ToArray();
+
                 SyncButtonCount(dialogueOptions.Length);
                 SyncButtonValues(dialogueOptions, onOptionSelected);
 
