@@ -46,13 +46,13 @@ namespace AWP
         }
 
         /// <summary>
-        /// Modifies Vector in a Cross Product type fashion, but replaces multiplication of x1 * x2 with provided func
+        /// Modifies Vector using the provided function and combined various axis of the vector
         /// </summary>
         /// <param name="vector1"></param>
         /// <param name="vector2"></param>
         /// <param name="func"></param>
         /// <returns></returns>
-        public static Vector2 CrossFunc(this Vector2 vector1, Vector2 vector2, Func<float, float, float> func)
+        public static Vector2 AxisFunc(this Vector2 vector1, Vector2 vector2, Func<float, float, float> func)
         {
             return new Vector2(func(vector1.x, vector2.x), func(vector1.y, vector2.y));
         }

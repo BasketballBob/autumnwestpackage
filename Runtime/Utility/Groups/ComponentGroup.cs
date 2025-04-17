@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace AWP
 {
     public class ComponentGroup<TComponent> : Group<TComponent> where TComponent : Component
     {
+        [Button]
         protected void Reset()
         {
             transform.TraverseSelfAndChildren(x => 

@@ -38,15 +38,40 @@ namespace AWP
         }
 
         /// <summary>
-        /// Modifies Vector in a Cross Product type fashion, but replaces multiplication of x1 * x2 with provided func
+        /// Modifies Vector using the provided function and combined various axis of the vector
         /// </summary>
         /// <param name="vector1"></param>
         /// <param name="vector2"></param>
         /// <param name="func"></param>
         /// <returns></returns>
-        public static Vector3 CrossFunc(this Vector3 vector1, Vector3 vector2, Func<float, float, float> func)
+        public static Vector3 AxisFunc(this Vector3 vector1, Vector3 vector2, Func<float, float, float> func)
         {
             return new Vector3(func(vector1.x, vector2.x), func(vector1.y, vector2.y), func(vector1.z, vector2.z));
+        }
+
+        /// <summary>
+        /// Lerps vector1 to vector2 using individual values for each axis
+        /// </summary>
+        /// <param name="vector1"></param>
+        /// <param name="vector2"></param>
+        /// <param name="deltaVector"></param>
+        /// <returns></returns>
+        public static Vector3 AxisLerp(this Vector3 vector1, Vector3 vector2, Vector3 deltaVector)
+        {
+            return new Vector3(Mathf.Lerp(vector1.x, vector2.x, deltaVector.x),
+                Mathf.Lerp(vector1.y, vector2.y, deltaVector.y),
+                Mathf.Lerp(vector1.z, vector2.z, deltaVector.z));
+        }
+
+        /// <summary>
+        /// Multiply each axis of vector1 by each corresponding axis of vector2
+        /// </summary>
+        /// <param name="vector1"></param>
+        /// <param name="vector2"></param>
+        /// <returns></returns>
+        public static Vector3 AxisMultiply(this Vector3 vector1, Vector3 vector2)
+        {
+            return AxisFunc(vector1, vector2, (x, y) => x * y);
         }
     }
 }

@@ -12,6 +12,8 @@ namespace AWP
 
         private float _timeDelta;
 
+        protected virtual float Duration => _duration;
+
         protected void Update()
         {
             ManageDelta(Time.deltaTime);
@@ -19,7 +21,7 @@ namespace AWP
 
         private void ManageDelta(float deltaTime)
         {
-            _timeDelta += deltaTime * (1 / _duration);
+            _timeDelta += deltaTime * (1 / Duration);
             _timeDelta = _timeDelta % 1;
 
             OnDeltaChange(_timeDelta);

@@ -9,7 +9,6 @@ using UnityEngine.PlayerLoop;
 
 namespace AWP
 {
-    [RequireComponent(typeof(Rigidbody2D))]
     public class CompoundBody2D : MonoBehaviour
     {
         [SerializeField]
