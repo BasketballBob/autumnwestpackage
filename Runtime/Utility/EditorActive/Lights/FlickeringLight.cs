@@ -5,26 +5,20 @@ using UnityEngine;
 namespace AWP
 {
     [ExecuteInEditMode]
-    public class FlickeringLight : PerlinNoiseAnimator
+    public class FlickeringLight : LightAnimator
     {
-        [SerializeField]
-        protected Light _light;
         [SerializeField]
         private float _minIntensity = 5;
         [SerializeField]
         private float _maxIntensity = 10;
+        [SerializeField] 
+        private float _perlinNoiseScale = 1;
 
-        private void Reset()
-        {
-            if (GetComponent<Light>() != null) 
-            {
-                _light = GetComponent<Light>();
-            }
-        }
+        protected override float Duration => base.Duration * _perlinNoiseScale;
         
         protected override void OnDeltaChange(float delta)
         {
-            _light.intensity = Mathf.Lerp(_minIntensity, _maxIntensity, GetPerlinNoise1D(delta));
+            _light.intensity = Mathf.Lerp(_minIntensity, _maxIntensity, AWUnity.PerlinNoise1D(delta, _perlinNoiseScale)) * EnabledDelta;
         }
     }
 }

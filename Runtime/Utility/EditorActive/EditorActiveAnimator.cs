@@ -9,10 +9,21 @@ namespace AWP
     {
         [SerializeField] [Min(.01f)]
         private float _duration = 1;
+        [SerializeField]
+        private float _enabledDelta = 1;
 
         private float _timeDelta;
 
+        /// <summary>
+        /// Allows animator to be turned on and off in a smooth fashion
+        /// </summary>
+        public virtual float EnabledDelta { get { return _enabledDelta; } set { _enabledDelta = value; } } 
         protected virtual float Duration => _duration;
+
+        protected virtual void Start()
+        {
+
+        }
 
         protected void Update()
         {

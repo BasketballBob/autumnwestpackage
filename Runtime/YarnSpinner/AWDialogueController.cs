@@ -81,7 +81,7 @@ namespace AWP
             _dialogueRunner.startAutomatically = false;
         }
 
-        private void Start()
+        protected virtual void Start()
         {
             if (_startAutomatically) StartDialogue();
         }

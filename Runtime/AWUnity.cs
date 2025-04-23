@@ -69,6 +69,19 @@ namespace AWP
             }
         #endregion
 
+        #region Perlin Noise
+            public static float PerlinNoise1D(float delta, float noiseScale)
+            {
+                return Mathf.PerlinNoise1D(delta * noiseScale);
+            }
+
+            public static Vector3 PerlinNoiseVector3(float delta, float noiseScale)
+            {
+                return new Vector3(PerlinNoise1D(delta, noiseScale),
+                    PerlinNoise1D(delta + .25f, noiseScale), PerlinNoise1D(delta + .5f, noiseScale));
+            }
+        #endregion
+
         #region Colors
             public static Color SetAlpha(this Color color, float alpha)
             {
