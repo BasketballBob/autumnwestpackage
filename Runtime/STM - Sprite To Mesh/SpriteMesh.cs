@@ -23,35 +23,39 @@ namespace MADCUP.STM
         private const string defaultSpritePath = "Assets/STM (Sprite To Mesh)/Icon_Pack/Square.png";
         private Sprite previousSprite;
 
-        [MenuItem("GameObject/2D Object/SpriteMesh", false, 10)]
-        static void CreateSpriteMeshObject(MenuCommand menuCommand)
-        {
-            GameObject go = new GameObject("SpriteMesh");
-            Undo.RegisterCreatedObjectUndo(go, "Create " + go.name);
-            go.AddComponent<SpriteMesh>();
-
-            // Set position in front of the camera
-            Camera sceneCamera = SceneView.lastActiveSceneView.camera;
-            if (sceneCamera != null)
+        #if UNITY_EDITOR
+            [MenuItem("GameObject/2D Object/SpriteMesh", false, 10)]
+            static void CreateSpriteMeshObject(MenuCommand menuCommand)
             {
-                go.transform.position = sceneCamera.transform.position + sceneCamera.transform.forward * 1.5f;
-                go.transform.rotation = Quaternion.identity;
-            }
+                GameObject go = new GameObject("SpriteMesh");
+                Undo.RegisterCreatedObjectUndo(go, "Create " + go.name);
+                go.AddComponent<SpriteMesh>();
 
-            GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
-            Selection.activeObject = go;
-        }
+                // Set position in front of the camera
+                Camera sceneCamera = SceneView.lastActiveSceneView.camera;
+                if (sceneCamera != null)
+                {
+                    go.transform.position = sceneCamera.transform.position + sceneCamera.transform.forward * 1.5f;
+                    go.transform.rotation = Quaternion.identity;
+                }
+
+                GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
+                Selection.activeObject = go;
+            }
+        #endif
 
         void Start()
         {
             Initialize();
         }
 
-        void OnValidate()
-        {
-            // Use delayCall to defer Initialize call
-            EditorApplication.delayCall += DelayedInitialize;
-        }
+        #if UNITY_EDITOR
+            void OnValidate()
+            {
+                // Use delayCall to defer Initialize call
+                EditorApplication.delayCall += DelayedInitialize;
+            }
+        #endif
 
         void DelayedInitialize()
         {
@@ -88,18 +92,22 @@ namespace MADCUP.STM
 
         public void Initialize()
         {
-            if (sprite == null)
-            {
-                LoadDefaultSprite();
-            }
+            #if UNITY_EDITOR
+                if (sprite == null)
+                {
+                    LoadDefaultSprite();
+                }
+            #endif
 
             UpdateMesh();
         }
 
-        void LoadDefaultSprite()
-        {
-            sprite = AssetDatabase.LoadAssetAtPath<Sprite>(defaultSpritePath);
-        }
+        #if UNITY_EDITOR
+            void LoadDefaultSprite()
+            {
+                sprite = AssetDatabase.LoadAssetAtPath<Sprite>(defaultSpritePath);
+            }
+        #endif
 
         void UpdateMesh(bool forceUpdate = false)
         {

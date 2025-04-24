@@ -129,6 +129,45 @@ namespace AWP
 
             public static Scene GetCurrentScene() => SceneManager.GetActiveScene();
             public static void ResetScene() => LoadScene(GetCurrentScene().name);
+
+            public static void SetActiveScene(Scene scene) => SceneManager.SetActiveScene(scene);
+            public static void SetActiveScene(string scene) => SetActiveScene(SceneManager.GetSceneByName(scene));
+
+            /// <summary>
+            /// Checks if the scene is currently under the hierarchy (but not necessarily loaded)
+            /// </summary>
+            /// <param name="scene"></param>
+            /// <returns></returns>
+            public static bool SceneIsInHierarchy(string scene)
+            {
+                Scene waitScene = SceneManager.GetSceneByName(scene);
+                if (!waitScene.IsValid()) return false;
+
+                return true;
+            }
+
+            /// <summary>
+            /// Checks if the scene isLoaded in the hierarchy
+            /// </summary>
+            /// <param name="scene"></param>
+            /// <returns></returns>
+            public static bool SceneIsLoaded(string scene)
+            {
+                Scene waitScene = SceneManager.GetSceneByName(scene);
+                if (!waitScene.IsValid()) return false;
+                if (!waitScene.isLoaded) return false;
+
+                return true;
+            }
+
+            public static IEnumerator WaitForSceneToBeLoaded(string scene)
+            {
+                while (true)
+                {
+                    if (SceneIsLoaded(scene)) break;
+                    yield return null;
+                }
+            }
         #endregion
 
         #region Scene transition
