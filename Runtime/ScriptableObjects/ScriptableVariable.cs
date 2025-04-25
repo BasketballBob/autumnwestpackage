@@ -12,7 +12,7 @@ namespace AWP
 
         public T InitialValue;
 
-        public T RuntimeValue 
+        public virtual T RuntimeValue 
         {
             get 
             {

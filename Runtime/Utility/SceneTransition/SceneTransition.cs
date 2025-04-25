@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -42,15 +43,32 @@ namespace AWP
         {
             _destinationScene = scene;
             _destinationSceneLoaded = false;
-            _transitionRoutine.StartRoutine(TransitionRoutine());
+            _transitionRoutine.StartRoutine(TransitionRoutine(LoadSceneRoutine()));
+
+            IEnumerator LoadSceneRoutine()
+            {
+                AWGameManager.LoadScene(_destinationScene);
+                while (!_destinationSceneLoaded) yield return null;
+            }
         }
 
-        private IEnumerator TransitionRoutine()
+        /// <summary>
+        /// Plays transition effect, but allows you to replace scene loading with any routine
+        /// </summary>
+        /// <param name="transitionRoutine"></param>
+        public void CustomTransition(IEnumerator transitionRoutine)
+        {
+            _transitionRoutine.StartRoutine(TransitionRoutine(transitionRoutine));
+        }
+
+        private IEnumerator TransitionRoutine(IEnumerator transitionRoutine)
         {
             if (_pauseGame) AWGameManager.SetPaused(true);
             yield return _animator.WaitForAnimationToComplete("Enter");
-            AWGameManager.LoadScene(_destinationScene);
-            while (!_destinationSceneLoaded) yield return null;
+            yield return transitionRoutine;
+
+            // AWGameManager.LoadScene(_destinationScene);
+            // while (!_destinationSceneLoaded) yield return null;
 
             yield return new WaitForSecondsRealtime(_exitDelay);
             if (_pauseGame) AWGameManager.SetPaused(false);

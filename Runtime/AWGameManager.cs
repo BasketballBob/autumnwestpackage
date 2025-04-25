@@ -177,6 +177,13 @@ namespace AWP
                 SceneTransition instance = Instantiate(transition);
                 instance.Transition(scene);
             }
+
+            public static void TransitionCustom(IEnumerator customRoutine) => TransitionCustom(customRoutine, Current._defaultSceneTransition);
+            public static void TransitionCustom(IEnumerator customRoutine, SceneTransition transition)
+            {
+                SceneTransition instance = Instantiate(transition);
+                instance.CustomTransition(customRoutine);
+            }
         #endregion
 
         public static void SetPaused(bool paused)
@@ -186,6 +193,18 @@ namespace AWP
             TimeScale = paused ? 0 : _prePauseTimeScale;
             IsPaused = paused;
         }
+
+        #region Developer mode
+            public static bool IsDemoMode()
+            {
+                return (int)DevMode >= (int)DeveloperMode.TestBuild;
+            }
+
+            public static bool IsDeveloperMode()
+            {
+                return (int)DevMode >= (int)DeveloperMode.Developer;
+            }
+        #endregion
 
         #region Debug
             protected virtual void ManageDebugCommands()
