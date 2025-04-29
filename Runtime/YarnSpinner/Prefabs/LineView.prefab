@@ -52,8 +52,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fef1729a89219640a721479d7db0b0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _text: {fileID: 0}
+  _text: {fileID: 4956696198670618515}
+  _textTMP: {fileID: 3512727919740835966}
   _nameText: {fileID: 0}
+  _nameTMP: {fileID: 3757741603131112305}
   _waitForInput: 1
   _useTypewriterEffect: 1
 --- !u!222 &7534571151697371507

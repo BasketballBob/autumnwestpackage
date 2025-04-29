@@ -14,7 +14,11 @@ namespace AWP
         [SerializeField]
         private TypewriterCore _text;
         [SerializeField]
+        private TMP_Text _textTMP;
+        [SerializeField]
         private TypewriterCore _nameText;
+        [SerializeField]
+        private TMP_Text _nameTMP;
 
         [Header("Text Printing")]
         [SerializeField]
@@ -25,6 +29,8 @@ namespace AWP
         protected bool _enterBodyText;
         protected bool _enterNameText;
 
+        public TMP_Text TextTMP => _textTMP;
+        public TMP_Text NameTMP => _nameTMP;
         protected float DismissAnimationDuration => .25f;
 
         protected override void OnEnable()

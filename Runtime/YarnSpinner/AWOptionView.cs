@@ -78,9 +78,11 @@ namespace AWP
             for (int i = 0; i < dialogueOptions.Length; i++)
             {
                 int optionIndex = i;
+                int optionIDIndex = dialogueOptions[i].DialogueOptionID;
+
                 _optionButtons[i].Initialize(dialogueOptions[i], () => 
                 {
-                    onOptionSelected(optionIndex);
+                    onOptionSelected(optionIDIndex);
                     DisableButtons();
                 });
             }
