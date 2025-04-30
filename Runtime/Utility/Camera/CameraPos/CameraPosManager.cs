@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor.Internal;
 using Sirenix.Utilities;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace AWP
 {
@@ -50,15 +52,25 @@ namespace AWP
         {
             MoveToCamPos(data.CameraPos, data.ShiftSettings.Duration, data.ShiftSettings.EasingMode);
         }
+        private void MoveToCamPos(CameraPosData data, float duration, EasingFunction easingMode, AWDelta.DeltaType deltaType = AWCamera.DefaultDeltaType, Action onFinish = null)
+        {
+            MoveToCamPos(data.CameraPos, duration, easingMode, deltaType, onFinish);
+        }
         public void MoveToCamPos(CameraPos camPos)
         {
             CameraPosData data = GetCameraPosData(camPos);
             MoveToCamPos(data);
         }
+
         public void MoveToCamPos(string camPos)
         {
             CameraPosData camPosData = GetCameraPosData(camPos);
             MoveToCamPos(camPosData);
+        }
+        public void MoveToCamPos(string camPos, float duration, EasingFunction easing, AWDelta.DeltaType deltaType = AWCamera.DefaultDeltaType)
+        {
+            CameraPosData camPosData = GetCameraPosData(camPos);
+            MoveToCamPos(camPosData, duration, easing, deltaType);
         }
 
         /// <summary>

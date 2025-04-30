@@ -158,6 +158,8 @@ namespace AWP
             OnUserRequestedViewAdvancement?.Invoke();
         }
 
+        public IEnumerator ExitDialogueBox() => ExitTextboxAnimation();
+
         #region Events
             public IEnumerator WaitUntilComplete()
             {
@@ -169,26 +171,26 @@ namespace AWP
         #endregion
 
         #region Custom animations
-            protected IEnumerator EnterAnimation()
+            protected virtual IEnumerator EnterAnimation()
             {
                 _currentState = RunnerState.EnterAnimation;
                 yield return _animator?.WaitForAnimationToComplete(EnterAnim);
             }
 
-            protected IEnumerator ExitAnimation()
+            protected virtual IEnumerator ExitAnimation()
             {
                 _currentState = RunnerState.ExitAnimation;
                 yield return _animator?.WaitForAnimationToComplete(ExitAnim);
                 _currentState = RunnerState.Off;
             }
 
-            protected IEnumerator EnterTextboxAnimation()
+            protected virtual IEnumerator EnterTextboxAnimation()
             {
                 TextboxVisible = true;
                 yield return _animator?.WaitForAnimationToComplete(TextboxEnterAnim, 1);
             }
 
-            protected IEnumerator ExitTextboxAnimation()
+            protected virtual IEnumerator ExitTextboxAnimation()
             {
                 TextboxVisible = false;
                 yield return _animator?.WaitForAnimationToComplete(TextboxExitAnim, 1);

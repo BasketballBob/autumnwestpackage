@@ -22,6 +22,20 @@ namespace AWP
             anim.Play(animName, layer);
             return anim.WaitForAnimationToComplete(layer);
         }
+        /// <summary>
+        /// Plays animation at specific duration and waits for completion
+        /// </summary>
+        /// <param name="anim"></param>
+        /// <param name="animName"></param>
+        /// <param name="duration"></param>
+        /// <param name="layer"></param>
+        /// <returns></returns>
+        public static IEnumerator WaitForAnimationToCompleteAtDuration(this Animator anim, string animName, float duration, int layer = 0)
+        {
+            anim.Play(animName, layer);
+            anim.SetSpeedForDuration(duration);
+            return anim.WaitForAnimationToComplete(layer);
+        }
 
         public static IEnumerator WaitForTransitionToFinish(this Animator anim, int layer = 0)
         {

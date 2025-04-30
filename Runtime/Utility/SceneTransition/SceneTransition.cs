@@ -56,24 +56,34 @@ namespace AWP
         /// Plays transition effect, but allows you to replace scene loading with any routine
         /// </summary>
         /// <param name="transitionRoutine"></param>
-        public void CustomTransition(IEnumerator transitionRoutine)
+        public IEnumerator CustomTransition(IEnumerator transitionRoutine)
         {
-            _transitionRoutine.StartRoutine(TransitionRoutine(transitionRoutine));
+            yield return _transitionRoutine.StartRoutine(TransitionRoutine(transitionRoutine));
         }
 
         private IEnumerator TransitionRoutine(IEnumerator transitionRoutine)
         {
             if (_pauseGame) AWGameManager.SetPaused(true);
-            yield return _animator.WaitForAnimationToComplete("Enter");
+            yield return EnterRoutine();
             yield return transitionRoutine;
-
-            // AWGameManager.LoadScene(_destinationScene);
-            // while (!_destinationSceneLoaded) yield return null;
-
             yield return new WaitForSecondsRealtime(_exitDelay);
             if (_pauseGame) AWGameManager.SetPaused(false);
-            yield return _animator.WaitForAnimationToComplete("Exit");
+            yield return ExitRoutine();
             Destroy(gameObject);
+        }
+
+        public IEnumerator EnterRoutine(float duration = AWGameManager.NullFloat)
+        {
+            if (duration != AWGameManager.NullFloat) _animator.SetSpeedForDuration(duration);
+            _animator.Play("Enter");
+            yield return _animator.WaitForAnimationToComplete();
+        }
+
+        public IEnumerator ExitRoutine(float duration = AWGameManager.NullFloat)
+        {
+            if (duration != AWGameManager.NullFloat) _animator.SetSpeedForDuration(duration);
+            _animator.Play("Exit");
+            yield return _animator.WaitForAnimationToComplete();
         }
 
         private void OnSceneLoaded(Scene loadedScene, LoadSceneMode loadSceneMode)

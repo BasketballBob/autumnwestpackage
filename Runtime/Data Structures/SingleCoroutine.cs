@@ -22,7 +22,7 @@ namespace AWP
             if (_mono == null) return null;
 
             StopRoutine();
-            return _mono.StartCoroutine(TrackingRoutine());
+            return _routine = _mono.StartCoroutine(TrackingRoutine());
 
             IEnumerator TrackingRoutine()
             {

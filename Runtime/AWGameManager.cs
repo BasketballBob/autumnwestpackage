@@ -12,6 +12,8 @@ namespace AWP
     [DefaultExecutionOrder(AWExecutionOrder.BaseGameManager)]
     public abstract class AWGameManager : MonoBehaviour
     {
+        public const float NullFloat = -1;
+
         protected virtual string CameraRefName => "MainCamera";
         protected virtual string MenuManagerRefName => "EventSystem";
         protected virtual string CullingBoundsRefName => "CullingBounds";
@@ -39,6 +41,7 @@ namespace AWP
         private SceneTransition _defaultSceneTransition;
 
         private static float _prePauseTimeScale;
+        private static SceneTransition _sceneTransition;
 
         public virtual Vector2 MousePosition => default;
         public virtual UnityEngine.InputSystem.InputAction Mouse1 => default;
@@ -174,15 +177,33 @@ namespace AWP
             public static void TransitionScene(string scene) => TransitionScene(scene, Current._defaultSceneTransition);
             public static void TransitionScene(string scene, SceneTransition transition)
             {
-                SceneTransition instance = Instantiate(transition);
-                instance.Transition(scene);
+                SetTransition(transition);
+                _sceneTransition.Transition(scene);
             }
 
-            public static void TransitionCustom(IEnumerator customRoutine) => TransitionCustom(customRoutine, Current._defaultSceneTransition);
-            public static void TransitionCustom(IEnumerator customRoutine, SceneTransition transition)
+            public static IEnumerator TransitionCustom(IEnumerator customRoutine) => TransitionCustom(customRoutine, Current._defaultSceneTransition);
+            public static IEnumerator TransitionCustom(IEnumerator customRoutine, SceneTransition transition)
             {
-                SceneTransition instance = Instantiate(transition);
-                instance.CustomTransition(customRoutine);
+                SetTransition(transition);
+                return _sceneTransition.CustomTransition(customRoutine);
+            }
+
+            public static IEnumerator EnterTransition(SceneTransition transition = null, float duration = NullFloat)
+            {
+                if (transition == null) transition = Current._defaultSceneTransition;
+                SetTransition(transition);
+                yield return _sceneTransition.EnterRoutine(duration);
+            }
+            public static IEnumerator ExitTransition(float duration = NullFloat)
+            {
+                if (_sceneTransition == null) yield break;
+                yield return _sceneTransition.ExitRoutine(duration);
+            }
+
+            private static void SetTransition(SceneTransition transition)
+            {
+                if (_sceneTransition != null) Destroy(_sceneTransition.gameObject);
+                _sceneTransition = Instantiate(transition);
             }
         #endregion
 

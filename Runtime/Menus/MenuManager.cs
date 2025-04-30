@@ -103,7 +103,6 @@ namespace AWP
             
             if (_eventSystem != null) _eventSystem.enabled = enabled;
             if (_uiModule != null) _uiModule.enabled = enabled;
-            Debug.Log("EVENTSYS " + _eventSystem.enabled);
         }
 
         private void SyncInteractableMenu()
