@@ -17,16 +17,8 @@ namespace AWP
             Display();
         }
 
-        private void Update()
-        {
-            if (AWGameManager.Current.Debug1Pressed)
-            {
-                Display();
-            }
-        }
-
         [Button]
-        private void Display()
+        public void Display()
         {
             _typewriter.StartShowingText(true);
         }

@@ -7,11 +7,37 @@ namespace AWP
 {
     public static class TextAnimatorExtensions
     {
+        /// <summary>
+        /// Waits for text to finish displaying 
+        /// </summary>
+        /// <param name="typewriter"></param>
+        /// <returns></returns>
         public static IEnumerator WaitUntilTextShown(this TypewriterCore typewriter)
         {
             bool waiting = true;
             typewriter.onTextShowed.AddListener(() => waiting = false);
             while (waiting) yield return null;
+        }
+
+        /// <summary>
+        /// Waits for text to finish disappearing
+        /// </summary>
+        /// <param name="typewriter"></param>
+        /// <returns></returns>
+        public static IEnumerator WaitUntilTextDisappeared(this TypewriterCore typewriter)
+        {
+            while (typewriter.isHidingText) yield return null;
+        }
+
+        /// <summary>
+        /// Disappears the text and waits for it to finish
+        /// </summary>
+        /// <param name="typewriter"></param>
+        /// <returns></returns>
+        public static IEnumerator DisappearText(this TypewriterCore typewriter)
+        {
+            typewriter.StartDisappearingText();
+            yield return WaitUntilTextDisappeared(typewriter);
         }
     }
 }

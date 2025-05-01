@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: AW_BehaviourDatabase
   m_EditorClassIdentifier: 
   data:
-  - {fileID: 11400000, guid: f02398b5bb18c03419b9d8edd61f8734, type: 2}
+  - {fileID: 11400000, guid: 576d0701235450142881877a4626d9f9, type: 2}
   - {fileID: 11400000, guid: 9e45ee142ea29e047a38991e60bbb845, type: 2}
+  - {fileID: 11400000, guid: 77c4e4f18095e0f4ba7c1c7219a4e7a4, type: 2}
+  - {fileID: 11400000, guid: 647bd049f7898b240921e758b1210e59, type: 2}
+  - {fileID: 11400000, guid: 197825a4b4c532d43acf848e55e8630e, type: 2}

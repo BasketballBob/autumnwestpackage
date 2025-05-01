@@ -110,12 +110,13 @@ namespace AWP
 
             protected virtual IEnumerator DismissLineAnimation()
             {
-                yield return this.WaitOnRoutines(new IEnumerator[]
-                {
-                    //_text.ShiftAlpha(0, DismissAnimationDuration, EasingFunction.Sin, AWDelta.DeltaType.Update),
-                    //_nameText.ShiftAlpha(0, 0, EasingFunction.Sin, AWDelta.DeltaType.Update)
-                });
+                // yield return this.WaitOnRoutines(new IEnumerator[]
+                // {
+                //     _text.DisappearText(),
+                //     _nameText != null ? _nameText.DisappearText() : null
+                // });
 
+                yield return null; //DEBUG
                 _text.ShowText("");
                 if (_nameText != null) _nameText.ShowText("");
             }

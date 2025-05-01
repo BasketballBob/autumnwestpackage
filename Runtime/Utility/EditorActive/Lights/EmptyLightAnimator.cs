@@ -6,20 +6,20 @@ namespace AWP
 {
     public class EmptyLightAnimator : LightAnimator
     {
-        private float _initialIntensity;
+        [SerializeField]
+        private float _intensity;
         //private float _initialRange;
 
         protected override void Start()
         {
             base.Start();
 
-            _initialIntensity = _light.intensity;
-            //_initialRange = _light.range;
+            _light.intensity = _intensity;
         }
 
         protected override void OnDeltaChange(float delta)
         {
-            _light.intensity = _initialIntensity * EnabledDelta;
+            _light.intensity = _intensity * EnabledDelta;
         }
     }
 }
