@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f29c16c9fe849e442b4f1bab0c32e28a, type: 3}
-  m_Name: Calm
+  m_Name: calm
   m_EditorClassIdentifier: 
-  tagID: Calm
+  tagID: calm
   timeMode:
     startDelay: 0
     useUniformTime: 1
