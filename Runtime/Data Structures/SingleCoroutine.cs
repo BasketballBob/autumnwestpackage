@@ -38,5 +38,10 @@ namespace AWP
             if (_routine == null) return;
             _mono.StopCoroutine(_routine);
         }
+
+        public IEnumerator WaitUntilFinished()
+        {
+            while (RoutineActive) yield return null;
+        }
     }
 }

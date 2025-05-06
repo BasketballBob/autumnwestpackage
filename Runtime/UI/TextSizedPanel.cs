@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Febucci.UI.Core;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace AWP
@@ -12,11 +15,14 @@ namespace AWP
         [SerializeField]
         private TextMeshProUGUI _text;
         [SerializeField]
+        private TAnimCore _textAnim;
+        [SerializeField]
         private Vector2 _minSize = new Vector2(640, 480);
         [SerializeField]
         private Vector2 _9SlicingArea = Vector2.zero;
 
         private RectTransform _rectTrans;
+        private string _typewriterText;
 
         private void OnEnable()
         {
@@ -27,8 +33,7 @@ namespace AWP
 
         private void LateUpdate()
         {
-            SetNewSize(_text.GetRenderedValues());
-            SyncPosition();
+            SyncValues();
         }
 
         private void OnDrawGizmosSelected()
@@ -38,6 +43,14 @@ namespace AWP
             Gizmos.DrawWireCube(Vector2.zero, _minSize);
             Gizmos.color = Color.green;
             Gizmos.DrawWireCube(Vector2.zero, GetComponent<RectTransform>().sizeDelta - _9SlicingArea);
+        }
+
+        private void SyncValues()
+        {
+            Vector2 newSize = _text.GetRenderedValues();
+            if (_textAnim != null) newSize = GetDisplayedTypewriterSize();
+            SetNewSize(newSize + new Vector2(_text.margin.x + _text.margin.z, _text.margin.y + _text.margin.w));
+            SyncPosition();
         }
 
         private void SetNewSize(Vector2 newSize)
@@ -70,6 +83,17 @@ namespace AWP
                 case VerticalAlignmentOptions.Bottom:
                     break;
             }
+        }
+
+        private Vector2 GetDisplayedTypewriterSize()
+        {
+            string oldText = _text.text;
+            _text.text = new string(_text.text.Take(_textAnim.latestCharacterShown.index).ToArray());
+            _text.ForceMeshUpdate();
+            Vector2 size = _text.GetRenderedValues();
+            _text.text = oldText;
+
+            return size;
         }
     }
 }

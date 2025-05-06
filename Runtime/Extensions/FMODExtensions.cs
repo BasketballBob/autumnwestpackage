@@ -43,6 +43,17 @@ namespace AWP
                 instance.stop(stopMode);
             }
 
+            public static IEnumerator FadeToVolume(this EventInstance instance, float duration, float endVolume)
+            {
+                float startVolume;
+                instance.getVolume(out startVolume);
+
+                yield return AnimationFX.DeltaRoutine(x => 
+                {
+                    instance.setVolume(startVolume.Lerp(endVolume, x));
+                }, duration, EasingFunction.Sin);
+            }
+
             public static PLAYBACK_STATE GetPlaybackState(this EventInstance instance)
             {
                 PLAYBACK_STATE returnState;
