@@ -16,6 +16,14 @@ namespace AWP
 
         public SceneAudioSettings Music;
         public SceneAudioSettings Ambience;
+        public List<SRWrapper<AWEventParameter>> GlobalParams;
+
+        public void ApplyParameters()
+        {
+            // Music.ApplyParameters();
+            // Ambience.ApplyParameters();
+            GlobalParams.ForEach(x => x.Value.Apply());
+        }
 
         [System.Serializable]
         public class SceneAudioSettings : IEquatable<SceneAudioSettings>

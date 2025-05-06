@@ -39,11 +39,12 @@ namespace AWP
             DontDestroyOnLoad(transform.gameObject);
         }
 
-        public void Transition(string scene)
+        public void Transition(string scene, SceneAudio audio = null)
         {
             _destinationScene = scene;
             _destinationSceneLoaded = false;
-            _transitionRoutine.StartRoutine(TransitionRoutine(LoadSceneRoutine()));
+            if (audio == null) AWGameManager.AudioManager.GetSceneAudio(scene);
+            _transitionRoutine.StartRoutine(TransitionRoutine(LoadSceneRoutine(), audio));
 
             IEnumerator LoadSceneRoutine()
             {
@@ -56,20 +57,32 @@ namespace AWP
         /// Plays transition effect, but allows you to replace scene loading with any routine
         /// </summary>
         /// <param name="transitionRoutine"></param>
-        public IEnumerator CustomTransition(IEnumerator transitionRoutine)
+        public IEnumerator CustomTransition(IEnumerator transitionRoutine, SceneAudio audio = null)
         {
-            yield return _transitionRoutine.StartRoutine(TransitionRoutine(transitionRoutine));
+            yield return _transitionRoutine.StartRoutine(TransitionRoutine(transitionRoutine, audio));
         }
 
-        private IEnumerator TransitionRoutine(IEnumerator transitionRoutine)
+        private IEnumerator TransitionRoutine(IEnumerator transitionRoutine, SceneAudio audio)
         {
+            Action onSwitch = null;
+
             if (_pauseGame) AWGameManager.SetPaused(true);
+            PrepareSceneAudioTransition();
             yield return EnterRoutine();
             yield return transitionRoutine;
             yield return new WaitForSecondsRealtime(_exitDelay);
             if (_pauseGame) AWGameManager.SetPaused(false);
+
+            onSwitch?.Invoke();
+
             yield return ExitRoutine();
             Destroy(gameObject);
+
+            void PrepareSceneAudioTransition()
+            {
+                if (audio == null) return;
+                AWGameManager.AudioManager.EnterNewSceneAudio(audio, onSwitch: onSwitch);
+            }
         }
 
         public IEnumerator EnterRoutine(float duration = AWGameManager.NullFloat)

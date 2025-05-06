@@ -43,7 +43,7 @@ namespace AWP
                 instance.stop(stopMode);
             }
 
-            public static IEnumerator FadeToVolume(this EventInstance instance, float duration, float endVolume)
+            public static IEnumerator FadeToVolume(this EventInstance instance, float duration, float endVolume, AWDelta.DeltaType deltaType = AWDelta.DeltaType.UnscaledUpdate)
             {
                 float startVolume;
                 instance.getVolume(out startVolume);
@@ -51,7 +51,7 @@ namespace AWP
                 yield return AnimationFX.DeltaRoutine(x => 
                 {
                     instance.setVolume(startVolume.Lerp(endVolume, x));
-                }, duration, EasingFunction.Sin);
+                }, duration, EasingFunction.Sin, deltaType);
             }
 
             public static PLAYBACK_STATE GetPlaybackState(this EventInstance instance)
