@@ -39,6 +39,23 @@ namespace AWP
             return returnVal;
         }
 
+        /// <summary>
+        /// Clears all null values from list
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        public static void ClearNullValues<T>(this List<T> list) where T : class
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i] == null)
+                {
+                    list.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
         #region Stack functionality
             public static void StackPush<T>(this List<T> list, T newValue)
             {

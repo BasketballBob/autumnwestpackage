@@ -19,12 +19,12 @@ namespace AWP
         private TypewriterCore _nameText;
         [SerializeField]
         private TMP_Text _nameTMP;
+        [SerializeField]
+        private Color _optionsTextColor = Color.black;
 
         [Header("Text Printing")]
         [SerializeField]
         private bool _waitForInput = true;
-        [SerializeField]
-        private bool _useTypewriterEffect = true;
 
         protected bool _enterBodyText;
         protected bool _enterNameText;
@@ -85,6 +85,26 @@ namespace AWP
                 onDismissalComplete?.Invoke();
             }
         }
+
+        public override void RunOptions(DialogueOption[] dialogueOptions, Action<int> onOptionSelected)
+        {
+            base.RunOptions(dialogueOptions, onOptionSelected);
+            
+
+            _text.hideAppearancesOnSkip = true;
+            if (_nameText != null) _nameText.hideAppearancesOnSkip = true;
+
+            RunLine(_prevLine, null);
+
+            _textTMP.color = _optionsTextColor;
+            _nameTMP.color = _optionsTextColor;
+
+            _text.SkipTypewriter();
+            if (_nameText != null) _nameText.SkipTypewriter();
+            _text.hideAppearancesOnSkip = false;
+            if (_nameText != null) _nameText.hideAppearancesOnSkip = false;
+        }
+
 
         public override void DialogueComplete()
         {

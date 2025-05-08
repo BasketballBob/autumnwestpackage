@@ -4,7 +4,9 @@ using UnityEngine;
 
 namespace AWP
 {
-    public class RendererGroup : ComponentGroup<Renderer>
+    public sealed class RendererGroup : RendererGroup<Renderer> { }
+
+    public class RendererGroup<TRenderer> : ComponentGroup<TRenderer> where TRenderer : Renderer
     {
         public void SetEnabled(bool enabled) => ModifyAll(x => x.enabled = enabled);
     }

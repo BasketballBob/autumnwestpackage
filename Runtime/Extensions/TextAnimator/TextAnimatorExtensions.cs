@@ -39,5 +39,21 @@ namespace AWP
             typewriter.StartDisappearingText();
             yield return WaitUntilTextDisappeared(typewriter);
         }
+
+        public static void SkipTypewriterInstant(this TypewriterCore typewriter)
+        {
+            bool hideAppearancesOnSkip = typewriter.hideAppearancesOnSkip;
+            typewriter.hideAppearancesOnSkip = true;
+
+            typewriter.SkipTypewriter();
+
+            typewriter.hideAppearancesOnSkip = hideAppearancesOnSkip;
+        }
+
+        public static void ShowInstant(this TypewriterCore typewriter, string text)
+        {
+            typewriter.ShowText(text);
+            typewriter.SkipTypewriterInstant();
+        }
     }
 }
