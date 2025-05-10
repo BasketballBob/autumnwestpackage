@@ -9,11 +9,16 @@ namespace AWP
     {
         public AnimatedVar<Color> Color;
 
-        private void LateUpdate()
+        protected override void LateUpdate()
         {
+            base.LateUpdate();
+            
             Color.RunOnValueChange(x => 
             {
-                ModifyAll(y => y.color = x);
+                ModifyAll(y => 
+                {
+                    y.color = x;
+                });
         }   );
         }
     }

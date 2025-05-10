@@ -23,7 +23,8 @@ namespace AWP
 
         [Header("Delta Animation")]
         [SerializeField]
-        private bool _useDeltaAnimation;
+        protected bool _useDeltaAnimation;
+        
         [Header("Scale")]
         [SerializeField] [ShowIf("_useDeltaAnimation")]
         private AnimationCurve _xScaleCurve = AnimationCurve.Constant(0, 1, 1);
@@ -31,6 +32,7 @@ namespace AWP
         private AnimationCurve _yScaleCurve = AnimationCurve.Constant(0, 1, 1);
         [SerializeField] [ShowIf("_useDeltaAnimation")]
         private AnimationCurve _zScaleCurve = AnimationCurve.Constant(0, 1, 1);
+
         [Header("Position")]
         [SerializeField] [ShowIf("_useDeltaAnimation")]
         private AnimationCurve _yPosCurve = AnimationCurve.Constant(0, 1, 1);
@@ -124,7 +126,7 @@ namespace AWP
             for (int i = 0; i < _decorationItems.Count; i++)
             {
                 _decorationItems[i].SetLocalPosition(CurrentToLocalPos(currentPos));
-                ApplyDeltaAnimation(_decorationItems[i], Mathf.Clamp01(currentPos / _length));
+                CheckApplyDeltaAnimation(_decorationItems[i], Mathf.Clamp01(currentPos / _length));
                 currentPos += _decorationItems[i].Length;
             }
         }
@@ -183,11 +185,16 @@ namespace AWP
         #endregion
 
         #region Delta animation
-            private void ApplyDeltaAnimation(Decoration decor, float delta)
+            private void CheckApplyDeltaAnimation(Decoration decor, float delta)
             {
                 if (!_useDeltaAnimation) return;
                 if (decor.Component == null) return;
 
+                ApplyDeltaAnimation(decor, delta);
+            }
+
+            protected virtual void ApplyDeltaAnimation(Decoration decor, float delta)
+            {
                 decor.Component.transform.localScale = new Vector3(_xScaleCurve.Evaluate(delta),
                     _yScaleCurve.Evaluate(delta), _zScaleCurve.Evaluate(delta));
                 

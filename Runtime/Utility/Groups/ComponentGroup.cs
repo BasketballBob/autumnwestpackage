@@ -30,5 +30,10 @@ namespace AWP
 
             _items.ClearNullValues();
         }
+
+        protected override bool ItemIsNull(TComponent item)
+        {
+            return item == null;
+        }
     }
 }

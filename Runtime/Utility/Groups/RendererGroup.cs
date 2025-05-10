@@ -8,6 +8,22 @@ namespace AWP
 
     public class RendererGroup<TRenderer> : ComponentGroup<TRenderer> where TRenderer : Renderer
     {
-        public void SetEnabled(bool enabled) => ModifyAll(x => x.enabled = enabled);
+        public AnimatedVar<bool> Enabled = new AnimatedVar<bool>(true);
+
+        protected virtual void LateUpdate()
+        {
+            Enabled.RunOnValueChange(x =>
+            {
+                ModifyAll(y => 
+                {
+                    y.enabled = x;
+                });
+            });
+        }
+
+        public void SetEnabled(bool enabled)
+        {
+            ModifyAll(y => y.enabled = enabled);
+        }
     }
 }

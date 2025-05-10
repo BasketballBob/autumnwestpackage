@@ -18,16 +18,34 @@ namespace AWP
         public void ModifyAll(Action<T> action)
         {
             Undo.SetCurrentGroupName("ModifyAll");
-            
-            _items.ForEach(x => 
+
+            for (int i = 0; i < _items.Count; i++)
             {
+                // Cull null items
+                if (ItemIsNull(_items[i]))
+                {
+                    _items.RemoveAt(i);
+                    i--;
+                    continue;
+                }
+
                 #if UNITY_EDITOR
-                if (x is UnityEngine.Object) 
-                    Undo.RecordObject(x as UnityEngine.Object, "ModifyAll");
+                if (_items[i] is UnityEngine.Object) 
+                {
+                    if (_items[i] as UnityEngine.Object != null)
+                    {
+                        Undo.RecordObject(_items[i] as UnityEngine.Object, "ModifyAll");
+                    }
+                }
                 #endif
 
-                action(x);
-            });
+                action(_items[i]);
+            }
+        }
+
+        protected virtual bool ItemIsNull(T item)
+        {
+            return item == null;
         }
     }
 }

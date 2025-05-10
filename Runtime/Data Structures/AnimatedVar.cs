@@ -13,6 +13,12 @@ namespace AWP
         public TVariable Value;
         private TVariable _oldValue;
 
+        public AnimatedVar(TVariable value)
+        {
+            Value = value;
+            _oldValue = default;
+        }
+
         /// <summary>
         /// Checks if the variable has changed and runs the provided action if true
         /// </summary>

@@ -12,7 +12,7 @@ namespace AWP
     {
         private const string CreateFolderName = "Scriptable Variables/";
         private const string CreateItemName = "SceneAudio";
-        private const string ResourcesFolder = "SceneAudio";
+        private const string ResourcesFolder = "SceneAudio/";
 
         public SceneAudioSettings Music;
         public SceneAudioSettings Ambience;
