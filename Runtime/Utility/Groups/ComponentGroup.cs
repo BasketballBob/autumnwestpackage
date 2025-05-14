@@ -17,7 +17,9 @@ namespace AWP
 
         public void SyncChildren()
         {
+            #if UNITY_EDITOR
             Undo.RecordObject(this, "SyncChildren");
+            #endif
 
             transform.TraverseSelfAndChildren(x => 
             {

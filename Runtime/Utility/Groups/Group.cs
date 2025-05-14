@@ -15,9 +15,17 @@ namespace AWP
         [SerializeField]
         protected List<T> _items = new List<T>();
 
+        public T this[int index]
+        {
+            get => _items[index];
+            set => _items[index] = value;
+        }
+
         public void ModifyAll(Action<T> action)
         {
+            #if UNITY_EDITOR
             Undo.SetCurrentGroupName("ModifyAll");
+            #endif
 
             for (int i = 0; i < _items.Count; i++)
             {

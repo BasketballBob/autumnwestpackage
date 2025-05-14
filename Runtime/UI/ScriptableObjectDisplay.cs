@@ -10,10 +10,10 @@ namespace AWP
     public class ScriptableObjectDisplay : MonoBehaviour
     {
         [SerializeField]
-        private TMP_Text _text;
+        protected TMP_Text _text;
 
         [SerializeField]
-        private AWScriptableObject _scriptableObject;
+        protected AWScriptableObject _scriptableObject;
         [SerializeField]
         private bool _useFormat = false;
         [SerializeField] [ShowIf("_useFormat")]
@@ -35,7 +35,7 @@ namespace AWP
             _scriptableObject.OnValueChanged -= UpdateDisplay;
         }
 
-        private void UpdateDisplay()
+        protected virtual void UpdateDisplay()
         {
             _text.text = _openText + _scriptableObject.ToString(_useFormat ? _format : null) + _closeText;
         }

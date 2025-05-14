@@ -6,7 +6,6 @@ using System;
 using AWPEditor;
 using Sirenix.Serialization;
 using UnityEngine.Events;
-using Codice.Client.Common;
 
 namespace AWP
 {

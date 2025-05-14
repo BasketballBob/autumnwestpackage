@@ -20,6 +20,8 @@ namespace AWP
         private Vector2 _minSize = new Vector2(640, 480);
         [SerializeField]
         private Vector2 _9SlicingArea = Vector2.zero;
+        [SerializeField]
+        private int _charOffset;
 
         private RectTransform _rectTrans;
         private string _typewriterText;
@@ -87,8 +89,10 @@ namespace AWP
 
         private Vector2 GetDisplayedTypewriterSize()
         {
+            int latestIndex = Mathf.Clamp(_textAnim.latestCharacterShown.index + _charOffset, 0, _text.text.Length);
+
             string oldText = _text.text;
-            _text.text = new string(_text.text.Take(_textAnim.latestCharacterShown.index).ToArray());
+            _text.text = new string(_text.text.Take(latestIndex).ToArray());
             _text.ForceMeshUpdate();
             Vector2 size = _text.GetRenderedValues();
             _text.text = oldText;
