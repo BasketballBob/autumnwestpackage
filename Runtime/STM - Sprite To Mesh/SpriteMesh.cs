@@ -1,7 +1,12 @@
 using UnityEngine;
-using UnityEditor;
 using UnityEngine.Rendering;
 using Sirenix.OdinInspector;
+using AWP;
+using System.IO;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace MADCUP.STM
 {
@@ -44,33 +49,33 @@ namespace MADCUP.STM
             }
         #endif
 
-        void Start()
-        {
-            Initialize();
-        }
+        // void Start()
+        // {
+        //     //Initialize();
+        // }
 
-        #if UNITY_EDITOR
-            void OnValidate()
-            {
-                // Use delayCall to defer Initialize call
-                EditorApplication.delayCall += DelayedInitialize;
-            }
-        #endif
+        // #if UNITY_EDITOR
+        //     void OnValidate()
+        //     {
+        //         // Use delayCall to defer Initialize call
+        //         EditorApplication.delayCall += DelayedInitialize;
+        //     }
+        // #endif
 
-        void DelayedInitialize()
-        {
-            if (this == null) return; // Ensure the object still exists
-            Initialize();
-        }
+        // void DelayedInitialize()
+        // {
+        //     if (this == null) return; // Ensure the object still exists
+        //     Initialize();
+        // }
 
-        void Update()
-        {
-            if (!Application.isPlaying || sprite != previousSprite)
-            {
-                Initialize();
-                previousSprite = sprite;
-            }
-        }
+        // void Update()
+        // {
+        //     if (!Application.isPlaying || sprite != previousSprite)
+        //     {
+        //         Initialize();
+        //         previousSprite = sprite;
+        //     }
+        // }
 
         void OnDestroy()
         {
@@ -111,6 +116,10 @@ namespace MADCUP.STM
 
         void UpdateMesh(bool forceUpdate = false)
         {
+            #if UNITY_EDITOR
+            Undo.RecordObject(gameObject, "UpdateMesh");
+            #endif
+
             // Early exit if sprite or its required properties are null
             if (sprite == null || sprite.vertices == null || sprite.uv == null || sprite.triangles == null)
             {
@@ -121,12 +130,20 @@ namespace MADCUP.STM
             if (forceUpdate || material == null)
             {
                 material = CreateMaterialBasedOnRenderPipeline();
+
+                #if UNITY_EDITOR
+                AWAssetGeneration.CreateMaterial(material, gameObject.name);
+                #endif
             }
 
             // Create or update mesh
             if (mesh == null)
             {
-                mesh = new Mesh { name = "Generated Mesh" };
+                mesh = new Mesh { name = "GM_" + gameObject.name};
+
+                #if UNITY_EDITOR
+                AWAssetGeneration.CreateMesh(mesh, gameObject.name);
+                #endif
             }
             else
             {
