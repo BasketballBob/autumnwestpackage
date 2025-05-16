@@ -23,7 +23,7 @@ namespace AWP
 
         public void SetEnabled(bool enabled)
         {
-            ModifyAll(y => y.enabled = enabled);
+            Enabled.Value = enabled;
         }
     }
 }

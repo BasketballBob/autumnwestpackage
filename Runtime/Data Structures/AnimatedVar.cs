@@ -16,7 +16,7 @@ namespace AWP
         public AnimatedVar(TVariable value)
         {
             Value = value;
-            _oldValue = default;
+            _oldValue = value;
         }
 
         /// <summary>
