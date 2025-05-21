@@ -134,8 +134,8 @@ namespace AWP
             public static Scene GetCurrentScene() => SceneManager.GetActiveScene();
             public static void ResetScene() => LoadScene(GetCurrentScene().name);
 
-            public static void SetActiveScene(Scene scene) => SceneManager.SetActiveScene(scene);
-            public static void SetActiveScene(string scene) => SetActiveScene(SceneManager.GetSceneByName(scene));
+            public static bool SetActiveScene(Scene scene) => SceneManager.SetActiveScene(scene);
+            public static bool SetActiveScene(string scene) => SetActiveScene(SceneManager.GetSceneByName(scene));
 
             /// <summary>
             /// Checks if the scene is currently under the hierarchy (but not necessarily loaded)
