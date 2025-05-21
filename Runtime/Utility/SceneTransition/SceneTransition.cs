@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,8 +11,6 @@ namespace AWP
     {
         [SerializeField]
         private Animator _animator;
-        [SerializeField]
-        private bool _pauseGame = true;
         [SerializeField]
         private float _exitDelay = .2f;
 
@@ -39,12 +38,12 @@ namespace AWP
             DontDestroyOnLoad(transform.gameObject);
         }
 
-        public void Transition(string scene, SceneAudio audio = null)
+        public void Transition(string scene, TransitionSettings settings, SceneAudio audio = null)
         {
             _destinationScene = scene;
             _destinationSceneLoaded = false;
             if (audio == null) AWGameManager.AudioManager.GetSceneAudio(scene);
-            _transitionRoutine.StartRoutine(TransitionRoutine(LoadSceneRoutine(), audio));
+            _transitionRoutine.StartRoutine(TransitionRoutine(LoadSceneRoutine(), settings, audio));
 
             IEnumerator LoadSceneRoutine()
             {
@@ -57,25 +56,25 @@ namespace AWP
         /// Plays transition effect, but allows you to replace scene loading with any routine
         /// </summary>
         /// <param name="transitionRoutine"></param>
-        public IEnumerator CustomTransition(IEnumerator transitionRoutine, SceneAudio audio = null)
+        public IEnumerator CustomTransition(IEnumerator transitionRoutine, TransitionSettings settings = null, SceneAudio audio = null)
         {
-            yield return _transitionRoutine.StartRoutine(TransitionRoutine(transitionRoutine, audio));
+            yield return _transitionRoutine.StartRoutine(TransitionRoutine(transitionRoutine, settings, audio));
         }
 
-        private IEnumerator TransitionRoutine(IEnumerator transitionRoutine, SceneAudio audio)
+        private IEnumerator TransitionRoutine(IEnumerator transitionRoutine, TransitionSettings settings, SceneAudio audio)
         {
             Action onSwitch = null;
 
-            if (_pauseGame) AWGameManager.SetPaused(true);
+            if (settings == null || settings.PauseGame) AWGameManager.SetPaused(true);
             PrepareSceneAudioTransition();
-            yield return EnterRoutine();
+            yield return EnterRoutine(settings);
             yield return transitionRoutine;
             yield return new WaitForSecondsRealtime(_exitDelay);
-            if (_pauseGame) AWGameManager.SetPaused(false);
+            if (settings == null || settings.PauseGame) AWGameManager.SetPaused(false);
 
             onSwitch?.Invoke();
 
-            yield return ExitRoutine();
+            yield return ExitRoutine(settings);
             Destroy(gameObject);
 
             void PrepareSceneAudioTransition()
@@ -85,16 +84,16 @@ namespace AWP
             }
         }
 
-        public IEnumerator EnterRoutine(float duration = AWGameManager.NullFloat)
+        public IEnumerator EnterRoutine(TransitionSettings settings)
         {
-            if (duration != AWGameManager.NullFloat) _animator.SetSpeedForDuration(duration);
+            if (settings != null) _animator.SetSpeedForDuration(settings.EnterDuration);
             _animator.Play("Enter");
             yield return _animator.WaitForAnimationToComplete();
         }
 
-        public IEnumerator ExitRoutine(float duration = AWGameManager.NullFloat)
+        public IEnumerator ExitRoutine(TransitionSettings settings)
         {
-            if (duration != AWGameManager.NullFloat) _animator.SetSpeedForDuration(duration);
+            if (settings != null) _animator.SetSpeedForDuration(settings.ExitDuration);
             _animator.Play("Exit");
             yield return _animator.WaitForAnimationToComplete();
         }

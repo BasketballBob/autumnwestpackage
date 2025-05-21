@@ -8,6 +8,8 @@ namespace AWP
     {
         [SerializeField]
         private UnparentType _unparentType;
+        [SerializeField]
+        private Transform _customParent;
 
         private enum UnparentType { Self, Children };
 
@@ -21,10 +23,10 @@ namespace AWP
             switch (_unparentType)
             {
                 case UnparentType.Self:
-                    transform.SetParent(null);
+                    transform.SetParent(_customParent);
                     break;
                 case UnparentType.Children:
-                    transform.UnparentChildren();
+                    transform.ReparentChildren(_customParent);
                     break;
             }
         }

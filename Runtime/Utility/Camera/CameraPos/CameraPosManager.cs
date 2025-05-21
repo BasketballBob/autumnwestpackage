@@ -133,10 +133,11 @@ namespace AWP
         }
 
         #if UNITY_EDITOR
-            private IEnumerable PositionOptions()
-            {
-                return _positions.Select(x => new ValueDropdownItem(x.CameraPos?.name ?? "EMPTY", x.CameraPos));
-            }
+        private IEnumerable PositionOptions()
+        {
+            if (_positions == null) return null;
+            return _positions.Select(x => new ValueDropdownItem(x.CameraPos?.name ?? "EMPTY", x.CameraPos));
+        }
         #endif
     }
 }

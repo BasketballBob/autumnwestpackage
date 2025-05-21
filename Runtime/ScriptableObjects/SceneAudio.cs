@@ -16,6 +16,7 @@ namespace AWP
 
         public SceneAudioSettings Music;
         public SceneAudioSettings Ambience;
+        public SceneAudioSettings Snapshot;
         public List<SRWrapper<AWEventParameter>> GlobalParams;
 
         public void ApplyParameters()

@@ -39,7 +39,8 @@ namespace AWP
 
         protected virtual void UpdateVariable()
         {
-            Variable.RuntimeValue = _oldValue;
+            Variable.RuntimeValue = Accessor;
+            Debug.Log($"VALUE SET {Variable.name} {Variable.RuntimeValue}");
         }
     }
 }

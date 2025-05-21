@@ -194,61 +194,66 @@ namespace AWP
         public void PlayAmbience(EventReference eventRef, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, float volume = DefaultVolume) =>
             _ambienceChannel.PlayEvent(eventRef, fadeEnter, fadeExit, volume);
 
+        [Button()]
+        public void PlaySnapshot(EventReference eventRef, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, float volume = DefaultVolume) =>
+            _snapshotChannel.PlayEvent(eventRef, fadeEnter, fadeExit, volume);
+
         #region Scene Audio
-            /// <summary>
-            /// Gets the scene audio for the target scene (can also decide whether or not it is used)
-            /// </summary>
-            /// <param name="scene"></param>
-            /// <returns></returns>
-            public SceneAudio GetSceneAudio(string scene)
-            {
-                SceneAudio audio = SceneAudio.LoadSceneAudio(scene);
-                return audio;
-            }
+        /// <summary>
+        /// Gets the scene audio for the target scene (can also decide whether or not it is used)
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <returns></returns>
+        public SceneAudio GetSceneAudio(string scene)
+        {
+            SceneAudio audio = SceneAudio.LoadSceneAudio(scene);
+            return audio;
+        }
 
-            public void EnterNewSceneAudio(SceneAudio sceneAudio, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null)
-            {
-                sceneAudio.ApplyParameters();
-                _musicChannel.PlayEvent(sceneAudio.Music.EventReference, fadeEnter, fadeExit, sceneAudio.Music.Volume, onSwitch);
-                _ambienceChannel.PlayEvent(sceneAudio.Ambience.EventReference, fadeEnter, fadeExit, sceneAudio.Ambience.Volume, onSwitch);
+        public void EnterNewSceneAudio(SceneAudio sceneAudio, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null)
+        {
+            sceneAudio.ApplyParameters();
+            _musicChannel.PlayEvent(sceneAudio.Music.EventReference, fadeEnter, fadeExit, sceneAudio.Music.Volume, onSwitch);
+            _ambienceChannel.PlayEvent(sceneAudio.Ambience.EventReference, fadeEnter, fadeExit, sceneAudio.Ambience.Volume, onSwitch);
+            _snapshotChannel.PlayEvent(sceneAudio.Snapshot.EventReference, fadeEnter, fadeExit, sceneAudio.Snapshot.Volume, onSwitch);
 
-                // StartCoroutine(this.WaitOnRoutines(new IEnumerator[] 
-                // {
-                //     _musicChannel.PlayEvent(sceneAudio.Music.EventReference, fadeDuration),
-                //     _ambienceChannel.PlayEvent(sceneAudio.Ambience.EventReference, fadeDuration),
-                //     //_snapshotChannel.PlayEvent(sceneAudio.Snapshot)
-                // }));
-            }
-            public void EnterNewSceneAudio(string scene, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null) =>
-                EnterNewSceneAudio(GetSceneAudio(scene), fadeEnter, fadeExit, onSwitch);
-
-            // private void PrepareForNewSceneAudio(string scene, float fadeDuration)
+            // StartCoroutine(this.WaitOnRoutines(new IEnumerator[] 
             // {
-            //     if (!_useSceneAudio) return;
+            //     _musicChannel.PlayEvent(sceneAudio.Music.EventReference, fadeDuration),
+            //     _ambienceChannel.PlayEvent(sceneAudio.Ambience.EventReference, fadeDuration),
+            //     //_snapshotChannel.PlayEvent(sceneAudio.Snapshot)
+            // }));
+        }
+        public void EnterNewSceneAudio(string scene, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null) =>
+            EnterNewSceneAudio(GetSceneAudio(scene), fadeEnter, fadeExit, onSwitch);
 
-            //     SceneAudio newAudio = SceneAudio.LoadSceneAudio(scene);
-            //     if (newAudio == null) return;
-            //     if (newAudio == _currentSceneAudio) return;
+        // private void PrepareForNewSceneAudio(string scene, float fadeDuration)
+        // {
+        //     if (!_useSceneAudio) return;
 
-            //     if (newAudio.Music != _currentSceneAudio.Music) 
-            //         _musicRoutine.StartRoutine(FadeMusic(0, fadeDuration));
-            //     if (newAudio.Ambience != _currentSceneAudio.Ambience)
-            //         _ambienceRoutine.StartRoutine(FadeAmbience(0, fadeDuration));
-            // }
+        //     SceneAudio newAudio = SceneAudio.LoadSceneAudio(scene);
+        //     if (newAudio == null) return;
+        //     if (newAudio == _currentSceneAudio) return;
 
-            // private void LoadNewSceneAudio(string scene)
-            // {
-            //     if (!_useSceneAudio) return;
+        //     if (newAudio.Music != _currentSceneAudio.Music) 
+        //         _musicRoutine.StartRoutine(FadeMusic(0, fadeDuration));
+        //     if (newAudio.Ambience != _currentSceneAudio.Ambience)
+        //         _ambienceRoutine.StartRoutine(FadeAmbience(0, fadeDuration));
+        // }
 
-            //     SceneAudio newAudio = SceneAudio.LoadSceneAudio(scene);
-            //     if (newAudio == null) return;
-            //     if (newAudio == _currentSceneAudio) return;
+        // private void LoadNewSceneAudio(string scene)
+        // {
+        //     if (!_useSceneAudio) return;
 
-            //     if (newAudio.Music != _currentSceneAudio.Music)
-            //         PlayMusic(newAudio.Music.EventReference, newAudio.Music.Volume);
-            //     if (newAudio.Ambience != _currentSceneAudio.Ambience)
-            //         PlayAmbience(newAudio.Ambience.EventReference, newAudio.Ambience.Volume);
-            // }
+        //     SceneAudio newAudio = SceneAudio.LoadSceneAudio(scene);
+        //     if (newAudio == null) return;
+        //     if (newAudio == _currentSceneAudio) return;
+
+        //     if (newAudio.Music != _currentSceneAudio.Music)
+        //         PlayMusic(newAudio.Music.EventReference, newAudio.Music.Volume);
+        //     if (newAudio.Ambience != _currentSceneAudio.Ambience)
+        //         PlayAmbience(newAudio.Ambience.EventReference, newAudio.Ambience.Volume);
+        // }
         #endregion
 
         #region Audio channel

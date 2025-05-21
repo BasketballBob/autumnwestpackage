@@ -13,6 +13,8 @@ namespace AWP
     {
         [SerializeField]
         private List<BodySegment> _segments = new List<BodySegment>();
+        [SerializeField]
+        private Transform _disconnectTransform;
 
         private Rigidbody2D _rb;
 
@@ -73,7 +75,7 @@ namespace AWP
             rb.mass = segment.Mass;
             rb.velocity = _rb.velocity;
             rb.angularVelocity = _rb.angularVelocity;
-            rb.transform.SetParent(null);
+            rb.transform.SetParent(_disconnectTransform);
         }
         public void DisconnectSegment(Transform transform) => DisconnectSegment(transform, updateCenterOfMass: true);
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using AWP;
 using Sirenix.OdinInspector;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -175,29 +176,30 @@ namespace AWP
 
         #region Scene transition
             public static void TransitionScene(string scene) => TransitionScene(scene, Current._defaultSceneTransition);
-            public static void TransitionScene(string scene, SceneTransition transition)
+            public static void TransitionScene(string scene, SceneTransition transition, TransitionSettings settings = null)
             {
                 SetTransition(transition);
-                _sceneTransition.Transition(scene);
+                _sceneTransition.Transition(scene, settings);
             }
 
-            public static IEnumerator TransitionCustom(IEnumerator customRoutine) => TransitionCustom(customRoutine, Current._defaultSceneTransition);
-            public static IEnumerator TransitionCustom(IEnumerator customRoutine, SceneTransition transition)
-            {
-                SetTransition(transition);
-                return _sceneTransition.CustomTransition(customRoutine);
-            }
-
-            public static IEnumerator EnterTransition(SceneTransition transition = null, float duration = NullFloat)
+            public static IEnumerator TransitionCustom(IEnumerator customRoutine, SceneTransition transition = null, TransitionSettings settings = null)
             {
                 if (transition == null) transition = Current._defaultSceneTransition;
                 SetTransition(transition);
-                yield return _sceneTransition.EnterRoutine(duration);
+
+                return _sceneTransition.CustomTransition(customRoutine, settings);
             }
-            public static IEnumerator ExitTransition(float duration = NullFloat)
+
+            public static IEnumerator EnterTransition(SceneTransition transition = null, TransitionSettings settings = null)
+            {
+                if (transition == null) transition = Current._defaultSceneTransition;
+                SetTransition(transition);
+                yield return _sceneTransition.EnterRoutine(settings);
+            }
+            public static IEnumerator ExitTransition(TransitionSettings settings = null)
             {
                 if (_sceneTransition == null) yield break;
-                yield return _sceneTransition.ExitRoutine(duration);
+                yield return _sceneTransition.ExitRoutine(settings);
             }
 
             private static void SetTransition(SceneTransition transition)

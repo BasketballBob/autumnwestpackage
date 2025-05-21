@@ -39,16 +39,24 @@ namespace AWP
         [System.Serializable]
         public class CameraPosEvent
         {
-            [ValueDropdown("@_parent._manager.GetAllPositions()")]
+            [ValueDropdown("GetPositions")]
             public CameraPos Pos;
             public UnityEvent Event;
 
-            [SerializeField] [HideInInspector]
+            [SerializeField]
+            [HideInInspector]
             private CameraPosEvents _parent;
 
             public CameraPosEvent(CameraPosEvents parent)
             {
                 _parent = parent;
+            }
+
+            private IEnumerable GetPositions()
+            {
+                if (_parent == null) return null;
+                if (_parent._manager == null) return null;
+                return _parent._manager.GetAllPositions();
             }
         }
     }
