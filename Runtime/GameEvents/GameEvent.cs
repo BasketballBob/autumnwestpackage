@@ -6,8 +6,6 @@ using UnityEngine;
 
 namespace AWP
 {
-    
-    
     [CreateAssetMenu(fileName = CreateItemName, menuName = CreateFolderName + CreateItemName)]
     public class GameEvent : ScriptableObject
     {

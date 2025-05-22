@@ -19,6 +19,7 @@ namespace AWP
 
         protected CanvasGroup _canvasGroup;
         protected MenuState _currentMenuState;
+        private bool _skipInitialization;
 
         public bool IsVisible => _currentMenuState != MenuState.Hidden;
 
@@ -31,7 +32,7 @@ namespace AWP
 
         private void Start()
         {
-            SetMenuState(_defaultState);
+            if (!_skipInitialization) SetMenuState(_defaultState);
         }
 
         public void SetVisible(bool visible)
@@ -84,6 +85,8 @@ namespace AWP
                     break;
             }
         }
+
+        public void SkipInitialization() => _skipInitialization = true;
 
         public IEnumerator WaitOnMenuTransition() => AWGameManager.MenuManager.WaitOnTransition();
 
