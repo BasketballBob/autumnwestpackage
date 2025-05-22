@@ -19,6 +19,8 @@ namespace AWP
         private DimensionType _positionType;
         [SerializeField]
         private List<Camera> _syncedCameras;
+        [SerializeField]
+        private TransparencySortMode _transparencySortMode = TransparencySortMode.Default;
 
         private Camera _camera;
         private Animator _animator;
@@ -38,6 +40,8 @@ namespace AWP
 
         private void Start()
         {
+            _camera.transparencySortMode = _transparencySortMode;
+            Debug.Log("WEEE " + _camera.transparencySortMode);
             _animator.enabled = false;
         }
 
