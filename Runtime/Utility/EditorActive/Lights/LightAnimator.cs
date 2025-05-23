@@ -8,10 +8,12 @@ namespace AWP
     {
         [SerializeField]
         protected Light _light;
+        
+        protected override ActiveType ActiveSetting => ActiveType.Duration;
 
         private void Reset()
         {
-            if (GetComponent<Light>() != null) 
+            if (GetComponent<Light>() != null)
             {
                 _light = GetComponent<Light>();
             }
