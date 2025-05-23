@@ -20,6 +20,7 @@ namespace AWP
 
         public bool AnimationActive => _animationRoutine != null;
         public virtual bool Paused { get; set; }
+        public virtual bool AdvancementRequestsDisabled { get; set; }
 
         protected virtual void OnEnable()
         {
@@ -33,6 +34,7 @@ namespace AWP
 
         public override void UserRequestedViewAdvancement()
         {
+            if (AdvancementRequestsDisabled) return;
             _advanceHandler?.Invoke();
         }
 

@@ -52,10 +52,19 @@ namespace AWP
                 base.Paused = value; 
             }
         }
+        public override bool AdvancementRequestsDisabled
+        {
+            get => base.AdvancementRequestsDisabled;
+            set
+            {
+                _childViews.ForEach(x => x.AdvancementRequestsDisabled = value);
+                base.AdvancementRequestsDisabled = value;
+            }
+        }
         public bool IsRunning => _currentState != RunnerState.Off;
-        public string StartNode { get => _startNode; set { _startNode = value; }}
-        protected virtual bool EnterTextboxAutomatically => true;
         protected bool TextboxVisible { get; private set; }
+        public string StartNode { get => _startNode; set { _startNode = value; } }
+        protected virtual bool EnterTextboxAutomatically => true;
 
         protected void Awake()
         {

@@ -31,6 +31,8 @@ namespace AWP
 
         public TMP_Text TextTMP => _textTMP;
         public TMP_Text NameTMP => _nameTMP;
+        public TypewriterCore TextTypewriter => _text;
+        public TypewriterCore NameTypewriter => _nameText;
         protected float DismissAnimationDuration => .25f;
 
         protected override void OnEnable()
@@ -49,12 +51,12 @@ namespace AWP
         {
             _advanceHandler = requestInterrupt;
             StartAnimationRoutine(RunLineRoutine());
-            
+
             IEnumerator RunLineRoutine()
             {
                 while (Paused) yield return null;
 
-                yield return RunLineAnimation(dialogueLine); 
+                yield return RunLineAnimation(dialogueLine);
 
                 if (!_waitForInput) onDialogueLineFinished?.Invoke();
                 _prevLine = dialogueLine;
@@ -89,7 +91,6 @@ namespace AWP
         public override void RunOptions(DialogueOption[] dialogueOptions, Action<int> onOptionSelected)
         {
             base.RunOptions(dialogueOptions, onOptionSelected);
-            
 
             _text.hideAppearancesOnSkip = true;
             if (_nameText != null) _nameText.hideAppearancesOnSkip = true;
@@ -108,38 +109,38 @@ namespace AWP
 
         public override void DialogueComplete()
         {
-            
+
         }
 
         #region Animations
-            protected virtual IEnumerator RunLineAnimation(LocalizedLine dialogueLine)
-            {
-                string bodyText = dialogueLine.TextWithoutCharacterName.Text;
-                string nameText = dialogueLine.CharacterName;
+        protected virtual IEnumerator RunLineAnimation(LocalizedLine dialogueLine)
+        {
+            string bodyText = dialogueLine.TextWithoutCharacterName.Text;
+            string nameText = dialogueLine.CharacterName;
 
-                _canvasGroup.alpha = 1;
+            _canvasGroup.alpha = 1;
 
-                _text.ShowText(bodyText);
-                if (_nameText != null) _nameText.ShowText(nameText);
+            _text.ShowText(bodyText);
+            if (_nameText != null) _nameText.ShowText(nameText);
 
-                yield return this.WaitOnRoutines(new IEnumerator[] {
+            yield return this.WaitOnRoutines(new IEnumerator[] {
                     _text.WaitUntilTextShown(),
                     _nameText != null ? _nameText.WaitUntilTextShown() : null
                 });
-            }
+        }
 
-            protected virtual IEnumerator DismissLineAnimation()
-            {
-                // yield return this.WaitOnRoutines(new IEnumerator[]
-                // {
-                //     _text.DisappearText(),
-                //     _nameText != null ? _nameText.DisappearText() : null
-                // });
+        protected virtual IEnumerator DismissLineAnimation()
+        {
+            // yield return this.WaitOnRoutines(new IEnumerator[]
+            // {
+            //     _text.DisappearText(),
+            //     _nameText != null ? _nameText.DisappearText() : null
+            // });
 
-                yield return null; //DEBUG
-                _text.ShowText("");
-                if (_nameText != null) _nameText.ShowText("");
-            }
+            yield return null; //DEBUG
+            _text.ShowText("");
+            if (_nameText != null) _nameText.ShowText("");
+        }
         #endregion
     }
 }
