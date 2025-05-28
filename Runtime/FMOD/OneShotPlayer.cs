@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using FMODUnity;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 namespace AWP
 {
@@ -11,11 +12,13 @@ namespace AWP
         [SerializeField]
         private ItemSelector<EventReference> _eventReference;
 
+        [Button]
         public void Play()
         {
             AWGameManager.AudioManager.PlayOneShot(_eventReference.GetItem());
         }
 
+        [Button]
         public void PlayAttached()
         {
             AWGameManager.AudioManager.PlayOneShotAttached(_eventReference.GetItem(), gameObject);

@@ -277,7 +277,7 @@ namespace AWP
             /// </summary>
             public void Clean()
             {
-                Instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                Instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 Instance.release();
             }
 
@@ -316,7 +316,7 @@ namespace AWP
                 if (Instance.isValid())
                 {
                     yield return Instance.FadeToVolume(fadeEnter, 0);
-                    Instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                    Instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                     Instance.release();
                     CurrentEvent = default;
                 }
@@ -326,7 +326,7 @@ namespace AWP
                 // Fade in new audio
                 if (!eventRef.IsNull)
                 {
-                    Instance = _audioManager.CreateEvent(eventRef);
+                    Instance = _audioManager.CreateAttachedInstance(eventRef, AWGameManager.AWCamera.gameObject);
                     CurrentEvent = eventRef;
                     Instance.start();
                     Instance.setVolume(0);
