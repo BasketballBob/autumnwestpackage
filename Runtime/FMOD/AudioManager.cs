@@ -7,6 +7,7 @@ using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
+using Yarn.Unity;
 
 namespace AWP
 {
@@ -202,11 +203,11 @@ namespace AWP
         /// <summary>
         /// Gets the scene audio for the target scene (can also decide whether or not it is used)
         /// </summary>
-        /// <param name="scene"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
-        public SceneAudio GetSceneAudio(string scene)
+        public SceneAudio GetSceneAudio(string name)
         {
-            SceneAudio audio = SceneAudio.LoadSceneAudio(scene);
+            SceneAudio audio = SceneAudio.LoadSceneAudio(name);
             return audio;
         }
 
@@ -224,8 +225,9 @@ namespace AWP
             //     //_snapshotChannel.PlayEvent(sceneAudio.Snapshot)
             // }));
         }
-        public void EnterNewSceneAudio(string scene, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null) =>
-            EnterNewSceneAudio(GetSceneAudio(scene), fadeEnter, fadeExit, onSwitch);
+        public void EnterNewSceneAudio(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null) =>
+            EnterNewSceneAudio(GetSceneAudio(name), fadeEnter, fadeExit, onSwitch);
+
 
         // private void PrepareForNewSceneAudio(string scene, float fadeDuration)
         // {
@@ -335,7 +337,7 @@ namespace AWP
 
                 void InitializeOnSwitchEvent()
                 {
-                    if (onSwitch == null) 
+                    if (onSwitch == null)
                     {
                         readyToSwitch = true;
                         return;
@@ -349,6 +351,14 @@ namespace AWP
                     while (!readyToSwitch) yield return null;
                 }
             }
+        }
+        #endregion
+
+        #region Yarn Commands
+        [YarnCommand("EnterNewSceneAudio")]
+        public static void YarnEnterNewSceneAudio(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null)
+        {
+            AWGameManager.AudioManager.EnterNewSceneAudio(name, fadeEnter, fadeExit, onSwitch);
         }
         #endregion
     }
