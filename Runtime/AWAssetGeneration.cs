@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace AWP
 {
     public static class AWAssetGeneration
@@ -18,7 +22,7 @@ namespace AWP
             Directory.CreateDirectory(directoryPath);
         }
 
-        public static void CreateMesh(Mesh mesh, string name) => 
+        public static void CreateMesh(Mesh mesh, string name) =>
             CreateAsset(mesh, name + ".asset", MeshFolder);
 
         public static void CreateMaterial(Material material, string name) =>
@@ -27,7 +31,10 @@ namespace AWP
         public static void CreateAsset(Object asset, string name, string subFolder)
         {
             EnsureDirectory(RootFolder + subFolder);
+
+            #if UNITY_EDITOR
             UnityEditor.AssetDatabase.CreateAsset(asset, RootFolder + subFolder + "GA_" + name);
+            #endif
         }
     }
 }
