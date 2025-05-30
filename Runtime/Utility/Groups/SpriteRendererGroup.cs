@@ -11,13 +11,22 @@ namespace AWP
         protected override void LateUpdate()
         {
             base.LateUpdate();
-            
-            Color.RunOnValueChange(x => 
+
+            Color.RunOnValueChange(x =>
             {
-                ModifyAll(y => 
+                ModifyAll(y =>
                 {
                     y.color = x;
                 });
+            });
+        }
+        
+        public override void SyncChildren()
+        {
+            base.SyncChildren();
+            ModifyAll(y =>
+            {
+                y.color = Color.Value;
             });
         }
     }

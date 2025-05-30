@@ -15,7 +15,7 @@ namespace AWP
             SyncChildren();
         }
 
-        public void SyncChildren()
+        public virtual void SyncChildren()
         {
             #if UNITY_EDITOR
             Undo.RecordObject(this, "SyncChildren");
@@ -31,6 +31,7 @@ namespace AWP
             });
 
             _items.ClearNullValues();
+            
         }
 
         protected override bool ItemIsNull(TComponent item)
