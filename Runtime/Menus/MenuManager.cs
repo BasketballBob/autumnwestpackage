@@ -62,7 +62,7 @@ namespace AWP
 
         public void Push(Menu menu)
         {
-            if (!Interactable) return;
+            //if (!Interactable) return;
             if (StackContainsMenu(menu)) return;
 
             _menuStack.StackPush(new MenuItem()
@@ -80,7 +80,7 @@ namespace AWP
         }
         public void Pop(Menu menu)
         {
-            if (!Interactable) return;
+            //if (!Interactable) return;
             
             for (int i = _menuStack.Count - 1; i >= 0; i--)
             {

@@ -14,6 +14,8 @@ namespace AWP
         protected int _minItemCount = 5;
         protected List<TObject> _poolItems = new List<TObject>();
 
+        public List<TObject> Items => _poolItems;
+
         protected virtual void Start()
         {
             _poolItems.Clear();
