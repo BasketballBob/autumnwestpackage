@@ -10,12 +10,12 @@ namespace AWP
         public GameEvent Event;
         public UnityEvent Response;
 
-        private void OnEnable() 
+        private void OnEnable()
         {
             Event.RegisterListener(Response.Invoke);
         }
 
-        private void OnDisable() 
+        private void OnDisable()
         {
             Event.UnregisterListener(Response.Invoke);
         }
@@ -23,6 +23,14 @@ namespace AWP
         public void OnEventRaised()
         {
             Response?.Invoke();
+        }
+
+        /// <summary>
+        /// Calls the attached UnityEvent
+        /// </summary>
+        public void CallResponse()
+        {
+            Response.Invoke();
         }
     }
 }

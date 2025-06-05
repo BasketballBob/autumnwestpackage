@@ -55,6 +55,11 @@ namespace AWP
             _animator.Play(EnterAnimation, 0, 1);
             PushSelf();
         }
+        public IEnumerator WaitOnPushSelf()
+        {
+            PushSelf();
+            yield return AWGameManager.MenuManager.WaitOnTransition();
+        }
 
         public void PopSelf()
         {
@@ -65,6 +70,21 @@ namespace AWP
             if (_animator == null) return;
             _animator.Play(ExitAnimation, 0, 1);
             PopSelf();  
+        }
+        public IEnumerator WaitOnPopSelf()
+        {
+            PopSelf();
+            yield return AWGameManager.MenuManager.WaitOnTransition();
+        }
+
+        public void SoloSelf()
+        {
+            AWGameManager.MenuManager.SoloMenu(this);
+        }
+        public IEnumerator WaitOnSoloSelf()
+        {
+            SoloSelf();
+            yield return AWGameManager.MenuManager.WaitOnTransition();
         }
 
         public void SetMenuState(MenuState state)
@@ -87,7 +107,6 @@ namespace AWP
         }
 
         public void SkipInitialization() => _skipInitialization = true;
-
         public IEnumerator WaitOnMenuTransition() => AWGameManager.MenuManager.WaitOnTransition();
 
         public virtual IEnumerator PushAnimation()

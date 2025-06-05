@@ -41,7 +41,6 @@ namespace AWP
         private void Start()
         {
             _camera.transparencySortMode = _transparencySortMode;
-            Debug.Log("WEEE " + _camera.transparencySortMode);
             _animator.enabled = false;
         }
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -62,16 +63,21 @@ namespace AWP
 
         public void Push(Menu menu)
         {
+            StartTransitionRoutine(PushRoutine(menu));
+        }
+        private IEnumerator PushRoutine(Menu menu)
+        {
             //if (!Interactable) return;
-            if (StackContainsMenu(menu)) return;
+
+            if (StackContainsMenu(menu)) yield break;
 
             _menuStack.StackPush(new MenuItem()
             {
                 Menu = menu
             });
             SyncInteractableMenu();
-            
-            StartTransitionRoutine(_menuStack.StackPeek().Menu.PushAnimation());
+
+            yield return _menuStack.StackPeek().Menu.PushAnimation();
         }
 
         public void Pop()
@@ -80,20 +86,47 @@ namespace AWP
         }
         public void Pop(Menu menu)
         {
+            StartTransitionRoutine(PopRoutine(menu));
+        }
+        private IEnumerator PopRoutine(Menu menu)
+        {
             //if (!Interactable) return;
-            
+
+            IEnumerator enumerator = null;
+
             for (int i = _menuStack.Count - 1; i >= 0; i--)
             {
                 if (_menuStack[i].Menu != menu) continue;
-                StartTransitionRoutine(_menuStack[i].Menu.PopAnimation());
+                enumerator = _menuStack[i].Menu.PopAnimation();
                 _menuStack.RemoveAt(i);
                 SyncInteractableMenu();
             }
+
+            yield return enumerator;
+        }
+
+        /// <summary>
+        /// Pops every menu and except for one that gets pushed
+        /// </summary>
+        /// <param name="menu"></param>
+        public void SoloMenu(Menu menu)
+        {
+            List<IEnumerator> waitRoutines = new List<IEnumerator>();
+
+            _menuStack.ForEach(x =>
+            {
+                if (x.Menu == menu) return;
+                waitRoutines.Add(PopRoutine(x.Menu));
+            });
+
+            waitRoutines.Add(PushRoutine(menu));
+
+            this.WaitOnRoutines(waitRoutines.ToArray());
         }
 
         public IEnumerator WaitOnTransition()
         {
-            if (!InTransition) yield break; 
+            if (!InTransition) yield break;
             yield return _transitionRoutine;
         }
 
