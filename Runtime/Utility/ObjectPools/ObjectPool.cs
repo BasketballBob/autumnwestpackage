@@ -55,7 +55,7 @@ namespace AWP
             DisableObject(obj);
         }
 
-        protected TObject CreateObject()
+        protected virtual TObject CreateObject()
         {
             TObject newObject = Instantiate(_prefab, transform);
             AddObjectToPool(newObject);
@@ -63,7 +63,7 @@ namespace AWP
             return newObject;
         }
 
-        protected void AddObjectToPool(TObject obj)
+        protected virtual void AddObjectToPool(TObject obj)
         {  
             _poolItems.Add(obj);
         }

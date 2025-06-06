@@ -1,8 +1,9 @@
+using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
-using System;
 using AWPEditor;
 using Sirenix.Serialization;
 using UnityEngine.Events;
@@ -34,8 +35,8 @@ namespace AWP
         {
             List<int> ints = new List<int>() {1};
 
-            Debug.Log($"Any {ints.ConditionAny(x => x == 1)}");
-            Debug.Log($"All {ints.ConditionAll(x => x == 1)}");
+            Debug.Log($"Any {ints.Any(x => x == 1)}");
+            Debug.Log($"All {ints.All(x => x == 1)}");
         }
 
         public Sprite TestSprite;
