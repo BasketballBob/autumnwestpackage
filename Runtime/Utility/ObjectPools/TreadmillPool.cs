@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace AWP
 {
-    public class TreadmillPool : StaticObjectPool<Renderer>
+    public class TreadmillPool : ObjectPool<Renderer>
     {
         [SerializeField]
         private float _speed;
@@ -35,7 +35,7 @@ namespace AWP
 
         private void Update()
         {
-            ModifyActiveItems();
+            SyncActiveValues();
             OffsetDelta += _speed * Time.deltaTime;
         }
 
@@ -64,7 +64,12 @@ namespace AWP
             }, duration, easing);
         }
 
-        protected override void ActiveModification(Renderer obj, int index)
+        protected override void SyncObjectValues(Renderer obj, int index)
+        {
+            SyncPosition(Items[index], index);
+        }
+
+        private void SyncPosition(Renderer obj, int index)
         {
             obj.transform.localPosition = GetItemPosition(index, OffsetDelta);
         }
