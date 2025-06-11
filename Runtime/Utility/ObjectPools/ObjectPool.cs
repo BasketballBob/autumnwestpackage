@@ -118,7 +118,6 @@ namespace AWP
 
         protected virtual TObject CreateObject()
         {
-            Debug.Log($"CREATE OBJECT {gameObject.name} {_poolItems.Count}");
             TObject newObject = Instantiate(_prefab, transform);
             AddObjectToPool(newObject);
 
@@ -127,7 +126,6 @@ namespace AWP
 
         protected virtual void AddObjectToPool(TObject obj)
         {
-            Debug.Log($"ADD OBJECT TO POOL {gameObject.name} {_poolItems.Count}");
             _poolItems.Add(obj);
         }
 

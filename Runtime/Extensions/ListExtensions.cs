@@ -39,6 +39,15 @@ namespace AWP
             return returnVal;
         }
 
+        public static void MoveToFront<T>(this List<T> list, int itemIndex) => list.MoveToIndex(itemIndex, 0);
+        public static void MoveToBack<T>(this List<T> list, int itemIndex) => list.MoveToIndex(itemIndex, list.Count);
+        public static void MoveToIndex<T>(this List<T> list, int itemIndex, int moveIndex)
+        {
+            T item = list[itemIndex];
+            list.RemoveAt(itemIndex);
+            list.Insert(moveIndex, item);
+        }
+
         /// <summary>
         /// Clears all null values from list
         /// </summary>

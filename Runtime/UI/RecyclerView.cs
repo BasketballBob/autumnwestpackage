@@ -16,6 +16,10 @@ namespace AWP
         private Scrollbar _scrollbar;
         [SerializeField]
         private float _offset;
+        [SerializeField] [MinValue(0)]
+        private float _upperMargin;
+        [SerializeField] [MinValue(0)]
+        private float _lowerMargin;
 
         protected List<TData> _data = new List<TData>();
         private List<TComponent> _components = new List<TComponent>();
@@ -25,10 +29,11 @@ namespace AWP
         private int _oldTargetActiveCount;
 
         public List<TData> Data => _data;
+        public float Offset => _offset;
         public float RectLength => _rect.sizeDelta.y;
         public float MaxOffset => Mathf.Max(DataTotalLength - RectLength, 0);
         public float PrefabLength => _prefab.sizeDelta.y;
-        public float DataTotalLength => PrefabLength * _data.Count;
+        public float DataTotalLength => PrefabLength * _data.Count + _upperMargin + _lowerMargin;
 
         protected virtual void OnEnable()
         {
@@ -49,6 +54,23 @@ namespace AWP
         private void LateUpdate()
         {
 
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.matrix = transform.localToWorldMatrix;
+
+            Gizmos.color = Color.yellow;
+            if (_rect != null && (_upperMargin > 0 || _lowerMargin > 0))
+            {
+
+
+                Rect drawRect = _rect.rect;
+                drawRect.yMax -= _upperMargin;
+                drawRect.yMin += _lowerMargin;
+
+                Gizmos.DrawWireCube(drawRect.center, drawRect.size);
+            }
         }
 
         private void Reset()
@@ -89,13 +111,14 @@ namespace AWP
         protected abstract void SyncObjectValues(TComponent component, TData data);
 
         [Button]
-        protected void SyncView()
+        protected virtual void SyncView()
         {
             _offset += PrefabLength * (_dataIndexOffset - _oldDataIndexOffset);
             _offset = Mathf.Clamp(_offset, 0, MaxOffset);
             _dataIndexOffset = Mathf.FloorToInt(_offset / PrefabLength);
             _targetActiveCount = GetTargetActiveCount();
 
+            // Scrollbar
             if (_scrollbar != null)
             {
                 if (DataTotalLength > 0) _scrollbar.size = 1 - (MaxOffset / DataTotalLength);
@@ -105,11 +128,26 @@ namespace AWP
             }
 
             SetActiveCount(_targetActiveCount);
-            SyncObjectPositions();
 
             bool indexOffsetChanged = _dataIndexOffset != _oldDataIndexOffset;
             bool targetCountChanged = _targetActiveCount != _oldTargetActiveCount;
 
+            if (indexOffsetChanged && !targetCountChanged)
+            {
+                int indexChange = _dataIndexOffset - _oldDataIndexOffset;
+                while (indexChange < 0)
+                {
+                    MoveItemIndex(Items.Count - 1, 0);
+                    indexChange++;
+                }
+                while (indexChange > 0)
+                {
+                    MoveItemIndex(0, Items.Count - 1);
+                    indexChange--;
+                }
+            }
+
+            SyncObjectPositions();
             if (indexOffsetChanged || targetCountChanged)
             {
                 SyncActiveValues();
@@ -145,6 +183,14 @@ namespace AWP
         {
             Items[index].localPosition = new Vector3(0, -position + _rect.rect.max.y);
         }
+
+        #region Item management
+        private void MoveItemIndex(int itemIndex, int moveIndex)
+        {
+            Items.MoveToIndex(itemIndex, moveIndex);
+            _components.MoveToIndex(itemIndex, moveIndex);
+        }
+        #endregion
 
         #region Scrollbar
         private void SyncScrollbar(float value)
