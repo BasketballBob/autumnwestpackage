@@ -31,6 +31,7 @@ namespace AWP
         public List<TData> Data => _data;
         public float Offset => _offset;
         public float RectLength => _rect.sizeDelta.y;
+        public float MinOffset => -_upperMargin;
         public float MaxOffset => Mathf.Max(DataTotalLength - RectLength, 0);
         public float PrefabLength => _prefab.sizeDelta.y;
         public float DataTotalLength => PrefabLength * _data.Count + _upperMargin + _lowerMargin;
@@ -48,6 +49,8 @@ namespace AWP
         protected override void Start()
         {
             base.Start();
+
+            _offset = MinOffset;
             SyncView();
         }
 
@@ -63,8 +66,6 @@ namespace AWP
             Gizmos.color = Color.yellow;
             if (_rect != null && (_upperMargin > 0 || _lowerMargin > 0))
             {
-
-
                 Rect drawRect = _rect.rect;
                 drawRect.yMax -= _upperMargin;
                 drawRect.yMin += _lowerMargin;
@@ -94,7 +95,12 @@ namespace AWP
         {
             base.SyncObjectValues(obj, index);
 
-            int dataIndex = index + _dataIndexOffset;
+            Debug.Log($"DATAINDEX {index} {_dataIndexOffset} {_offset}");
+            int dataIndex = index;
+            if (_dataIndexOffset >= 0) dataIndex += _dataIndexOffset;
+
+            Debug.Log($"DATAINDEX1 {dataIndex}");
+
             SyncObjectValues(_components[index], _data[dataIndex]);
         }
 
@@ -103,6 +109,8 @@ namespace AWP
             ModifyActiveObjects((x, y) =>
             {
                 float position = PrefabLength * y + (-_offset % PrefabLength) + PrefabLength / 2;
+                if (_dataIndexOffset < 0) position += PrefabLength * Mathf.Abs(_dataIndexOffset);
+
                 SetPosition(position, y);
             });
         }
@@ -114,8 +122,8 @@ namespace AWP
         protected virtual void SyncView()
         {
             _offset += PrefabLength * (_dataIndexOffset - _oldDataIndexOffset);
-            _offset = Mathf.Clamp(_offset, 0, MaxOffset);
-            _dataIndexOffset = Mathf.FloorToInt(_offset / PrefabLength);
+            _offset = Mathf.Clamp(_offset, MinOffset, MaxOffset);
+            _dataIndexOffset = (int)(_offset / PrefabLength);
             _targetActiveCount = GetTargetActiveCount();
 
             // Scrollbar
@@ -165,6 +173,7 @@ namespace AWP
         {
             int targetCount = ActiveItemCount;
             float visibleDistance = RectLength + PrefabLength;
+            if (_offset < 0) visibleDistance += _offset;
 
             targetCount = Mathf.CeilToInt(visibleDistance / PrefabLength);
 
@@ -174,8 +183,9 @@ namespace AWP
             }
 
             if (targetCount > _data.Count) targetCount = _data.Count;
-            if (targetCount > _data.Count - _dataIndexOffset) targetCount = _data.Count - _dataIndexOffset;
+            if (targetCount > _data.Count - _dataIndexOffset && _dataIndexOffset > 0) targetCount = _data.Count - _dataIndexOffset;
 
+            Debug.Log($"TARGETCOUNT {targetCount}");
             return targetCount;
         }
 
@@ -195,7 +205,7 @@ namespace AWP
         #region Scrollbar
         private void SyncScrollbar(float value)
         {
-            _offset = MaxOffset * value;
+            _offset = MinOffset.Lerp(MaxOffset, value);
 
             SyncView();
         }
