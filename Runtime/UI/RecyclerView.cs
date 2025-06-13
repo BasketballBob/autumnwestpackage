@@ -11,7 +11,7 @@ namespace AWP
     public abstract class RecyclerView<TComponent, TData> : ObjectPool<RectTransform>
     {
         [SerializeField]
-        private RectTransform _rect;
+        protected RectTransform _rect;
         [SerializeField]
         private Scrollbar _scrollbar;
         [SerializeField]
@@ -35,6 +35,12 @@ namespace AWP
         public float MaxOffset => Mathf.Max(DataTotalLength - RectLength, 0);
         public float PrefabLength => _prefab.sizeDelta.y;
         public float DataTotalLength => PrefabLength * _data.Count + _upperMargin + _lowerMargin;
+        /// <summary>
+        /// The length of the currently displayed items
+        /// </summary>
+        public float DisplayedLength { get; private set; }
+        public float DisplayedMaxY => _rect.rect.max.y - (_dataIndexOffset < 0 ? PrefabLength * Mathf.Abs(_dataIndexOffset) : 0);
+        public float DisplayedMinY => DisplayedMaxY - DisplayedLength;
 
         protected virtual void OnEnable()
         {
@@ -95,23 +101,20 @@ namespace AWP
         {
             base.SyncObjectValues(obj, index);
 
-            Debug.Log($"DATAINDEX {index} {_dataIndexOffset} {_offset}");
             int dataIndex = index;
             if (_dataIndexOffset >= 0) dataIndex += _dataIndexOffset;
-
-            Debug.Log($"DATAINDEX1 {dataIndex}");
 
             SyncObjectValues(_components[index], _data[dataIndex]);
         }
 
         private void SyncObjectPositions()
         {
-            ModifyActiveObjects((x, y) =>
+            ModifyActiveObjects((x, index) =>
             {
-                float position = PrefabLength * y + (-_offset % PrefabLength) + PrefabLength / 2;
+                float position = PrefabLength * index + (-_offset % PrefabLength) + PrefabLength / 2;
                 if (_dataIndexOffset < 0) position += PrefabLength * Mathf.Abs(_dataIndexOffset);
 
-                SetPosition(position, y);
+                SetPosition(position, index);
             });
         }
 
@@ -185,7 +188,11 @@ namespace AWP
             if (targetCount > _data.Count) targetCount = _data.Count;
             if (targetCount > _data.Count - _dataIndexOffset && _dataIndexOffset > 0) targetCount = _data.Count - _dataIndexOffset;
 
-            Debug.Log($"TARGETCOUNT {targetCount}");
+            //Debug.Log($"TARGETCOUNT {targetCount}");
+
+            // Sync displayed values
+            DisplayedLength = PrefabLength * targetCount;
+
             return targetCount;
         }
 
