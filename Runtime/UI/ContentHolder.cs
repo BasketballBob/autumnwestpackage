@@ -60,16 +60,19 @@ namespace AWP
         //     _rect.sizeDelta = newRect.size;
         // }
 
-        public void FitToHeight(Vector3 worldTop, Vector3 worldBottom)
+        public void FitToHeightWorld(Vector3 worldTop, Vector3 worldBottom)
         {
             Vector3 localTop = transform.parent.InverseTransformPoint(worldTop);
             Vector3 localBottom = transform.parent.InverseTransformPoint(worldBottom);
 
-            Rect newRect = _rect.rect;
-            newRect.yMax = localTop.y + TopMargin;
-            newRect.yMin = localBottom.y - BottomMargin;
+            FitToHeight(localTop, localBottom);
+        }
 
-            //Debug.Log($"TO HEIGHT {worldTop} {worldBottom} {localTop} {localBottom} {newRect.yMax} {newRect.yMin}");
+        public void FitToHeight(Vector2 top, Vector2 bottom)
+        {
+            Rect newRect = _rect.rect;
+            newRect.yMax = top.y + TopMargin;
+            newRect.yMin = bottom.y - BottomMargin;
 
             SetRect(newRect);
         }
