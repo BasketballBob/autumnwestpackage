@@ -33,6 +33,12 @@ namespace AWP
         private float _offsetDelta;
         public virtual Vector3 ItemSize => _prefab.bounds.size;
 
+        protected override void Start()
+        {
+            base.Start();
+            SetActiveCount(Items.Count);
+        }
+
         private void Update()
         {
             SyncActiveValues();

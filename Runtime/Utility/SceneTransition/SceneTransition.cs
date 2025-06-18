@@ -74,7 +74,6 @@ namespace AWP
             onSwitch?.Invoke();
 
             yield return ExitRoutine(settings);
-            Destroy(gameObject);
 
             void PrepareSceneAudioTransition()
             {
@@ -95,6 +94,7 @@ namespace AWP
             if (settings != null) _animator.SetSpeedForDuration(settings.ExitDuration);
             _animator.Play("Exit");
             yield return _animator.WaitForAnimationToComplete();
+            Destroy(gameObject);
         }
 
         private void OnSceneLoaded(Scene loadedScene, LoadSceneMode loadSceneMode)

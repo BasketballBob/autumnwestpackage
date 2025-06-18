@@ -213,6 +213,7 @@ namespace AWP
 
         public void EnterNewSceneAudio(SceneAudio sceneAudio, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null)
         {
+            Debug.Log($"ENTER NEW SCENE AUDIO {sceneAudio.name}");
             sceneAudio.ApplyParameters();
             _musicChannel.PlayEvent(sceneAudio.Music.EventReference, fadeEnter, fadeExit, sceneAudio.Music.Volume, onSwitch);
             _ambienceChannel.PlayEvent(sceneAudio.Ambience.EventReference, fadeEnter, fadeExit, sceneAudio.Ambience.Volume, onSwitch);

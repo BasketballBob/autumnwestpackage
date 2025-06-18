@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -121,7 +120,7 @@ namespace AWP
 
             waitRoutines.Add(PushRoutine(menu));
 
-            this.WaitOnRoutines(waitRoutines.ToArray());
+            StartTransitionRoutine(this.WaitOnRoutines(waitRoutines.ToArray()));
         }
 
         public IEnumerator WaitOnTransition()
