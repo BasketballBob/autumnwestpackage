@@ -24,24 +24,28 @@ namespace AWP
         [Header("Delta Animation")]
         [SerializeField]
         protected bool _useDeltaAnimation;
-        
+
         [Header("Scale")]
-        [SerializeField] [ShowIf("_useDeltaAnimation")]
+        [SerializeField]
+        [ShowIf("_useDeltaAnimation")]
         private AnimationCurve _xScaleCurve = AnimationCurve.Constant(0, 1, 1);
-        [SerializeField] [ShowIf("_useDeltaAnimation")]
+        [SerializeField]
+        [ShowIf("_useDeltaAnimation")]
         private AnimationCurve _yScaleCurve = AnimationCurve.Constant(0, 1, 1);
-        [SerializeField] [ShowIf("_useDeltaAnimation")]
+        [SerializeField]
+        [ShowIf("_useDeltaAnimation")]
         private AnimationCurve _zScaleCurve = AnimationCurve.Constant(0, 1, 1);
 
         [Header("Position")]
-        [SerializeField] [ShowIf("_useDeltaAnimation")]
+        [SerializeField]
+        [ShowIf("_useDeltaAnimation")]
         private AnimationCurve _yPosCurve = AnimationCurve.Constant(0, 1, 1);
 
         private List<Decoration> _decorationItems = new List<Decoration>();
         private float _currentLength;
         private float _offset;
 
-        public float Speed 
+        public float Speed
         {
             get { return _speed; }
             set { _speed = value; }
@@ -61,8 +65,8 @@ namespace AWP
         {
             Gizmos.color = Color.yellow;
             Gizmos.matrix = transform.localToWorldMatrix;
-            Gizmos.DrawWireCube(Vector3.zero + new Vector3(0, 0, _length / 2), 
-                new Vector3(Mathf.Max(1, _positionOffsetRange.x * 2), 
+            Gizmos.DrawWireCube(Vector3.zero + new Vector3(0, 0, _length / 2),
+                new Vector3(Mathf.Max(1, _positionOffsetRange.x * 2),
                 Mathf.Max(1, _positionOffsetRange.y * 2), _length));
         }
 
@@ -99,12 +103,12 @@ namespace AWP
 
                 bool ItemShouldBeCulled()
                 {
-                    if (currentPos + _decorationItems[i].Extent < 0 && shiftingBackwards) 
+                    if (currentPos + _decorationItems[i].Extent < 0 && shiftingBackwards)
                     {
                         currentPos += _decorationItems[i].Length;
                         return true;
                     }
-                    if (currentPos - _decorationItems[i].Extent > _length && !shiftingBackwards) 
+                    if (currentPos - _decorationItems[i].Extent > _length && !shiftingBackwards)
                     {
                         return true;
                     }
@@ -141,11 +145,11 @@ namespace AWP
 
             decor.SetLocalPosition(CurrentToLocalPos(_currentLength));
             _currentLength += decor.Length;
-            if (shiftingBackwards) 
+            if (shiftingBackwards)
             {
                 _decorationItems.Add(decor);
             }
-            else 
+            else
             {
                 _decorationItems.Insert(0, decor);
                 _offset -= decor.Length;
@@ -158,7 +162,7 @@ namespace AWP
             _decorationItems.Remove(decor);
             DestroyItem(decor);
 
-            if (shiftingBackwards) 
+            if (shiftingBackwards)
             {
                 _offset += decor.Length;
             }
@@ -175,42 +179,47 @@ namespace AWP
             return new Vector3(0, 0, 1) * currentPos;
         }
 
+        public void SetItems(ItemSelector<Decoration> items)
+        {
+            _items = items;
+        }
+
         #region Initial variation
-            private void InitializeDecor(Decoration decor)
-            {
-                decor.Offset = new Vector3(_positionOffsetRange.x * AWRandom.RangeSigned1(), 
-                    _positionOffsetRange.y * AWRandom.RangeSigned1(), 
-                    _positionOffsetRange.z * AWRandom.RangeSigned1());
-            }
+        private void InitializeDecor(Decoration decor)
+        {
+            decor.Offset = new Vector3(_positionOffsetRange.x * AWRandom.RangeSigned1(),
+                _positionOffsetRange.y * AWRandom.RangeSigned1(),
+                _positionOffsetRange.z * AWRandom.RangeSigned1());
+        }
         #endregion
 
         #region Delta animation
-            private void CheckApplyDeltaAnimation(Decoration decor, float delta)
-            {
-                if (!_useDeltaAnimation) return;
-                if (decor.Component == null) return;
+        private void CheckApplyDeltaAnimation(Decoration decor, float delta)
+        {
+            if (!_useDeltaAnimation) return;
+            if (decor.Component == null) return;
 
-                ApplyDeltaAnimation(decor, delta);
-            }
+            ApplyDeltaAnimation(decor, delta);
+        }
 
-            protected virtual void ApplyDeltaAnimation(Decoration decor, float delta)
-            {
-                decor.Component.transform.localScale = new Vector3(_xScaleCurve.Evaluate(delta),
-                    _yScaleCurve.Evaluate(delta), _zScaleCurve.Evaluate(delta));
-                
-                decor.Component.transform.position += new Vector3(0, _yPosCurve.Evaluate(delta), 0);
-            }
+        protected virtual void ApplyDeltaAnimation(Decoration decor, float delta)
+        {
+            decor.Component.transform.localScale = new Vector3(_xScaleCurve.Evaluate(delta),
+                _yScaleCurve.Evaluate(delta), _zScaleCurve.Evaluate(delta));
+
+            decor.Component.transform.position += new Vector3(0, _yPosCurve.Evaluate(delta), 0);
+        }
         #endregion
 
         [System.Serializable]
-        protected class Decoration
+        public class Decoration
         {
             public TComponent Component;
             public float Length;
             [HideInInspector]
             public Vector3 Offset;
 
-            public Decoration () { }
+            public Decoration() { }
 
             public float Extent => Length / 2;
 
