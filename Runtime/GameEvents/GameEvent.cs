@@ -9,7 +9,7 @@ namespace AWP
     [CreateAssetMenu(fileName = CreateItemName, menuName = CreateFolderName + CreateItemName)]
     public class GameEvent : ScriptableObject
     {
-        public const string CreateItemName = "GameEvent";
+        private const string CreateItemName = "GameEvent";
         public const string CreateFolderName = "GameEvents/";
 
         private List<Action> listeners = new List<Action>();
@@ -44,8 +44,20 @@ namespace AWP
             listeners.Remove(listener);
         }
 
+        public IEnumerator WaitOnRaise()
+        {
+            bool raised = false;
+            RegisterOneShotListener(OnRaise);
+            while (!raised) yield return null;
+
+            void OnRaise()
+            {
+                raised = true;
+            }   
+        }
+
         #if UNITY_EDITOR
-            [Button("Test Raise")]
+        [Button("Test Raise")]
             private void TestRaise() => Raise();
         #endif
     }
