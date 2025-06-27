@@ -44,12 +44,12 @@ namespace AWP
         /// Used to halt the automatic progression of the dialogue (add custom animations / waiting)
         /// </summary>
         public override bool Paused
-        { 
-            get => base.Paused; 
-            set 
+        {
+            get => base.Paused;
+            set
             {
                 _childViews.ForEach(x => x.Paused = value);
-                base.Paused = value; 
+                base.Paused = value;
             }
         }
         public override bool AdvancementRequestsDisabled
@@ -82,7 +82,7 @@ namespace AWP
 
             _startAutomatically = _dialogueRunner.startAutomatically;
 
-            if (!_startAutomatically) 
+            if (!_startAutomatically)
             {
                 _animator?.Play(ExitAnim, 0, 1);
                 _animator?.Play(TextboxExitAnim, 1, 1);
@@ -100,7 +100,7 @@ namespace AWP
             StartAnimationRoutine(StartDialogueRoutine());
 
             IEnumerator StartDialogueRoutine()
-            {   
+            {
                 yield return EnterAnimation();
                 if (EnterTextboxAutomatically) yield return EnterTextboxAnimation();
                 _dialogueRunner.StartDialogue(_startNode);
@@ -170,40 +170,44 @@ namespace AWP
         public IEnumerator ExitDialogueBox() => ExitTextboxAnimation();
 
         #region Events
-            public IEnumerator WaitUntilComplete()
+        public IEnumerator WaitUntilComplete()
+        {
+            while (IsRunning)
             {
-                while (IsRunning)
-                {
-                    yield return null;
-                }
+                yield return null;
             }
+        }
         #endregion
 
         #region Custom animations
-            protected virtual IEnumerator EnterAnimation()
-            {
-                _currentState = RunnerState.EnterAnimation;
-                yield return _animator?.WaitForAnimationToComplete(EnterAnim);
-            }
+        protected virtual IEnumerator EnterAnimation()
+        {
+            _currentState = RunnerState.EnterAnimation;
+            yield return _animator.WaitForAnimationToComplete(EnterAnim);
+        }
 
-            protected virtual IEnumerator ExitAnimation()
-            {
-                _currentState = RunnerState.ExitAnimation;
-                yield return _animator?.WaitForAnimationToComplete(ExitAnim);
-                _currentState = RunnerState.Off;
-            }
+        protected virtual IEnumerator ExitAnimation()
+        {
+            _currentState = RunnerState.ExitAnimation;
+            yield return _animator.WaitForAnimationToComplete(ExitAnim);
+            _currentState = RunnerState.Off;
+        }
 
-            protected virtual IEnumerator EnterTextboxAnimation()
-            {
-                TextboxVisible = true;
-                yield return _animator?.WaitForAnimationToComplete(TextboxEnterAnim, 1);
-            }
+        protected virtual IEnumerator EnterTextboxAnimation()
+        {
+            Debug.Log("TEXT ENTER START");
+            TextboxVisible = true;
+            yield return _animator.WaitForAnimationToComplete(TextboxEnterAnim, 1);
+            Debug.Log("TEXT ENTER START");
+        }
 
-            protected virtual IEnumerator ExitTextboxAnimation()
-            {
-                TextboxVisible = false;
-                yield return _animator?.WaitForAnimationToComplete(TextboxExitAnim, 1);
-            }
+        protected virtual IEnumerator ExitTextboxAnimation()
+        {
+            Debug.Log("TEXT EXIT START");
+            TextboxVisible = false;
+            yield return _animator.WaitForAnimationToComplete(TextboxExitAnim, 1);
+            Debug.Log("TEXT EXIT STOP");
+        }
         #endregion
     }
 }

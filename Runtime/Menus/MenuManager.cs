@@ -68,7 +68,10 @@ namespace AWP
         {
             //if (!Interactable) return;
 
-            if (StackContainsMenu(menu)) yield break;
+            if (!StackContainsMenu(menu))
+            {
+                StackRemoveMenu(menu);
+            }
 
             _menuStack.StackPush(new MenuItem()
             {
@@ -125,6 +128,7 @@ namespace AWP
 
         public IEnumerator WaitOnTransition()
         {
+            Debug.Log($"INTRANSITION " + InTransition);
             if (!InTransition) yield break;
             yield return _transitionRoutine;
         }
@@ -150,6 +154,16 @@ namespace AWP
             }
         }
 
+        private void StackRemoveMenu(Menu menu)
+        {
+            for (int i = 0; i < _menuStack.Count; i++)
+            {
+                if (_menuStack[i].Menu != menu) continue;
+                _menuStack.RemoveAt(i);
+                i--;
+            }
+        }
+
         private bool StackContainsMenu(Menu menu)
         {
             for (int i = 0; i < _menuStack.Count; i++)
@@ -162,6 +176,7 @@ namespace AWP
 
         private void StartTransitionRoutine(IEnumerator routine)
         {
+            if (_transitionRoutine != null) StopCoroutine(_transitionRoutine);
             _transitionRoutine = StartCoroutine(TransitionRoutine());
 
             IEnumerator TransitionRoutine()

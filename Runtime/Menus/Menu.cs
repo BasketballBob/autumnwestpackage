@@ -111,19 +111,23 @@ namespace AWP
 
         public virtual IEnumerator PushAnimation()
         {   
+            Debug.Log("PUSH START " + gameObject.name);
             _currentMenuState = MenuState.Entering;
             SetVisible(true);
             yield return WaitOnTransition(EnterAnimation);
             _currentMenuState = MenuState.Displayed;
+            Debug.Log("PUSH STOP " + gameObject.name);
             yield break;
         }
 
         public virtual IEnumerator PopAnimation()
         {
+            Debug.Log("POP START " + gameObject.name);
             _currentMenuState = MenuState.Exitting;
             yield return WaitOnTransition(ExitAnimation);
             SetVisible(false);
             _currentMenuState = MenuState.Hidden;
+            Debug.Log("POP STOP " + gameObject.name);
             yield break;
         }
 
