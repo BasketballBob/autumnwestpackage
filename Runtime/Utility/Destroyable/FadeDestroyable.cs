@@ -21,7 +21,7 @@ namespace AWP
 
         protected override void DeltaAction(float delta)
         {
-            _sr.color = _sr.color.SetA(_startAlpha * (1 - delta));
+            if (_sr != null) _sr.color = _sr.color.SetA(_startAlpha * (1 - delta));
             if (_additionalSpriteRenderers != null)
             {
                 _additionalSpriteRenderers?.ForEach(x => 

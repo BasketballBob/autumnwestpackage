@@ -28,14 +28,25 @@ namespace AWP
         public T PullItemConditionally(Func<T, bool> func)
         {
             T pulledItem = default;
+            if (!ContainsConditionalItem(func)) return pulledItem;
 
             do
             {
                 pulledItem = PullItem();
                 if (!func(pulledItem)) continue;
                 return pulledItem;
-            }   
+            }
             while (true);
+        }
+
+        public bool ContainsConditionalItem(Func<T, bool> func)
+        {
+            for (int i = 0; i < itemList.Count; i++)
+            {
+                if (func(itemList[i].Value)) return true;
+            }
+
+            return false;
         }
 
         public List<T> GetValueList()
