@@ -9,6 +9,8 @@ namespace AWP
     public class SceneTransition : MonoBehaviour
     {
         [SerializeField]
+        private Canvas _canvas;
+        [SerializeField]
         private Animator _animator;
         [SerializeField]
         private float _exitDelay = .2f;
@@ -16,6 +18,8 @@ namespace AWP
         private SingleCoroutine _transitionRoutine;
         private string _destinationScene;
         private bool _destinationSceneLoaded;
+
+        public Canvas Canvas => _canvas;
 
         private void Awake()
         {

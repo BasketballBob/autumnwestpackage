@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace AWP
 {
+    [System.Serializable]
     public class Alarm : IFormattable
     {
         protected float _remainingTime;
@@ -58,7 +59,7 @@ namespace AWP
         {
             float durationRatio = Duration / duration;
             Tick(timePassed * durationRatio);
-        }   
+        }
 
         /// <summary>
         /// If alarm has finished

@@ -206,6 +206,12 @@ namespace AWP
             if (_sceneTransition != null) Destroy(_sceneTransition.gameObject);
             _sceneTransition = Instantiate(transition);
         }
+
+        public static void SetTransitionSortOrder(int sortOrder)
+        {
+            if (_sceneTransition == null) return;
+            _sceneTransition.Canvas.sortingOrder = sortOrder;
+        }
         #endregion
 
         public static void SetPaused(bool paused)
