@@ -83,7 +83,6 @@ namespace AWP
         {
             FMODUnity.RuntimeManager.StudioSystem.setParameterByName(name, value);
         }
-
         public static float GetGlobalParameterByName(string name)
         {
             float value;
@@ -95,6 +94,14 @@ namespace AWP
         {
             FMODUnity.RuntimeManager.StudioSystem.setParameterByNameWithLabel(name, label);
         }
+        public static string GetGlobalLabeledParameterByName(string name)
+        {
+            int index = (int)GetGlobalParameterByName(name);
+            string value;
+            FMODUnity.RuntimeManager.StudioSystem.getParameterLabelByName(name, index, out value);
+            return value;
+        }
+
         public void PlayOneShot(EventReference eventRef, Vector3 worldPos = default)
         {
             if (eventRef.IsNull) return;
@@ -214,7 +221,7 @@ namespace AWP
         public void EnterNewSceneAudio(SceneAudio sceneAudio, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null)
         {
             Debug.Log($"ENTER NEW SCENE AUDIO {sceneAudio.name}");
-            sceneAudio.ApplyParameters();
+            sceneAudio.ApplyGlobalParameters();
             _musicChannel.PlayEvent(sceneAudio.Music.EventReference, fadeEnter, fadeExit, sceneAudio.Music.Volume, onSwitch);
             _ambienceChannel.PlayEvent(sceneAudio.Ambience.EventReference, fadeEnter, fadeExit, sceneAudio.Ambience.Volume, onSwitch);
             _snapshotChannel.PlayEvent(sceneAudio.Snapshot.EventReference, fadeEnter, fadeExit, sceneAudio.Snapshot.Volume, onSwitch);
@@ -284,9 +291,9 @@ namespace AWP
                 Instance.release();
             }
 
-            public void PlayEvent(EventReference eventRef, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, float volume = DefaultVolume, Action onSwitch = null)
+            public void PlayEvent(EventReference eventRef, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, float volume = DefaultVolume, Action onSwitch = null, List<AWEventParameter> localParams = null)
             {
-                _shiftRoutine.StartRoutine(SwitchAudio(eventRef, fadeEnter, fadeExit, volume, onSwitch));
+                _shiftRoutine.StartRoutine(SwitchAudio(eventRef, fadeEnter, fadeExit, volume, onSwitch, localParams));
             }
             public void PlaySceneAudioSettings(SceneAudio.SceneAudioSettings settings, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null)
             {
@@ -302,7 +309,7 @@ namespace AWP
             /// <param name="volume"></param>
             /// <param name="onSwitch">Action to optionally be called to allow the entering of new audio</param>
             /// <returns></returns>
-            private IEnumerator SwitchAudio(EventReference eventRef, float fadeEnter, float fadeExit, float volume = DefaultVolume, Action onSwitch = null)
+            private IEnumerator SwitchAudio(EventReference eventRef, float fadeEnter, float fadeExit, float volume = DefaultVolume, Action onSwitch = null, List<AWEventParameter> localParams = null)
             {
                 bool readyToSwitch = false;
                 InitializeOnSwitchEvent();
@@ -330,6 +337,7 @@ namespace AWP
                 if (!eventRef.IsNull)
                 {
                     Instance = _audioManager.CreateAttachedInstance(eventRef, AWGameManager.AWCamera.gameObject);
+                    //Instance.setPa // HERE
                     CurrentEvent = eventRef;
                     Instance.start();
                     Instance.setVolume(0);

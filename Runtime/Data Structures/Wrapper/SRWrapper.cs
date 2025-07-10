@@ -13,7 +13,14 @@ namespace AWP
     [System.Serializable]
     public class SRWrapper<T>
     {
-        [SerializeReference] [HideLabel] [InlineProperty]
+        [SerializeReference]
+        [HideLabel]
+        [InlineProperty]
         public T Value;
+
+        public SRWrapper(T value)
+        {
+            this.Value = value;
+        }
     }
 }
