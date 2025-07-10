@@ -20,6 +20,7 @@ namespace AWP
         private bool _initialized;
 
         public EventInstance Instance => _instance;
+        public bool InstanceValid => _instance.isValid();
         protected virtual Action<EventInstance> PlayEvent => (x) => x.StartIfNotPlaying();
         protected virtual Action<EventInstance> StopEvent => (x) => x.StopIfPlaying();
 
@@ -28,18 +29,30 @@ namespace AWP
         protected virtual void InitializeInstance(MonoBehaviour mono, GameObject attachedObject)
         {
             _mono = mono;
+            if (Event.IsNull)
+            {
+                _instance.DisposeOfSelf();
+                return;
+            }
+
             if (attachedObject != null) _instance = AWGameManager.AudioManager.CreateAttachedInstance(Event, attachedObject);
             else _instance = AWGameManager.AudioManager.CreateInstance(Event);
-
-            _updateRoutine = new SingleCoroutine(mono);
-            _updateRoutine.StartRoutine(UpdateRoutine());
+            // _updateRoutine = new SingleCoroutine(mono);
+            // _updateRoutine.StartRoutine(UpdateRoutine());
 
             _initialized = true;
+        }
+
+        public void InitializeWithEvent(MonoBehaviour mono, EventReference eventRef, GameObject attachedObject = null)
+        {
+            Event = eventRef;
+            InitializeInstance(mono, attachedObject);
         }
 
         public void SetActive(bool setActive)
         {
             if (!_initialized) return;
+            if (!InstanceValid) return;
             if (setActive == _active) return;
 
             if (setActive)

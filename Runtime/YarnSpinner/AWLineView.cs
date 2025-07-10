@@ -33,6 +33,7 @@ namespace AWP
         public TMP_Text NameTMP => _nameTMP;
         public TypewriterCore TextTypewriter => _text;
         public TypewriterCore NameTypewriter => _nameText;
+        public Action OnLineFinish;
         protected float DismissAnimationDuration => .25f;
 
         protected override void OnEnable()
@@ -59,6 +60,7 @@ namespace AWP
                 yield return RunLineAnimation(dialogueLine);
 
                 if (!_waitForInput) onDialogueLineFinished?.Invoke();
+                OnLineFinish?.Invoke();
                 _prevLine = dialogueLine;
             }
         }

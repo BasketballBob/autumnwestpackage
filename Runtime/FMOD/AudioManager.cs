@@ -160,8 +160,7 @@ namespace AWP
                     continue;
                 }
 
-                Current._eventList[i].stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-                Current._eventList[i].release();
+                Current._eventList[i].DisposeOfSelf();
             }
 
             for (int i = 0; i < Current._emitterList.Count; i++)
