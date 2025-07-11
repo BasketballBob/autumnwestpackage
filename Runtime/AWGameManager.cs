@@ -232,6 +232,11 @@ namespace AWP
         {
             return (int)DevMode >= (int)DeveloperMode.Developer;
         }
+
+        public static bool IsMinimumMode(DeveloperMode mode)
+        {
+            return (int)DevMode >= (int)mode;
+        }
         #endregion
 
         #region Debug
