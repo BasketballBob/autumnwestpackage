@@ -195,18 +195,14 @@ namespace AWP
 
         protected virtual IEnumerator EnterTextboxAnimation()
         {
-            Debug.Log("TEXT ENTER START");
             TextboxVisible = true;
             yield return _animator.WaitForAnimationToComplete(TextboxEnterAnim, 1);
-            Debug.Log("TEXT ENTER START");
         }
 
         protected virtual IEnumerator ExitTextboxAnimation()
         {
-            Debug.Log("TEXT EXIT START");
             TextboxVisible = false;
             yield return _animator.WaitForAnimationToComplete(TextboxExitAnim, 1);
-            Debug.Log("TEXT EXIT STOP");
         }
         #endregion
     }

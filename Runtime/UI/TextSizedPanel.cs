@@ -55,7 +55,7 @@ namespace AWP
             SyncPosition();
         }
 
-        private void SetNewSize(Vector2 newSize)
+        public void SetNewSize(Vector2 newSize)
         {
             newSize = new Vector2(Mathf.Max(_minSize.x, newSize.x), Mathf.Max(_minSize.y, newSize.y));
             _rectTrans.sizeDelta = newSize + _9SlicingArea;
@@ -90,11 +90,13 @@ namespace AWP
         private Vector2 GetDisplayedTypewriterSize()
         {
             int latestIndex = Mathf.Clamp(_textAnim.latestCharacterShown.index + _charOffset, 0, _text.text.Length);
+            if (!_textAnim.anyLetterVisible) latestIndex = 0;
 
             string oldText = _text.text;
             _text.text = new string(_text.text.Take(latestIndex).ToArray());
             _text.ForceMeshUpdate();
             Vector2 size = _text.GetRenderedValues();
+
             _text.text = oldText;
 
             return size;
