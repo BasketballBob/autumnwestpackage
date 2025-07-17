@@ -27,6 +27,7 @@ public class IgnoreCollision2D : MonoBehaviour
 
         foreach (Collider2D element in ignoredColliders)
         {
+            if (element == null) continue;
             Physics2D.IgnoreCollision(col, element, true);
         }
     }
