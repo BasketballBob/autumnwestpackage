@@ -12,9 +12,9 @@ namespace AWP
         /// Stops and releases the instance
         /// </summary>
         /// <param name="instance"></param>
-        public static void DisposeOfSelf(this EventInstance instance)
+        public static void DisposeOfSelf(this EventInstance instance, FMOD.Studio.STOP_MODE stopMode = FMOD.Studio.STOP_MODE.ALLOWFADEOUT)
         {
-            instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            instance.stop(stopMode);
             instance.release();
         }
     }

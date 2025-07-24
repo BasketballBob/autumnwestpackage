@@ -31,7 +31,7 @@ namespace AWP
             _mono = mono;
             if (Event.IsNull)
             {
-                _instance.DisposeOfSelf();
+                _instance.DisposeOfSelf(FMOD.Studio.STOP_MODE.IMMEDIATE);
                 return;
             }
 
