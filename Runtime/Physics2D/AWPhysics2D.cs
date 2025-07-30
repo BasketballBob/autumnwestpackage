@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace AWP
@@ -9,22 +10,26 @@ namespace AWP
     public static class AWPhysics2D
     {
         public static void Explosion(Vector2 point, float radius, float magnitude) => Explosion(point, radius, magnitude, ~0);
-        public static void Explosion(Vector2 point, float radius, float magnitude, LayerMask layerMask, Action<Collider2D, Vector2> hitAction = null)
+        public static void Explosion(Vector2 point, float radius, float magnitude, LayerMask layerMask, Action<Rigidbody2D, Vector2> hitAction = null)
         {
             Collider2D[] colArray = Physics2D.OverlapCircleAll(point, radius, layerMask);
             Debug.DrawLine(point, point - Vector2.right * radius, Color.red, 1);
 
-            foreach (Collider2D col in colArray)
+            List<Rigidbody2D> bodies = new List<Rigidbody2D>();
+            colArray.ForEach(x =>
             {
-                Vector2 difference = (Vector2)col.bounds.center - point;
+                if (x.attachedRigidbody == null) return;
+                bodies.Add(x.attachedRigidbody);
+            });
+
+            foreach (Rigidbody2D body in bodies)
+            {
+                Vector2 difference = (Vector2)body.centerOfMass - point;
                 if (difference.magnitude == 0) continue;
                 Vector2 appliedForce = difference.normalized * magnitude;
 
-                hitAction?.Invoke(col, appliedForce);
-
-                Rigidbody2D rb = col.attachedRigidbody;
-                if (rb == null) continue;
-                rb.AddForceAtPosition(appliedForce, col.ClosestPoint(point), ForceMode2D.Impulse);
+                hitAction?.Invoke(body, appliedForce);
+                body.AddForceAtPosition(appliedForce, body.ClosestPoint(point), ForceMode2D.Impulse);
             }
         }
     
