@@ -48,6 +48,18 @@ namespace AWP
             list.Insert(moveIndex, item);
         }
 
+        public static void AddIfAbsent<T>(this List<T> list, T item)
+        {
+            if (list.Contains(item)) return;
+            list.Add(item);
+        }
+
+        public static void RemoveIfPresent<T>(this List<T> list, T item)
+        {
+            if (!list.Contains(item)) return;
+            list.Remove(item);
+        }
+
         /// <summary>
         /// Clears all null values from list
         /// </summary>
