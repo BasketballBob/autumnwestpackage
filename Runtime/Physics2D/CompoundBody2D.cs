@@ -18,7 +18,8 @@ namespace AWP
 
         private Rigidbody2D _rb;
 
-        private List<Collider2D> AttachedColliders 
+        public Rigidbody2D Rigidbody2D => _rb;
+        private List<Collider2D> AttachedColliders
         {
             get
             {
@@ -64,10 +65,10 @@ namespace AWP
             Destroy(segment.Trans.gameObject);
         }
 
-        public void DisconnectSegment(Transform transform, bool updateCenterOfMass = true)
+        public Rigidbody2D DisconnectSegment(Transform transform, bool updateCenterOfMass = true)
         {
             BodySegment segment = RemoveSegment(transform, updateCenterOfMass);
-            if (segment == null) return;
+            if (segment == null) return null;
 
             Rigidbody2D rb = segment.Trans.gameObject.AddComponent<Rigidbody2D>();
             rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
@@ -76,8 +77,16 @@ namespace AWP
             rb.velocity = _rb.velocity;
             rb.angularVelocity = _rb.angularVelocity;
             rb.transform.SetParent(_disconnectTransform);
+
+            return rb;
         }
         public void DisconnectSegment(Transform transform) => DisconnectSegment(transform, updateCenterOfMass: true);
+
+        public void DisconnectSegmentAndIgnoreCollision(Transform transform)
+        {
+            Rigidbody2D rb = DisconnectSegment(transform, updateCenterOfMass: true);
+            AWPhysics2D.IgnoreRigidbodyCollision(_rb, rb);
+        }
 
         public void AddSegment(Transform transform, float mass, bool updateCenterOfMass = true)
         {

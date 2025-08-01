@@ -18,15 +18,22 @@ namespace AWP
             rb.velocity = (target - rb.position).normalized * magnitude;
         }
 
-        public static void ArcTowards(this Rigidbody2D rb, Vector2 target, float magnitude)
+        // public static void ArcTowards(this Rigidbody2D rb, Vector2 target, float magnitude)
+        // {
+        //     // Vector2 offset = target - rb.position;
+        //     // Vector2 
+
+        //     // if (offset.x == 0) return;
+        //     // float duration = xSpeed / offset.x;
+
+
+        // }
+
+        public static Collider2D[] GetAttachedColliders(this Rigidbody2D rb)
         {
-            // Vector2 offset = target - rb.position;
-            // Vector2 
-
-            // if (offset.x == 0) return;
-            // float duration = xSpeed / offset.x;
-
-
+            Collider2D[] colliders = new Collider2D[rb.attachedColliderCount];
+            rb.GetAttachedColliders(colliders);
+            return colliders;
         }
 
         public static void BalanceCenterOfMass(this Rigidbody2D rb, List<Tuple<Transform, float>> massPoints)
@@ -34,7 +41,7 @@ namespace AWP
             Vector2 centerOfMass = Vector2.zero;
             float totalMass = 0;
 
-            massPoints.ForEach(x => 
+            massPoints.ForEach(x =>
             {
                 centerOfMass += (Vector2)(x.Item1.transform.position - rb.transform.position) * x.Item2;
                 totalMass += x.Item2;
