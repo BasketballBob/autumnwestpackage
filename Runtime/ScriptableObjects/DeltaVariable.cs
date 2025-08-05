@@ -13,7 +13,14 @@ namespace AWP
         public float MinValue = 0;
         public float MaxValue = 1;
 
-        public float Delta => Mathf.Clamp01((RuntimeValue - MinValue) / (MaxValue - MinValue));
+        public float Delta
+        {
+            get => Mathf.Clamp01((RuntimeValue - MinValue) / (MaxValue - MinValue));
+            set
+            {
+                RuntimeValue = MinValue.Lerp(MaxValue, value);
+            }
+        }
 
         // public override float RuntimeValue 
         // { 

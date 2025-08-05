@@ -87,6 +87,17 @@ namespace AWP
             _remainingTime = _duration;
         }
 
+        /// <summary>
+        /// Resets the timer with the newDuration
+        /// </summary>
+        /// <param name="timePassed"></param>
+        /// <returns></returns>
+        public virtual void Reset(float newDuration)
+        {
+            _duration = newDuration;
+            _remainingTime = _duration;
+        }
+
         public bool RunWhileFinished(float timePassed)
         {
             Tick(timePassed);
