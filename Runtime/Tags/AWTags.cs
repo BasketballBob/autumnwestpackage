@@ -30,6 +30,9 @@ namespace AWP
             _collection.RemoveInstance(this);
         }
 
+        public bool FitsMask(int mask) => Collection.ItemFitsMask(gameObject, mask);
+        public bool HasTag(string tag) => Collection.ItemHasTag(gameObject, tag);
+
         private IEnumerable TagOptions()
         {
             if (_collection == null) return null;
