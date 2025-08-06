@@ -34,5 +34,20 @@ namespace AWP
 
             return children;
         }
+
+        public static List<T> GetComponentInSelfAndChildren<T>(this Transform trans) where T : Component
+        {
+            List<T> returnList = new List<T>();
+
+            trans.TraverseSelfAndChildren(x =>
+            {
+                T component = x.GetComponent<T>();
+                if (component == null) return;
+
+                returnList.Add(component);
+            });
+
+            return returnList;
+        }
     }
 }
