@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Yarn.Unity;
 
@@ -67,6 +68,7 @@ namespace AWP
 
         public void DisposeObject(TObject obj)
         {
+            if (obj == null) return;
             DisableObject(obj);
         }
 
@@ -76,6 +78,8 @@ namespace AWP
         /// <param name="count"></param>
         public void SetActiveCount(int count)
         {
+
+            Debug.Log($"SET ACTIVE COUNT {count}");
             // Create new items if necessary
             while (_poolItems.Count < count)
             {

@@ -10,5 +10,6 @@ public static class AWExecutionOrder
     public const int MenuManager = -400;
     public const int Menu = -300;
     public const int AWDialogueController = -250;
+    public const int ConnectionVisualManager = -150;
     public const int Camera2D = -100;
 }
