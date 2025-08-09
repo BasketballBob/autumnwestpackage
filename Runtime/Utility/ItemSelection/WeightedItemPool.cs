@@ -22,6 +22,7 @@ namespace AWP
 
         public T PullItem()
         {
+
             return PullItem(itemList, (x) => x.Weight).Value; // );
         }
 

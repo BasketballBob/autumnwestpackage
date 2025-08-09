@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace AWP
 {
+    [System.Serializable]
     public class StateMachine
     {
         private BaseState _currentState;
@@ -13,13 +14,13 @@ namespace AWP
             _currentState?.ExitState();
             _currentState = newState;
             _currentState?.EnterState();
-        }   
+        }
 
         public void Update(float deltaTime)
         {
             _currentState?.Update(deltaTime);
         }
-        
+
         public void FixedUpdate(float fixedDeltaTime)
         {
             _currentState?.FixedUpdate(fixedDeltaTime);

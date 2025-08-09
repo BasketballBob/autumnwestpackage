@@ -17,9 +17,10 @@ namespace AWP
 
         private void Initialize()
         {
-            Debug.Log("INITIALIZE");
             GameObject prefab = Instantiate(_prefabPool.PullItem(), transform);
             prefab.transform.SetParent(transform.parent);
+            prefab.transform.localPosition = transform.localPosition;
+            prefab.transform.localRotation = transform.localRotation;
             Destroy(gameObject);
         }
     }

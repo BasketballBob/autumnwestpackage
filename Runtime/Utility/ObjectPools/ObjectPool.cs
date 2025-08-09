@@ -79,7 +79,6 @@ namespace AWP
         public void SetActiveCount(int count)
         {
 
-            Debug.Log($"SET ACTIVE COUNT {count}");
             // Create new items if necessary
             while (_poolItems.Count < count)
             {

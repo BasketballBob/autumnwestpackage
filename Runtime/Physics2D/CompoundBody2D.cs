@@ -76,6 +76,7 @@ namespace AWP
             rb.mass = segment.Mass;
             rb.velocity = _rb.velocity;
             rb.angularVelocity = _rb.angularVelocity;
+            rb.gravityScale = _rb.gravityScale;
             rb.transform.SetParent(_disconnectTransform);
 
             return rb;

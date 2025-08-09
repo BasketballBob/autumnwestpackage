@@ -7,6 +7,7 @@ namespace AWP
     /// <summary>
     /// Base state for the StateMachine
     /// </summary>
+    [System.Serializable]
     public abstract class BaseState<TParent> : BaseState
     {
         protected TParent _parent;
@@ -17,6 +18,7 @@ namespace AWP
         }
     }
 
+    [System.Serializable]
     public abstract class BaseState
     {
         protected StateMachine _stateMachine;

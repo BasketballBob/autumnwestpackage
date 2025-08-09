@@ -122,8 +122,19 @@ namespace AWP
         #region Particle Systems
         public static void PlayAndDestroy(this ParticleSystem ps, bool withChildren = true, bool dropParent = true)
         {
-            if (dropParent) ps.transform.parent = null;
             ps.Play(withChildren);
+            WaitAndDestroy(ps, dropParent);
+        }
+
+        public static void StopAndDestroy(this ParticleSystem ps, bool withChildren = true, bool dropParent = true)
+        {
+            ps.Stop(withChildren);
+            WaitAndDestroy(ps, dropParent);
+        }
+
+        public static void WaitAndDestroy(this ParticleSystem ps, bool dropParent = true)
+        {
+            if (dropParent) ps.transform.parent = null;
             ps.gameObject.AddComponent<AWEmpty>().StartCoroutine(Destroy());
 
             IEnumerator Destroy()
