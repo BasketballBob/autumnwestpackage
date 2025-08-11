@@ -33,6 +33,10 @@ namespace AWP
 
         public ObjectLimit<TObjectType> ObjectLimit => _objectLimit;
         public bool CanSpawn => _delayAlarm.IsFinished();
+        /// <summary>
+        /// If there is room in the maximum object limit to spawn more
+        /// </summary>
+        public bool RoomToSpawn => CurrentObjectCount < _objectLimit.MaxCount;
         public int CurrentObjectCount => _objectLimit.CurrentCount;
         public bool SpawnRoutineActive => _spawningRoutine != null;
         protected virtual float DelayAlarmSpeed => 1;
@@ -56,12 +60,14 @@ namespace AWP
             _pointArea.DrawGizmos(transform);
         }
 
-        public void Spawn() => Spawn(null);
-        public void Spawn(Action<TObjectType> modificationAction)
+        public TObjectType Spawn() => Spawn(null);
+        public TObjectType Spawn(Action<TObjectType> modificationAction)
         {
-            if (!CanSpawn) return;
+            if (!CanSpawn) return null;
             TObjectType newObject = ForceSpawn(modificationAction);
             StartCoroutine(_delayAlarm.RunUntilFinishRoutine(DeltaType));
+
+            return newObject;
         }
         /// <summary>
         /// Spawns regardless of conditions of object spawners

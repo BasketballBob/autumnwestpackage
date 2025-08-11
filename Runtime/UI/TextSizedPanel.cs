@@ -89,7 +89,10 @@ namespace AWP
 
         private Vector2 GetDisplayedTypewriterSize()
         {
+            Debug.Log($"EEEE2 {_charOffset} {_textAnim.latestCharacterShown} {_text.text.Length}");
             int latestIndex = Mathf.Clamp(_textAnim.latestCharacterShown.index + _charOffset, 0, _text.text.Length);
+
+            Debug.Log($"EEEE {_text.text} {_text.text.Length} {latestIndex}");
             if (!_textAnim.anyLetterVisible) latestIndex = 0;
 
             string oldText = _text.text;
