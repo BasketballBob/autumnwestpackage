@@ -78,7 +78,7 @@ namespace AWP
                     //_rectTrans.anchorMax = new Vector2(0, 1);
                     //_rectTrans.anchorMin = new Vector2(0, 1);
                     _rectTrans.pivot = new Vector2(.5f, 1);
-                    
+
                     break;
                 case VerticalAlignmentOptions.Middle:
                     break;
@@ -89,12 +89,7 @@ namespace AWP
 
         private Vector2 GetDisplayedTypewriterSize()
         {
-            Debug.Log($"EEEE2 {_charOffset} {_textAnim.latestCharacterShown} {_text.text.Length}");
-            int latestIndex = Mathf.Clamp(_textAnim.latestCharacterShown.index + _charOffset, 0, _text.text.Length);
-
-            Debug.Log($"EEEE {_text.text} {_text.text.Length} {latestIndex}");
-            if (!_textAnim.anyLetterVisible) latestIndex = 0;
-
+            int latestIndex = GetLatestIndex();  
             string oldText = _text.text;
             _text.text = new string(_text.text.Take(latestIndex).ToArray());
             _text.ForceMeshUpdate();
@@ -103,6 +98,14 @@ namespace AWP
             _text.text = oldText;
 
             return size;
+
+            int GetLatestIndex()
+            {
+                if (_text.text.Length <= 0) return 0;
+                if (!_textAnim.anyLetterVisible) return 0;
+
+                return Mathf.Clamp(_textAnim.latestCharacterShown.index + _charOffset, 0, _text.text.Length);
+            }
         }
     }
 }
