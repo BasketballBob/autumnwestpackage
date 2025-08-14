@@ -11,6 +11,7 @@ namespace AWP
     public abstract class BaseState<TParent> : BaseState
     {
         protected TParent _parent;
+        protected TParent P => _parent;
 
         public BaseState(TParent parent, StateMachine stateMachine) : base(stateMachine)
         {

@@ -87,20 +87,26 @@ namespace AWP
         /// <returns></returns>
         public static TItem PullItem<TItem>(List<TItem> list, Func<TItem, float> weightFunc)
         {
-            float randomWeight = UnityEngine.Random.Range(0, GetWeightTotal(list, weightFunc));
-            float currentWeight = 0;
+            return list.PullRandomWeightedItem(weightFunc);
+        }
 
-            for (int i = 0; i < list.Count; i++)
+        /// <summary>
+        /// Calls pull item but removes all items from list that don't fit condition first
+        /// </summary>
+        /// <typeparam name="TItem"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="weightFunc"></param>
+        /// <param name="conditionFunc"></param>
+        /// <returns></returns>
+        public static TItem PullItemConditionally<TItem>(List<TItem> list, Func<TItem, float> weightFunc, Func<TItem, bool> conditionFunc)
+        {
+            List<TItem> conditionedList = new List<TItem>();
+            list.ForEach(x =>
             {
-                currentWeight += weightFunc(list[i]);
+                if (conditionFunc(x)) conditionedList.Add(x);
+            });
 
-                if (randomWeight <= currentWeight)
-                {
-                    return list[i];
-                }
-            }
-
-            throw new System.Exception("ERROR: Was unable to find an item!");
+            return PullItem(conditionedList, weightFunc);
         }
 
         public static float GetWeightTotal<TItem>(List<TItem> list, Func<TItem, float> weightFunc)

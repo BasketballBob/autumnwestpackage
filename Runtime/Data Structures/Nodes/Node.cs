@@ -10,7 +10,7 @@ namespace AWP
         public TData Data;
     }
 
-    public abstract class NodeBase<TNode> 
+    public abstract class NodeBase<TNode>
     {
         public List<TNode> Connections;
     }
