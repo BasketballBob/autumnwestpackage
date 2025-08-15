@@ -83,7 +83,7 @@ namespace AWP
 
             for (int i = 0; i < col2.Length; i++)
             {
-                IgnoreRigidbodyColliderCollision(rb1, col2[i]);
+                IgnoreRigidbodyColliderCollision(rb1, col2[i], ignore);
             }
         }
 
@@ -92,7 +92,7 @@ namespace AWP
             Collider2D[] attachedCols = rb.GetAttachedColliders();
             for (int i = 0; i < attachedCols.Length; i++)
             {
-                Physics2D.IgnoreCollision(attachedCols[i], col);
+                Physics2D.IgnoreCollision(attachedCols[i], col, ignore);
             }
         }
         #endregion
