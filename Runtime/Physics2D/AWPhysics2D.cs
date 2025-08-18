@@ -24,12 +24,13 @@ namespace AWP
 
             foreach (Rigidbody2D body in bodies)
             {
-                Vector2 difference = (Vector2)body.centerOfMass - point;
+                Vector2 difference = (Vector2)body.worldCenterOfMass - point;
                 if (difference.magnitude == 0) continue;
                 Vector2 appliedForce = difference.normalized * magnitude;
 
                 hitAction?.Invoke(body, appliedForce);
                 body.AddForceAtPosition(appliedForce, body.ClosestPoint(point), ForceMode2D.Impulse);
+                Debug.DrawRay(body.ClosestPoint(point), appliedForce, Color.magenta, 1);
             }
         }
 
