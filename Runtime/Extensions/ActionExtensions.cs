@@ -17,10 +17,32 @@ namespace AWP
         public static Action WithOneShot(this Action action, Action oneShot)
         {
             Action newAction = null;
-            newAction = () => 
+            newAction = () =>
             {
                 oneShot?.Invoke();
                 action -= newAction;
+            };
+            action += newAction;
+
+            return action;
+        }
+
+        /// <summary>
+        /// Returns the provided action with the attached oneshot that is only removed after returning true
+        /// ONLY MODIFIES THE LOCAL COPY
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="oneShot"></param>
+        /// <returns></returns>
+        public static Action WithConditionalOneShot(this Action action, Func<bool> oneShot)
+        {
+            Action newAction = null;
+            newAction = () =>
+            {
+                if (oneShot.Invoke())
+                {
+                    action -= newAction;
+                }
             };
             action += newAction;
 

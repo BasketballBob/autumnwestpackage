@@ -8,6 +8,7 @@ namespace AWP
 {
     public abstract class AWScriptableObject : SerializedScriptableObject, IFormattable
     {
+        [NonSerialized]
         public Action OnValueChanged;
 
         public abstract string ToString(string format, IFormatProvider formatProvider);

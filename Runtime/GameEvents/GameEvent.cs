@@ -38,6 +38,23 @@ namespace AWP
 
             RegisterListener(oneShot);
         }
+        /// <summary>
+        /// Adds a one shot that is only removed once it returns true
+        /// </summary>
+        /// <param name="listener"></param>
+        public void RegisterConditionalOneShotListener(Func<bool> listener)
+        {
+            Action oneShot = null;
+            oneShot = () =>
+            {
+                if (listener.Invoke())
+                {
+                    UnregisterListener(oneShot);
+                }
+            };
+
+            RegisterListener(oneShot);
+        }
 
         public void UnregisterListener(Action listener)
         {
