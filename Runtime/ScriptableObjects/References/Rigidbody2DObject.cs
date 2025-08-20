@@ -16,7 +16,7 @@ namespace AWP
     }
 
     [System.Serializable]
-    public sealed class RigidbodyReference : IRigidbody2DReference, ITransformReference
+    public sealed class Rigidbody2DReference : IRigidbody2DReference, ITransformReference
     {
         [SerializeField]
         private Rigidbody2D _rigidbody2D;
