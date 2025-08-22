@@ -14,12 +14,12 @@ namespace AWP
 
         protected override void OnParticleEmit(ParticleSystem.Particle particle)
         {
-            AWGameManager.AudioManager.PlayOneShotAttached(_emitSFX, gameObject);
+            AWGameManager.AudioManager.PlayOneShot(_emitSFX);
         }
 
         protected override void OnParticleDeath(ParticleSystem.Particle particle)
         {
-            AWGameManager.AudioManager.PlayOneShotAttached(_deathSFX, gameObject);
+            AWGameManager.AudioManager.PlayOneShot(_deathSFX);
         }
     }
 }
