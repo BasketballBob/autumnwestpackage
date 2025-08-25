@@ -8,48 +8,6 @@ namespace AWP
 {
     public static class AnimationFX
     {
-        public static IEnumerator WaitForAnimationToComplete(this Animator anim, int layer = 0)
-        {
-            yield return null;
-
-            while (anim.GetCurrentAnimatorStateInfo(layer).normalizedTime < 1)
-            {
-                yield return null;
-            }
-        }
-        public static IEnumerator WaitForAnimationToComplete(this Animator anim, string animName, int layer = 0)
-        {
-            anim.Play(animName, layer);
-            return anim.WaitForAnimationToComplete(layer);
-        }
-        /// <summary>
-        /// Plays animation at specific duration and waits for completion
-        /// </summary>
-        /// <param name="anim"></param>
-        /// <param name="animName"></param>
-        /// <param name="duration"></param>
-        /// <param name="layer"></param>
-        /// <returns></returns>
-        public static IEnumerator WaitForAnimationToCompleteAtDuration(this Animator anim, string animName, float duration, int layer = 0)
-        {
-            anim.Play(animName, layer);
-            anim.SetSpeedForDuration(duration);
-            return anim.WaitForAnimationToComplete(layer);
-        }
-
-        public static IEnumerator WaitForTransitionToFinish(this Animator anim, int layer = 0)
-        {
-            // Wait for transition to start
-            anim.Update(0);
-            while (!anim.IsInTransition(layer)) yield return null;
-
-            // Wait for transition to end
-            while (anim.IsInTransition(layer))
-            {
-                yield return null;
-            }
-        }
-
         #region Canvas group
             public static IEnumerator ShiftAlpha(this CanvasGroup canvasGroup, float endAlpha, float duration, EasingFunction easingFunc, AWDelta.DeltaType deltaType = AWDelta.DeltaType.Update)
             {

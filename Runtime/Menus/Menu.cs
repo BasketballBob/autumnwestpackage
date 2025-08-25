@@ -136,7 +136,7 @@ namespace AWP
             if (_animator == null) yield break;
 
             _animator.Play(animationName);
-            yield return AnimationFX.WaitForAnimationToComplete(_animator);
+            yield return _animator.WaitForAnimationToComplete();
         }
     }
 }
