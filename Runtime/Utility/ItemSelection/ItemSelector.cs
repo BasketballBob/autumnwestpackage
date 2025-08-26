@@ -19,6 +19,12 @@ namespace AWP
 
         public enum SelectorType { Single, List, WeightedPool };
 
+        public ItemSelector(WeightedItemPool<TItem> pool)
+        {
+            _weightedPool = pool;
+            SelectionType = SelectorType.WeightedPool;
+        }
+
         public TItem GetItem()
         {
             switch (SelectionType)
