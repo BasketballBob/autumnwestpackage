@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 1285614129474002108}
   - component: {fileID: 5603982766985912158}
   - component: {fileID: 1242634113185310825}
+  - component: {fileID: 3107709146378366349}
   - component: {fileID: 6959616193829470467}
   - component: {fileID: 1502364860492410463}
   - component: {fileID: 4001031417628579239}
@@ -91,7 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   yarnProject: {fileID: 7545569452688597077, guid: 71776635ddd1d4c4192159a91103a48c, type: 3}
-  _variableStorage: {fileID: 0}
+  _variableStorage: {fileID: 3107709146378366349}
   dialogueViews:
   - {fileID: 1242634113185310825}
   - {fileID: 4698052348848200590}
@@ -130,6 +131,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 4001031417628579239}
   _startNode: 
+--- !u!114 &3107709146378366349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3780612768186908833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb2582520caff8a4f9f86860dfe840f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6959616193829470467
 MonoBehaviour:
   m_ObjectHideFlags: 0
