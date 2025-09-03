@@ -5,7 +5,6 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
 using Yarn.Unity;
 
