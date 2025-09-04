@@ -11,7 +11,7 @@ namespace AWP
         [SerializeField]
         private Transform _customParent;
 
-        private enum UnparentType { Self, Children };
+        private enum UnparentType { Self, Children, ChildrenDestroySelf };
 
         private void Start()
         {
@@ -27,6 +27,10 @@ namespace AWP
                     break;
                 case UnparentType.Children:
                     transform.ReparentChildren(_customParent);
+                    break;
+                case UnparentType.ChildrenDestroySelf:
+                    transform.ReparentChildren(_customParent);
+                    Destroy(gameObject);
                     break;
             }
         }
