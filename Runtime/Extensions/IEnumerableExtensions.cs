@@ -37,7 +37,6 @@ namespace AWP
                 }
             }
 
-            Debug.LogError("ERROR: Was unable to find item!");
             return default;
         }
 
@@ -88,6 +87,15 @@ namespace AWP
             return highestItem;
         }
 
+        public static int GetItemCount<T>(this IEnumerable<T> enumerable)
+        {
+            int count = 0;
+            using (var enumerator = enumerable.GetEnumerator())
+            {
+                while (enumerator.MoveNext()) count++;
+            }
+            return count;
+        }
         //public static T
     }
 }

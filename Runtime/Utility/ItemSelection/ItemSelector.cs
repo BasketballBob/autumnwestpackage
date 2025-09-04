@@ -60,6 +60,11 @@ namespace AWP
             return GetEnumerable().GetEnumerator();
         }
 
+        public bool IsEmpty()
+        {
+            return GetEnumerable().GetItemCount() == 0;
+        }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
