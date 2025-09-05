@@ -65,6 +65,19 @@ namespace AWP
             instance.stop(stopMode);
         }
 
+        public static bool StoppingOrStopped(this EventInstance instance)
+        {
+            switch (instance.GetPlaybackState())
+            {
+                case PLAYBACK_STATE.STOPPING:
+                    return true;
+                case PLAYBACK_STATE.STOPPED:
+                    return true;
+            }
+
+            return false;
+        }
+
         public static IEnumerator FadeToVolume(this EventInstance instance, float duration, float endVolume, AWDelta.DeltaType deltaType = AWDelta.DeltaType.UnscaledUpdate)
         {
             float startVolume;
