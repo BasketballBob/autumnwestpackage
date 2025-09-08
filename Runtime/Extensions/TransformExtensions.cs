@@ -49,5 +49,20 @@ namespace AWP
 
             return returnList;
         }
+
+        public static TComponent GetComponentInRoot<TComponent>(this Transform trans) where TComponent : Component
+        {
+            while (trans != null)
+            {
+                if (trans.GetComponent<TComponent>() != null)
+                {
+                    return trans.GetComponent<TComponent>();
+                }
+
+                trans = trans.parent;
+            }
+
+            return default;
+        }
     }
 }

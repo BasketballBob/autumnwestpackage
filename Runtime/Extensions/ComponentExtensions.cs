@@ -14,17 +14,7 @@ namespace AWP
 
         public static TComponent GetRootComponent<TComponent>(this Component component) where TComponent : Component
         {
-            Transform currentTransform = component.transform;
-            TComponent returnComponent; 
-
-            while (currentTransform != null)
-            {
-                returnComponent = currentTransform.GetComponent<TComponent>();
-                if (returnComponent != null) return returnComponent;
-                currentTransform = currentTransform.parent;
-            }
-
-            return null;
+            return component.transform.GetComponentInRoot<TComponent>();
         }
     }
 }
