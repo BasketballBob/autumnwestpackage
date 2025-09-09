@@ -49,6 +49,7 @@ namespace AWP
         private List<StudioEventEmitter> _emitterList;
 
         public static AudioManager Current { get; private set; }
+        public enum VolumeType { Master, SFX, Music, Ambience }
         public enum EventPlayType { Music, Ambience, Snapshot };
 
         private void Awake()
@@ -265,7 +266,34 @@ namespace AWP
         // }
         #endregion
 
-        #region Audio channel
+        #region Volumes
+        public static void SetVolume(VolumeType volumeType, float newValue)
+        {
+            newValue = Mathf.Clamp01(newValue);
+            GetVolumeRef(volumeType) = newValue;
+            Current.UpdateVolumes();
+        }
+        public static float GetVolume(VolumeType volumeType) => GetVolumeRef(volumeType);
+
+        private static ref float GetVolumeRef(VolumeType volumeType)
+        {
+            switch (volumeType)
+            {
+                case VolumeType.Master:
+                    return ref MasterVolume;
+                case VolumeType.SFX:
+                    return ref SFXVolume;
+                case VolumeType.Music:
+                    return ref MusicVolume;
+                case VolumeType.Ambience:
+                    return ref AmbienceVolume;
+            }
+
+            throw new Exception("VOLUME TIME DOESN'T EXIST!");
+        }
+        #endregion
+
+        #region Audio channels
         [System.Serializable]
         private class AudioChannel
         {

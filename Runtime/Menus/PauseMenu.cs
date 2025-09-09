@@ -1,21 +1,61 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace AWP
 {
     public class PauseMenu : Menu
     {
-        private bool PauseInput => false;
+        [SerializeField]
+        private InputActionReference _pauseAction;
+        [SerializeField]
+        private LoopingInstance _snapshotInstance;
 
-        private void Update()
+        protected virtual bool CanPause => true;
+
+        protected override void OnEnable()
         {
-            if (PauseInput) CheckToTogglePause();
+            base.OnEnable();
+
+            _pauseAction.action.performed += TryTogglePause;
+            _pauseAction.action.Enable();
         }
 
-        private void CheckToTogglePause()
+        private void OnDisable()
         {
-            //if (_cu)
+            _pauseAction.action.performed -= TryTogglePause;
+            _pauseAction.action.Disable();
         }
+
+        public void SetPaused(bool paused)
+        {
+            AWGameManager.SetPaused(paused);
+            _snapshotInstance.SetActive(paused);
+
+            if (paused) PushSelf();
+            else PopSelf();
+        }
+
+        private void TryTogglePause(InputAction.CallbackContext context)
+        {
+            if (!CanPause) return;
+            if (!AWGameManager.MenuManager.Interactable) return;
+
+            SetPaused(!IsVisible);
+        }
+
+        #region Animations
+        public override IEnumerator PushAnimation()
+        {
+            return base.PushAnimation();
+        }
+
+        public override IEnumerator PopAnimation()
+        {
+            return base.PopAnimation();
+        }
+        #endregion
     }
 }

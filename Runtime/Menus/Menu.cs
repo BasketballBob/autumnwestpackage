@@ -21,16 +21,18 @@ namespace AWP
         protected MenuState _currentMenuState;
         private bool _skipInitialization;
 
+        public MenuState CurrentMenuState => _currentMenuState;
         public bool IsVisible => _currentMenuState != MenuState.Hidden;
+        public bool IsTransitioning => _currentMenuState == MenuState.Entering || _currentMenuState == MenuState.Exitting;
 
         public enum MenuState { Displayed, Hidden, Entering, Exitting };
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             _canvasGroup = GetComponent<CanvasGroup>();
         }
 
-        private void Start()
+        protected virtual void Start()
         {
             if (!_skipInitialization) SetMenuState(_defaultState);
         }
@@ -54,6 +56,7 @@ namespace AWP
             if (_animator == null) return;
             _animator.Play(EnterAnimation, 0, 1);
             PushSelf();
+            _currentMenuState = MenuState.Displayed;
         }
         public IEnumerator WaitOnPushSelf()
         {
@@ -65,11 +68,12 @@ namespace AWP
         {
             AWGameManager.MenuManager.Pop(this);
         }
-        public void PopSelfInstant() 
+        public void PopSelfInstant()
         {
             if (_animator == null) return;
             _animator.Play(ExitAnimation, 0, 1);
             PopSelf();  
+            _currentMenuState = MenuState.Hidden;
         }
         public IEnumerator WaitOnPopSelf()
         {
@@ -89,6 +93,7 @@ namespace AWP
 
         public void SetMenuState(MenuState state)
         {
+            Debug.Log($"VIDEO {gameObject} {state}");
             switch (state)
             {
                 case MenuState.Displayed:
@@ -111,23 +116,23 @@ namespace AWP
 
         public virtual IEnumerator PushAnimation()
         {   
-            Debug.Log("PUSH START " + gameObject.name);
+            Debug.Log("PUSH START " + gameObject.name + " " + _currentMenuState);
             _currentMenuState = MenuState.Entering;
             SetVisible(true);
             yield return WaitOnTransition(EnterAnimation);
             _currentMenuState = MenuState.Displayed;
-            Debug.Log("PUSH STOP " + gameObject.name);
+            Debug.Log("PUSH STOP " + gameObject.name + " " + _currentMenuState);
             yield break;
         }
 
         public virtual IEnumerator PopAnimation()
         {
-            Debug.Log("POP START " + gameObject.name);
+            Debug.Log("POP START " + gameObject.name + " " + _currentMenuState);
             _currentMenuState = MenuState.Exitting;
             yield return WaitOnTransition(ExitAnimation);
             SetVisible(false);
             _currentMenuState = MenuState.Hidden;
-            Debug.Log("POP STOP " + gameObject.name);
+            Debug.Log("POP STOP " + gameObject.name + " " + _currentMenuState);
             yield break;
         }
 
