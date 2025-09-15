@@ -85,7 +85,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &9202655982004792766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,6 +189,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5284338077221676317}
     m_Modifications:
+    - target: {fileID: 1242634113185310825, guid: 594752acd69020c46bf8eba7358b74b1, type: 3}
+      propertyPath: _variableStorage
+      value: 
+      objectReference: {fileID: 4100556159997639526}
     - target: {fileID: 1285614129474002108, guid: 594752acd69020c46bf8eba7358b74b1, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -309,6 +313,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1285614129474002108, guid: 594752acd69020c46bf8eba7358b74b1, type: 3}
   m_PrefabInstance: {fileID: 1425625792040113899}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4100556159997639526 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3107709146378366349, guid: 594752acd69020c46bf8eba7358b74b1, type: 3}
+  m_PrefabInstance: {fileID: 1425625792040113899}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb2582520caff8a4f9f86860dfe840f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8538646409806805522 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7329479412491840761, guid: 594752acd69020c46bf8eba7358b74b1, type: 3}

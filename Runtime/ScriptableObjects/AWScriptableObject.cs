@@ -8,6 +8,8 @@ namespace AWP
 {
     public abstract class AWScriptableObject : SerializedScriptableObject, IFormattable
     {
+        public const string CreateFolderName = "Scriptable Variables/";
+
         [NonSerialized]
         public Action OnValueChanged;
 

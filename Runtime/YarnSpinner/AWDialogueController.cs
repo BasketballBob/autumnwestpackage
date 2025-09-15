@@ -20,6 +20,8 @@ namespace AWP
         protected const string TextboxExitAnim = "Textbox_Exit";
 
         [SerializeField]
+        private AWVariableStorage _variableStorage;
+        [SerializeField]
         private Animator _animator;
         [ShowInInspector]
         private RunnerState _currentState;
@@ -109,6 +111,12 @@ namespace AWP
             OnStartDialogue?.Invoke();
         }
 
+        public override void DialogueStarted()
+        {
+            base.DialogueStarted();
+            _variableStorage.LoadFromGlobalData();
+        }
+
         public override void RunLine(LocalizedLine dialogueLine, Action onDialogueLineFinished)
         {
             _currentState = RunnerState.RunningLine;
@@ -127,6 +135,7 @@ namespace AWP
 
         public override void DialogueComplete()
         {
+            _variableStorage.SaveToGlobalData();
             StartAnimationRoutine(DialogueCompleteRoutine());
 
             IEnumerator DialogueCompleteRoutine()

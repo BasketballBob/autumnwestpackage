@@ -16,6 +16,12 @@ namespace AWP
             set { _items[index] = value; }
         }
 
+        public TData this[string label]
+        {
+            get { return GetItem(label); }
+            set { }
+        }
+
         public void Add(string label, TData value)
         {
             _items.Add(new LabeledItem<TData>(label, value));
@@ -33,6 +39,13 @@ namespace AWP
         {
             return GetLabeledItem(label).Value;
         }
+        public void SetItem(string label, TData value)
+        {
+            if (!HasLabel(label)) Add(label, value);
+            else GetLabeledItem(label).Value = value;
+        }
+
+        public bool HasLabel(string label) => GetLabeledItem(label) != null;
 
         public int IndexOf(TData value)
         {
@@ -64,7 +77,7 @@ namespace AWP
     }
     
     [System.Serializable]
-    public struct LabeledItem<TData>
+    public class LabeledItem<TData>
     {
         public string Label;
         public TData Value;

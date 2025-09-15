@@ -6,15 +6,13 @@ using UnityEngine;
 
 namespace AWP
 {
-    public abstract class ScriptableVariable<T> : AWScriptableObject, ISerializationCallbackReceiver
+    public abstract class ScriptableVariable<T> : AWScriptableObject, ISaveable<T>, ISerializationCallbackReceiver
     {
-        public const string CreateFolderName = "Scriptable Variables/";
-
         public T InitialValue;
 
-        public virtual T RuntimeValue 
+        public virtual T RuntimeValue
         {
-            get 
+            get
             {
                 return _runtimeValue;
             }
@@ -24,16 +22,16 @@ namespace AWP
                 OnValueChanged?.Invoke();
             }
         }
-        [ShowInInspector] [ReadOnly()]
+        [ShowInInspector][ReadOnly()]
         protected T _runtimeValue;
 
-        #if UNITY_EDITOR
-            [Header("DEBUG")]
-            [ShowInInspector]
-            private T testValue;
-            [Button()]
-            private void SetTestValue() => RuntimeValue = testValue;
-        #endif
+#if UNITY_EDITOR
+        [Header("DEBUG")]
+        [ShowInInspector]
+        private T testValue;
+        [Button()]
+        private void SetTestValue() => RuntimeValue = testValue;
+#endif
 
         protected override void OnAfterDeserialize()
         {
@@ -51,5 +49,17 @@ namespace AWP
 
             return _runtimeValue.ToString();
         }
+
+        #region ISaveable
+        public T GetSaveData()
+        {
+            return _runtimeValue;
+        }
+
+        public void LoadSaveData(T loadData)
+        {
+            _runtimeValue = loadData;
+        }
+        #endregion
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
@@ -17,6 +18,11 @@ namespace AWP
         [SerializeField]
         private MenuState _defaultState = MenuState.Hidden;
 
+        public Action OnPushStart;
+        public Action OnPushFinish;
+        public Action OnPopStart;
+        public Action OnPopFinish;
+
         protected CanvasGroup _canvasGroup;
         protected MenuState _currentMenuState;
         private bool _skipInitialization;
@@ -27,15 +33,36 @@ namespace AWP
 
         public enum MenuState { Displayed, Hidden, Entering, Exitting };
 
-        protected virtual void OnEnable()
+        protected virtual void Awake()
         {
             _canvasGroup = GetComponent<CanvasGroup>();
+        }
+
+        protected virtual void OnEnable()
+        {
+            OnPushStart += PushStart;
+            OnPushFinish += PushFinish;
+            OnPopStart += PopStart;
+            OnPopFinish += PopFinish;
+        }
+
+        protected virtual void OnDisable()
+        {
+            OnPushStart -= PushStart;
+            OnPushFinish -= PushFinish;
+            OnPopStart -= PopStart;
+            OnPopFinish -= PopFinish;
         }
 
         protected virtual void Start()
         {
             if (!_skipInitialization) SetMenuState(_defaultState);
         }
+
+        protected virtual void PushStart() { }
+        protected virtual void PushFinish() { }
+        protected virtual void PopStart() { }
+        protected virtual void PopFinish() { }
 
         public void SetVisible(bool visible)
         {
@@ -45,6 +72,7 @@ namespace AWP
         public void SetInteractable(bool interactable)
         {
             _canvasGroup.interactable = interactable;
+            _canvasGroup.blocksRaycasts = interactable;
         }
 
         public void PushSelf()
@@ -56,7 +84,8 @@ namespace AWP
             if (_animator == null) return;
             _animator.Play(EnterAnimation, 0, 1);
             PushSelf();
-            _currentMenuState = MenuState.Displayed;
+
+            SetStateDisplayed();
         }
         public IEnumerator WaitOnPushSelf()
         {
@@ -72,8 +101,9 @@ namespace AWP
         {
             if (_animator == null) return;
             _animator.Play(ExitAnimation, 0, 1);
-            PopSelf();  
-            _currentMenuState = MenuState.Hidden;
+            PopSelf();
+
+            SetStateHidden();
         }
         public IEnumerator WaitOnPopSelf()
         {
@@ -114,13 +144,27 @@ namespace AWP
         public void SkipInitialization() => _skipInitialization = true;
         public IEnumerator WaitOnMenuTransition() => AWGameManager.MenuManager.WaitOnTransition();
 
+        #region Menu states
+        private void SetStateDisplayed()
+        {
+            _currentMenuState = MenuState.Displayed;
+            SetInteractable(true);
+        }
+
+        private void SetStateHidden()
+        {
+            _currentMenuState = MenuState.Hidden;
+            SetInteractable(false);
+        }
+        #endregion
+
         public virtual IEnumerator PushAnimation()
-        {   
+        {
             Debug.Log("PUSH START " + gameObject.name + " " + _currentMenuState);
             _currentMenuState = MenuState.Entering;
             SetVisible(true);
             yield return WaitOnTransition(EnterAnimation);
-            _currentMenuState = MenuState.Displayed;
+            SetStateDisplayed();
             Debug.Log("PUSH STOP " + gameObject.name + " " + _currentMenuState);
             yield break;
         }
@@ -131,7 +175,7 @@ namespace AWP
             _currentMenuState = MenuState.Exitting;
             yield return WaitOnTransition(ExitAnimation);
             SetVisible(false);
-            _currentMenuState = MenuState.Hidden;
+            SetStateHidden();
             Debug.Log("POP STOP " + gameObject.name + " " + _currentMenuState);
             yield break;
         }

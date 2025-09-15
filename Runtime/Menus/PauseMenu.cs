@@ -23,8 +23,10 @@ namespace AWP
             _pauseAction.action.Enable();
         }
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
+
             _pauseAction.action.performed -= TryTogglePause;
             _pauseAction.action.Disable();
         }

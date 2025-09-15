@@ -62,6 +62,8 @@ namespace AWP
 
         public void Push(Menu menu)
         {
+            Debug.Log($"INVOKE PUSH START {menu.name}");
+            menu.OnPushStart?.Invoke();
             StartTransitionRoutine(PushRoutine(menu));
         }
         private IEnumerator PushRoutine(Menu menu)
@@ -80,6 +82,8 @@ namespace AWP
             SyncInteractableMenu();
 
             yield return _menuStack.StackPeek().Menu.PushAnimation();
+
+            menu.OnPushFinish?.Invoke();
         }
 
         public void Pop()
@@ -88,6 +92,7 @@ namespace AWP
         }
         public void Pop(Menu menu)
         {
+            menu.OnPopStart?.Invoke();
             StartTransitionRoutine(PopRoutine(menu));
         }
         private IEnumerator PopRoutine(Menu menu)
@@ -105,6 +110,8 @@ namespace AWP
             }
 
             yield return enumerator;
+
+            menu.OnPopFinish?.Invoke();
         }
 
         /// <summary>

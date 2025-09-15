@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
+using AWP;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using TMPro;
@@ -12,11 +14,23 @@ namespace AWP
 {
     public class AWVariableStorage : VariableStorageBehaviour
     {
+        public static AWVariableStorageData Data = new AWVariableStorageData();
+
         private Dictionary<string, float> _floats = new Dictionary<string, float>();
         private Dictionary<string, string> _strings = new Dictionary<string, string>();
         private Dictionary<string, bool> _bools = new Dictionary<string, bool>();
 
         private List<IDictionary> Dictionaries => new List<IDictionary>() { _floats, _strings, _bools };
+
+        private void OnEnable()
+        {
+            LoadFromGlobalData();
+        }
+
+        private void OnDisable()
+        {
+            SaveToGlobalData();
+        }
 
         public override bool TryGetValue<T>(string variableName, out T result)
         {
@@ -62,6 +76,24 @@ namespace AWP
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Saves the local component data into the global data
+        /// </summary>
+        public void SaveToGlobalData()
+        {
+            Data.EnsureValues(_floats, _strings, _bools);
+        }
+
+        /// <summary>
+        /// Loads the global data locally for use
+        /// </summary>
+        public void LoadFromGlobalData()
+        {
+            _floats.EnsureValues(Data.Floats);
+            _strings.EnsureValues(Data.Strings);
+            _bools.EnsureValues(Data.Bools);
         }
 
         #region Helper methods
@@ -124,4 +156,49 @@ namespace AWP
         }
         #endregion
     }
+}
+
+public class AWVariableStorageData : ISaveable<AWVariableStorageSave>
+{
+    public Dictionary<string, float> Floats = new Dictionary<string, float>();
+    public Dictionary<string, string> Strings = new Dictionary<string, string>();
+    public Dictionary<string, bool> Bools = new Dictionary<string, bool>();
+
+    /// <summary>
+    /// Ensures the provided values are in the dictionary
+    /// </summary>
+    public void EnsureValues(Dictionary<string, float> floats, Dictionary<string, string> strings, Dictionary<string, bool> bools)
+    {
+        Floats.EnsureValues(floats);
+        Strings.EnsureValues(strings);
+        Bools.EnsureValues(bools);
+    }
+
+    public AWVariableStorageSave GetSaveData()
+    {
+        return new AWVariableStorageSave()
+        {
+            Floats = new DictionarySave<string, float>(this.Floats),
+            Strings = new DictionarySave<string, string>(this.Strings),
+            Bools = new DictionarySave<string, bool>(this.Bools)
+        };
+    }
+
+    public void LoadSaveData(AWVariableStorageSave loadData)
+    {
+        Debug.Log($"TEST DATA NULL {loadData == null}");
+        if (loadData == null) return;
+
+        Floats = loadData.Floats.GetDictionary();
+        Strings = loadData.Strings.GetDictionary();
+        Bools = loadData.Bools.GetDictionary();
+    }
+}
+
+[System.Serializable]
+public class AWVariableStorageSave
+{
+    public DictionarySave<string, float> Floats;
+    public DictionarySave<string, string> Strings;
+    public DictionarySave<string, bool> Bools;
 }
