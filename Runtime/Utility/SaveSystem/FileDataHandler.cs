@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.IO;
-using Codice.Client.Common.GameUI.Checkin;
 
 namespace AWP
 {
     /// <summary>
     /// Used https://www.youtube.com/watch?v=aUi9aijvpgs for reference
     /// </summary>
-    public class FileDataHandler<TData> where TData : AWSaveData
+    public class FileDataHandler<TData> where TData : SaveableData
     {
         private string _fileName;
         private string _savePath;
@@ -50,7 +49,7 @@ namespace AWP
             return loadedData;
         }
 
-        public void Save(AWSaveData data)
+        public void Save(SaveableData data)
         {
             try
             {

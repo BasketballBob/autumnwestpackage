@@ -20,6 +20,7 @@ namespace AWP
 
         protected override Resolution GetStartValue() => new Resolution(Screen.width, Screen.height);
 
+        [System.Serializable]
         public struct Resolution
         {
             public int Width;

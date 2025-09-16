@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
@@ -12,6 +14,11 @@ namespace AWP
         private InputActionReference _pauseAction;
         [SerializeField]
         private LoopingInstance _snapshotInstance;
+
+        [FoldoutGroup("Events")]
+        public UnityEvent OnPause;
+        [FoldoutGroup("Events")]
+        public UnityEvent OnUnpause;
 
         protected virtual bool CanPause => true;
 
@@ -38,6 +45,9 @@ namespace AWP
 
             if (paused) PushSelf();
             else PopSelf();
+
+            if (paused) OnPause.Invoke();
+            else OnUnpause.Invoke();
         }
 
         private void TryTogglePause(InputAction.CallbackContext context)

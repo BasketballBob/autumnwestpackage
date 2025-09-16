@@ -22,6 +22,7 @@ namespace AWP
         protected virtual DeveloperMode _devMode => DeveloperMode.Developer;
         public static AWGameManager Current { get; private set; }
         public static AudioManager AudioManager { get; private set; }
+        public static AWSaveManager SaveManager { get; private set; }
         public static AWCamera AWCamera => Current?._refAWCamera.Reference;
         public static MenuManager MenuManager => Current?._refMenuManager.Reference;
         public static CullingBounds CullingBounds => Current?._refCullingBounds.Reference;
@@ -37,6 +38,8 @@ namespace AWP
         private ReferenceObject<CullingBounds> _refCullingBounds;
         [SerializeField]
         private AudioManager _audioManager;
+        [SerializeField]
+        private AWSaveManager _saveManager;
         [SerializeField]
         private SceneTransition _defaultSceneTransition;
 
@@ -66,6 +69,7 @@ namespace AWP
         {
             Current = this;
             AudioManager = _audioManager;
+            SaveManager = _saveManager;
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 

@@ -8,46 +8,38 @@ using UnityEngine;
 
 namespace AWP
 {
-    public abstract class AWSaveManager<TSaveData> : MonoBehaviour where TSaveData : AWSaveData, new()
+    public abstract class AWSaveManager<TSaveData, TPreferenceData> : AWSaveManager where TSaveData : SaveableData, new() where TPreferenceData : SaveableData, new()
     {
         private const string DefaultSaveName = "Save1.txt";
+        private const string PreferencesSaveName = "Preferences.txt";
 
         [SerializeField]
         private SaveSettings _settings;
 
         public TSaveData SaveData = new TSaveData();
-        private FileDataHandler<TSaveData> _dataHandler;
+        public TPreferenceData PreferenceData = new TPreferenceData();
+
+        private void Awake()
+        {
+            LoadPreferences();
+        }
 
         [Button()]
         public void Save(string fileName = DefaultSaveName)
         {
-            _dataHandler = new FileDataHandler<TSaveData>(fileName);
-
             SaveExternalData();
-            SaveData.Save();
-            _dataHandler.Save(SaveData);
+            Save<TSaveData>(fileName, ref SaveData);
         }
 
         [Button()]
         public void Load(string fileName = DefaultSaveName)
         {
-            _dataHandler = new FileDataHandler<TSaveData>(fileName);
-
-            SaveData = _dataHandler.Load() as TSaveData;
-            if (SaveData == null) SaveData = new TSaveData();
-
-            SaveData.Load();
+            Load<TSaveData>(fileName, ref SaveData);
             LoadExternalData();
-
-            Debug.Log($"SAVE DATA {SaveData != null} {_dataHandler.Load() != null}");
         }
 
         [Button()]
-        public void Delete(string fileName = DefaultSaveName)
-        {
-            _dataHandler = new FileDataHandler<TSaveData>(fileName);
-            _dataHandler.Delete();
-        }
+        public void Delete(string fileName = DefaultSaveName) => Delete<TSaveData>(fileName);
 
         public bool SaveExists(string fileName = DefaultSaveName)
         {
@@ -62,5 +54,49 @@ namespace AWP
         /// Loads data relevant to the SaveManager into the SaveData
         /// </summary>
         protected abstract void LoadExternalData();
+
+        #region Preferences
+        [Button()]
+        public override void SavePreferences() => Save<TPreferenceData>(PreferencesSaveName, ref PreferenceData);
+        [Button()]
+        public override void LoadPreferences() => Load<TPreferenceData>(PreferencesSaveName, ref PreferenceData);
+        #endregion
+
+        #region Helper functions
+        public void Save<TData>(string fileName, ref TData saveData) where TData : SaveableData, new()
+        {
+            FileDataHandler<TData> dataHandler = new FileDataHandler<TData>(fileName);
+
+            saveData.Save();
+            dataHandler.Save(saveData);
+        }
+
+        public void Load<TData>(string fileName, ref TData saveData) where TData : SaveableData, new()
+        {
+            FileDataHandler<TData> dataHandler = new FileDataHandler<TData>(fileName);
+
+            saveData = dataHandler.Load() as TData;
+            if (saveData == null) saveData = new TData();
+
+            saveData.Load();
+        }
+
+        public void Delete<TData>(string fileName) where TData : SaveableData
+        {
+            FileDataHandler<TData> dataHandler = new FileDataHandler<TData>(fileName);
+            dataHandler.Delete();
+        }
+
+        public bool SaveExists<TData>(string fileName) where TData : SaveableData
+        {
+            return File.Exists(FileDataHandler<TData>.GetFullPath(fileName));
+        }
+        #endregion
+    }
+
+    public abstract class AWSaveManager : MonoBehaviour
+    {
+        public abstract void SavePreferences();
+        public abstract void LoadPreferences();
     }
 }

@@ -6,18 +6,18 @@ using UnityEngine;
 namespace AWP
 {
     [System.Serializable]
-    public abstract class AWSaveData
+    public abstract class AWSaveData : SaveableData
     {
         public AWVariableStorageSave VariableStorageData;
 
         public AWSaveData() { }
 
-        public virtual void Save()
+        public override void Save()
         {
             VariableStorageData = AWVariableStorage.Data.GetSaveData();
         }
 
-        public virtual void Load()
+        public override void Load()
         {
             AWVariableStorage.Data.LoadSaveData(VariableStorageData);
         }
