@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using AWP;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -36,12 +36,19 @@ namespace AWP
         {
             result = default;
 
-            Dictionary<string, T> dict = GetDict<T>();
-            if (dict == null) return false;
-
-            if (GetDict<T>().ContainsKey(variableName))
+            if (_floats.ContainsKey(variableName))
             {
-                result = GetDict<T>()[variableName];
+                result = (T)(object)_floats[variableName];
+                return true;
+            }
+            else if (_strings.ContainsKey(variableName))
+            {
+                result = (T)(object)_strings[variableName];
+                return true;
+            }
+            else if (_bools.ContainsKey(variableName))
+            {
+                result = (T)(object)_bools[variableName];
                 return true;
             }
 
@@ -103,16 +110,13 @@ namespace AWP
             else dict[variableName] = value;
         }
 
-        private Dictionary<string, TValue> GetDict<TValue>()
-        {
-            Type genericType = typeof(TValue);
-            Debug.Log($"{typeof(float)} {genericType} {typeof(TValue)} Compare {typeof(TValue) == typeof(float)}");
+        // [Button]
+        // public void TEST()
+        // {
+        //     TypeConverter converter = TypeDescriptor.GetConverter(typeof(bool));
 
-            if (typeof(TValue) == typeof(float)) return _floats as Dictionary<string, TValue>;
-            else if (typeof(TValue) == typeof(string)) return _strings as Dictionary<string, TValue>;
-            else if (typeof(TValue) == typeof(bool)) return _bools as Dictionary<string, TValue>;
-            else return null;
-        }
+        //     //Debug.Log($"CONVERT TEST {converter.CanConvertTo()}");
+        // }
 
         /// <summary>
         /// Ensures that the receiver contains all newValues
@@ -131,7 +135,7 @@ namespace AWP
 
         #region Debug
         [InfoBox("@DrawDebug()")]
-        [ReadOnly]
+        [Sirenix.OdinInspector.ReadOnly]
         public bool _ignore;
         private string DrawDebug()
         {

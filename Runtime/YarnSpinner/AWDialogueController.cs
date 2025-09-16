@@ -42,6 +42,7 @@ namespace AWP
 
         public enum RunnerState { Off, EnterAnimation, RunningLine, ExitAnimation };
 
+        public AWVariableStorage VariableStorage => _variableStorage;
         /// <summary>
         /// Used to halt the automatic progression of the dialogue (add custom animations / waiting)
         /// </summary>
