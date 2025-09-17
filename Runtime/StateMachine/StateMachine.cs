@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace AWP
@@ -7,6 +8,7 @@ namespace AWP
     [System.Serializable]
     public class StateMachine
     {
+        [SerializeField]
         private BaseState _currentState;
 
         public void SetState(BaseState newState)
