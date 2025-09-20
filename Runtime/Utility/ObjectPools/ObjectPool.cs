@@ -10,7 +10,7 @@ namespace AWP
     [System.Serializable]
     public abstract class ObjectPool<TObject> : MonoBehaviour where TObject : Component
     {
-        [SerializeField]
+        [SerializeField] [SceneObjectsOnly]
         protected TObject _prefab;
         [SerializeField]
         protected int _minItemCount = 5;
@@ -39,7 +39,7 @@ namespace AWP
             DisableObject(_prefab);
 
             // Create remaining minimal item count
-            for (; _poolItems.Count < _minItemCount;)
+            for (; _poolItems.Count <= _minItemCount;)
             {
                 DisableObject(CreateObject());
             }
@@ -54,6 +54,7 @@ namespace AWP
                 if (!ObjectIsActive(_poolItems[i]))
                 {
                     EnableObject(_poolItems[i]);
+
                     return _poolItems[i];
                 }
             }
@@ -78,7 +79,6 @@ namespace AWP
         /// <param name="count"></param>
         public void SetActiveCount(int count)
         {
-
             // Create new items if necessary
             while (_poolItems.Count < count)
             {
