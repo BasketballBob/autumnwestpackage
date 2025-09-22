@@ -28,8 +28,6 @@ namespace AWP
         {
             if (_boolVariable.RuntimeValue) _onSetTrue.Invoke();
             else _onSetFalse.Invoke();
-
-            Debug.Log($"BOOL CHANGED {_boolVariable.RuntimeValue}");
         }
     }
 }
