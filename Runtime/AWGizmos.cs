@@ -6,6 +6,9 @@ namespace AWP
 {
     public static class AWGizmos
     {
-        
+        public static void DrawRect(Rect rect)
+        {
+            Gizmos.DrawWireCube(rect.center, rect.size);
+        }
     }
 }
