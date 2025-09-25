@@ -13,17 +13,22 @@ namespace AWP
     {
         private List<T> _colliderList = new List<T>();
 
+        public Action<T> OnEnterCollider;
+        public Action<T> OnExitCollider;
+
         public List<T> Colliders => _colliderList;
 
-        public virtual void OnColliderEnter(T col)
+        protected virtual void OnColliderEnter(T col)
         {
             _colliderList.Add(col);
+            OnEnterCollider?.Invoke(col);
             OnColliderListChange();
         }
 
-        public virtual void OnColliderExit(T col)
+        protected virtual void OnColliderExit(T col)
         {
             _colliderList.Remove(col);
+            OnExitCollider?.Invoke(col);
             OnColliderListChange();
         }
 
