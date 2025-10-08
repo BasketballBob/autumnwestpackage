@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.Utilities;
+using Unity.Collections;
 using UnityEngine;
 
 namespace AWP
@@ -25,5 +28,25 @@ namespace AWP
                 else dict.Add(x.Key, x.Value);
             });
         }
+
+        // NOT WORKING CURRENTLY
+        // public static Dictionary<TKey, TValue> GetWithClearedNullValues<TKey, TValue>(this Dictionary<TKey, TValue> dict) where TValue : class
+        // {
+        //     List<TKey> keysToRemove = new List<TKey>();
+
+        //     dict.ForEach(x =>
+        //     {
+        //         if (x.Value != null) return;
+        //         keysToRemove.Add(x.Key);
+        //         Debug.Log($"REMOVE KEY {x}");
+        //     });
+
+        //     keysToRemove.ForEach(x =>
+        //     {
+        //         dict.Remove(x);
+        //     });
+
+        //     return dict;
+        // }
     }
 }

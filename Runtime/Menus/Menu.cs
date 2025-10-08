@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using FMODUnity;
 
 namespace AWP
 {
@@ -17,6 +18,12 @@ namespace AWP
         private Animator _animator;
         [SerializeField]
         private MenuState _defaultState = MenuState.Hidden;
+
+        [Header("SFX")]
+        [SerializeField]
+        private EventReference _pushSFX;
+        [SerializeField]
+        private EventReference _popSFX;
 
         public Action OnPushStart;
         public Action OnPushFinish;
@@ -160,6 +167,8 @@ namespace AWP
 
         public virtual IEnumerator PushAnimation()
         {
+            AWGameManager.AudioManager.PlayOneShot(_pushSFX);
+
             Debug.Log("PUSH START " + gameObject.name + " " + _currentMenuState);
             _currentMenuState = MenuState.Entering;
             SetVisible(true);
@@ -171,6 +180,8 @@ namespace AWP
 
         public virtual IEnumerator PopAnimation()
         {
+            AWGameManager.AudioManager.PlayOneShot(_popSFX);
+
             Debug.Log("POP START " + gameObject.name + " " + _currentMenuState);
             _currentMenuState = MenuState.Exitting;
             yield return WaitOnTransition(ExitAnimation);

@@ -27,7 +27,8 @@ namespace AWP
         private Dictionary<string, List<AWTags>> _instances = new Dictionary<string, List<AWTags>>();
 
         public List<AWTags> GetInstances(string tag)
-        {   
+        {
+            if (!ContainsInstanceOfTag(tag)) return null;
             return _instances[tag];
         }
 

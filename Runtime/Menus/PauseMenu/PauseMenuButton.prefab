@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1628722942192246344}
   - component: {fileID: 1106581313173718416}
   - component: {fileID: 6443049846721839606}
+  - component: {fileID: 5243845327450440958}
   m_Layer: 0
   m_Name: PauseMenuButton
   m_TagString: Untagged
@@ -121,6 +122,32 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5243845327450440958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2526791302809254805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cbd7cc722c763b4296d760e7c98ab2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hoverSFX:
+    Guid:
+      Data1: -1546780842
+      Data2: 1294156715
+      Data3: 316003260
+      Data4: 781154467
+    Path: event:/UI/Play_UI_Settings_Nav
+  _selectSFX:
+    Guid:
+      Data1: 376899351
+      Data2: 1108073095
+      Data3: 396184247
+      Data4: 1295974428
+    Path: event:/UI/Play_UI_Settings_Button
 --- !u!1 &5256110128009926372
 GameObject:
   m_ObjectHideFlags: 0

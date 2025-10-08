@@ -25,6 +25,7 @@ namespace AWP
             {
                 TComponent component = x.GetComponent<TComponent>();
                 if (component == null) return;
+                if (x.GetComponent<IgnoreGroup>() != null) return;
                 if (_items.Contains(component)) return;
                 
                 _items.Add(component);

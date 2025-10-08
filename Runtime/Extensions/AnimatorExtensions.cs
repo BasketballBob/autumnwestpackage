@@ -10,7 +10,7 @@ namespace AWP
         {
             yield return null;
 
-            while (anim.GetCurrentAnimatorStateInfo(layer).normalizedTime < 1)
+            while (!anim.AnimationIsFinished(layer))
             {
                 yield return null;
             }
@@ -53,6 +53,11 @@ namespace AWP
             {
                 yield return null;
             }
+        }
+
+        public static bool AnimationIsFinished(this Animator anim, int layer = 0)
+        {
+            return anim.GetCurrentAnimatorStateInfo(layer).normalizedTime >= 1;
         }
         
         public static AnimatorClipInfo[] GetUpdatedCurrentClipInfo(this Animator animator, int layer)

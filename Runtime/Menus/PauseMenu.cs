@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,6 +13,7 @@ namespace AWP
     {
         [SerializeField]
         private InputActionReference _pauseAction;
+
         [SerializeField]
         private LoopingInstance _snapshotInstance;
 

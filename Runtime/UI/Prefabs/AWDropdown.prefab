@@ -854,6 +854,7 @@ GameObject:
   - component: {fileID: 5039849830910641076}
   - component: {fileID: 8517701714847279520}
   - component: {fileID: 7163088943390278349}
+  - component: {fileID: 7221248769524226366}
   m_Layer: 0
   m_Name: AWDropdown
   m_TagString: Untagged
@@ -981,6 +982,25 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_AlphaFadeSpeed: 0.15
+--- !u!114 &7221248769524226366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6065080561731287148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1de2074e2ce6b3444a2c0d4c38ace0b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _valueChangeSFX:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!1 &7747396080928469846
 GameObject:
   m_ObjectHideFlags: 0
