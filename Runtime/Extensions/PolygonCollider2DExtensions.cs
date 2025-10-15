@@ -18,7 +18,7 @@ namespace AWP
 
             col.points.ForEach(x =>
             {   
-                Debug.Log($"POINT {x}");
+                //Debug.Log($"POINT {x}");
 
                 if (x.x > rect.xMax) rect.xMax = x.x;
                 if (x.x < rect.xMin) rect.xMin = x.x;
@@ -26,7 +26,7 @@ namespace AWP
                 if (x.y < rect.yMin) rect.yMin = x.y;
             });
 
-            Debug.Log($"RECT xMax:{rect.xMax} xMin{rect.xMin} yMax{rect.yMax} yMin{rect.yMin}");
+            //Debug.Log($"RECT xMax:{rect.xMax} xMin{rect.xMin} yMax{rect.yMax} yMin{rect.yMin}");
             return rect;
         }
     }

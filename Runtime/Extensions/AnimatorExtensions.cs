@@ -75,7 +75,11 @@ namespace AWP
 
         public static void SetSpeedForDuration(this Animator animator, float duration, int layerIndex = 0)
         {
-            animator.speed = animator.GetUpdatedCurrentClipInfo(layerIndex)[0].clip.length / duration;
+            animator.speed = animator.GetSpeedForDuration(duration, layerIndex);
+        }
+        public static float GetSpeedForDuration(this Animator animator, float duration, int layerIndex = 0)
+        {
+            return animator.GetUpdatedCurrentClipInfo(layerIndex)[0].clip.length / duration;
         }
 
         public static void ClampSpeedForMaxDuration(this Animator animator, float maxDuration, int layerIndex = 0)

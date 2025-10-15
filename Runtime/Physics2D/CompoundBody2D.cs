@@ -66,8 +66,11 @@ namespace AWP
         }
 
         public Rigidbody2D DisconnectSegment(Transform transform, bool updateCenterOfMass = true)
+            => DisconnectSegment(RemoveSegment(transform, updateCenterOfMass));
+        public Rigidbody2D DisconnectSegment(string name, bool updateCenterOfMass = true)
+            => DisconnectSegment(RemoveSegment(name, updateCenterOfMass));
+        private Rigidbody2D DisconnectSegment(BodySegment segment)
         {
-            BodySegment segment = RemoveSegment(transform, updateCenterOfMass);
             if (segment == null) return null;
 
             Rigidbody2D rb = segment.Trans.gameObject.AddComponent<Rigidbody2D>();
@@ -102,14 +105,12 @@ namespace AWP
         }
 
         public BodySegment RemoveSegment(Transform transform, bool updateCenterOfMass = true)
+            => RemoveSegment(GetSegment(transform), updateCenterOfMass);
+        public BodySegment RemoveSegment(string name, bool updateCenterOfMass = true)
+            => RemoveSegment(GetSegment(name), updateCenterOfMass);
+        private BodySegment RemoveSegment(BodySegment segment, bool updateCenterOfMass = true)
         {
-            BodySegment segment = GetSegment(transform);
             if (segment == null) return null;
-
-            //Rigidbody2D rb = segment.Trans.gameObject.AddComponent<Rigidbody2D>();
-            //rb.mass = segment.Mass;
-            //rb.interpolation = RigidbodyInterpolation2D.Interpolate;
-            //rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 
             _segments.Remove(segment);
             if (updateCenterOfMass) UpdateCenterOfMass();
@@ -150,6 +151,11 @@ namespace AWP
             }
 
             return null;
+        }
+
+        private BodySegment GetSegment(string name)
+        {
+            return _segments.First(x => name == x.Trans.name);
         }
 
         private void InitializeSegments()
