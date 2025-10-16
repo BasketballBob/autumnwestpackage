@@ -19,6 +19,7 @@ namespace AWP
         private Rigidbody2D _rb;
 
         public Rigidbody2D Rigidbody2D => _rb;
+        public Transform DisconnectTransform { get => _disconnectTransform; set => _disconnectTransform = value; }
         private List<Collider2D> AttachedColliders
         {
             get
