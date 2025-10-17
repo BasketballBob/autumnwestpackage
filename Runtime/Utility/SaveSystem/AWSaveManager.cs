@@ -38,6 +38,11 @@ namespace AWP
             LoadExternalData();
         }
 
+        public void LoadEmptySave(string fileName = DefaultSaveName)
+        {
+            LoadEmpty<TSaveData>(fileName, ref SaveData);
+        }
+
         [Button()]
         public void Delete(string fileName = DefaultSaveName) => Delete<TSaveData>(fileName);
 
@@ -78,6 +83,12 @@ namespace AWP
             saveData = dataHandler.Load() as TData;
             if (saveData == null) saveData = new TData();
 
+            saveData.Load();
+        }
+
+        public void LoadEmpty<TData>(string fileName, ref TData saveData) where TData : SaveableData, new()
+        {
+            saveData = new TData();
             saveData.Load();
         }
 
