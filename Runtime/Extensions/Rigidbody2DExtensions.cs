@@ -36,6 +36,19 @@ namespace AWP
             return colliders;
         }
 
+        /// <summary>
+        /// Rotates the Rigidbody towards the destination rotation
+        /// Just like the balancing body (Crawling Angels)
+        /// </summary>
+        /// <param name="rb"></param>
+        /// <param name="targetRotation"></param>
+        /// <param name="maxDegreesDelta"></param>
+        public static void BalanceTowards(this Rigidbody2D rb, Quaternion targetRotation, float maxDegreesDelta)
+        {
+            rb.MoveRotation(Quaternion.RotateTowards(rb.transform.rotation,
+                targetRotation, maxDegreesDelta * Time.fixedDeltaTime));
+        }
+
         public static void BalanceCenterOfMass(this Rigidbody2D rb, List<Tuple<Transform, float>> massPoints)
         {
             Vector2 centerOfMass = Vector2.zero;
