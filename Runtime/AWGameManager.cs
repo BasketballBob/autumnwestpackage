@@ -26,7 +26,19 @@ namespace AWP
         public static AWCamera AWCamera => Current?._refAWCamera.Reference;
         public static MenuManager MenuManager => Current?._refMenuManager.Reference;
         public static CullingBounds CullingBounds => Current?._refCullingBounds.Reference;
-        public static float TimeScale { get { return Time.timeScale; } set { Time.timeScale = value; } }
+        public static float TimeScale
+        {
+            get
+            {
+                return Time.timeScale;
+            }
+            set
+            {
+                _timeScale = value;
+                SyncTimeScale();
+            }
+        }
+        private static float _timeScale;
         public static bool IsPaused { get; protected set; }
 
         [Header("Reference Objects")]
@@ -222,10 +234,12 @@ namespace AWP
         {
             if (!IsPaused && paused) _prePauseTimeScale = TimeScale;
 
-            TimeScale = paused ? 0 : _prePauseTimeScale;
+            Debug.Log($"PAUSED {paused}");
             IsPaused = paused;
+            SyncTimeScale();
         }
-
+        private static void SyncTimeScale() => Time.timeScale = IsPaused ? 0 : _timeScale;
+        
         #region Developer mode
         public static bool IsDemoMode()
         {

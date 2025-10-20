@@ -82,6 +82,11 @@ namespace AWP
             return animator.GetUpdatedCurrentClipInfo(layerIndex)[0].clip.length / duration;
         }
 
+        public static void ClampNormalizedTime01(this Animator animator, string animName, int layer = 0)
+        {
+            animator.Play(animName, layer, Mathf.Clamp01(animator.GetCurrentAnimatorStateInfo(0).normalizedTime));
+        }
+
         public static void ClampSpeedForMaxDuration(this Animator animator, float maxDuration, int layerIndex = 0)
         {
             if (animator.GetCurrentClipScaledDuration(layerIndex) < maxDuration) return;
