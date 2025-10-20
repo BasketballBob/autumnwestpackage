@@ -68,6 +68,8 @@ namespace AWP
         {
             Action onSwitch = null;
 
+            if (settings.OverrideSortingOrder != null) Canvas.sortingOrder = (int)settings.OverrideSortingOrder;
+
             if (settings == null || settings.PauseGame) AWGameManager.SetPaused(true);
             PrepareSceneAudioTransition();
             yield return EnterRoutine(settings);

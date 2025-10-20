@@ -13,6 +13,11 @@ namespace AWP
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            PlayHoverSFX();
+        }
+
+        protected virtual void PlayHoverSFX()
+        {
             AWGameManager.AudioManager.PlayOneShot(_hoverSFX);
         }
     }

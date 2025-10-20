@@ -26,6 +26,11 @@ namespace AWP
             _button.onClick.RemoveListener(PlaySelectSFX);
         }
 
+        protected override void PlayHoverSFX()
+        {
+            if (!_button.IsInteractable()) return;
+            base.PlayHoverSFX();
+        }
         private void PlaySelectSFX() => AWGameManager.AudioManager.PlayOneShot(_selectSFX);
     }
 }

@@ -10,6 +10,7 @@ namespace AWP
         public float DelayDuration;
         public float ExitDuration;
         public bool PauseGame = true;
+        public int? OverrideSortingOrder;
 
         public TransitionSettings() { }
 

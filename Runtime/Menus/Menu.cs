@@ -32,6 +32,7 @@ namespace AWP
 
         protected CanvasGroup _canvasGroup;
         protected MenuState _currentMenuState;
+        protected bool _interactable = false;
         private bool _skipInitialization;
 
         public MenuState CurrentMenuState => _currentMenuState;
@@ -80,6 +81,7 @@ namespace AWP
         {
             _canvasGroup.interactable = interactable;
             _canvasGroup.blocksRaycasts = interactable;
+            _interactable = interactable;
         }
 
         public void PushSelf()

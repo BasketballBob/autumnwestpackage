@@ -38,7 +38,7 @@ namespace AWP
                 SyncTimeScale();
             }
         }
-        private static float _timeScale;
+        private static float _timeScale = 1;
         public static bool IsPaused { get; protected set; }
 
         [Header("Reference Objects")]
@@ -142,6 +142,7 @@ namespace AWP
 
         public static IEnumerator UnloadSceneAsync(string sceneName)
         {
+            Debug.Log($"UNLOAD SCENE {sceneName}");
             AsyncOperation operation = SceneManager.UnloadSceneAsync(sceneName);
             while (!operation.isDone) yield return null;
         }
@@ -232,11 +233,12 @@ namespace AWP
 
         public static void SetPaused(bool paused)
         {
-            if (!IsPaused && paused) _prePauseTimeScale = TimeScale;
+            //if (!IsPaused && paused) _prePauseTimeScale = TimeScale;
 
-            Debug.Log($"PAUSED {paused}");
+            
             IsPaused = paused;
             SyncTimeScale();
+            Debug.Log($"PAUSED {paused} Time.timeScale={Time.timeScale} _timeScale={_timeScale}");
         }
         private static void SyncTimeScale() => Time.timeScale = IsPaused ? 0 : _timeScale;
         
