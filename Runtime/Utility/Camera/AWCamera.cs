@@ -19,7 +19,7 @@ namespace AWP
         private DimensionType _positionType;
         [SerializeField]
         private List<Camera> _syncedCameras;
-        [SerializeField]
+        [SerializeField] [FoldoutGroup("Advanced Settings")]
         private TransparencySortMode _transparencySortMode = TransparencySortMode.Default;
 
         private Camera _camera;

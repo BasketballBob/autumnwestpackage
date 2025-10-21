@@ -7,7 +7,7 @@ namespace AWP
 {
     public abstract class ReferenceObject<TReference> : AWScriptableObject where TReference : class
     {
-        protected const string CreateFolderName = "Reference Objects/";
+        protected new const string CreateFolderName = "Reference Objects/";
 
         [SerializeField]
         private TReference _reference;
