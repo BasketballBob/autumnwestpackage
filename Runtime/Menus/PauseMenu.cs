@@ -55,6 +55,7 @@ namespace AWP
         private void TryTogglePause(InputAction.CallbackContext context)
         {
             if (!CanPause) return;
+            if (!_interactable && IsVisible) return;
             if (!AWGameManager.MenuManager.Interactable) return;
 
             SetPaused(!IsVisible);

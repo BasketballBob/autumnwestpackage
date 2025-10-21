@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a5db0b98f0c2244cb323ead1312514d, type: 3}
+  m_Name: TestCreditsData
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: CreditsItems
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[AWP.CreditsData+CreditsItem, autumnwest.autumnwestpackage]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 1|AWP.CreditsData+CreditsSection, autumnwest.autumnwestpackage
+    - Name: Title
+      Entry: 1
+      Data: Game Design
+    - Name: Content
+      Entry: 1
+      Data: 'Talia bob Mair
+
+        Autumn West'
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 2|AWP.CreditsData+CreditsSection, autumnwest.autumnwestpackage
+    - Name: Title
+      Entry: 1
+      Data: Voice Acting
+    - Name: Content
+      Entry: 1
+      Data: "Christopher Mair as Uncle Tontine\r\nJaden Dyer as Imposter Myrtle\r\nMandy
+        Knopp as Jacob\u2019s Mother\r\n"
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 

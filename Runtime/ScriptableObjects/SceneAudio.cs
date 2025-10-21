@@ -8,9 +8,8 @@ using UnityEngine.SceneManagement;
 namespace AWP
 {
     [CreateAssetMenu(fileName = CreateItemName, menuName = CreateFolderName + CreateItemName)]
-    public class SceneAudio : ScriptableObject
+    public class SceneAudio : AWScriptableObject
     {
-        private const string CreateFolderName = "Scriptable Variables/";
         private const string CreateItemName = "SceneAudio";
         private const string ResourcesFolder = "SceneAudio/";
 
@@ -46,6 +45,11 @@ namespace AWP
         public static SceneAudio LoadSceneAudio(string name)
         {
             return Resources.Load<SceneAudio>(ResourcesFolder + name);
+        }
+
+        public override string ToString(string format, IFormatProvider formatProvider)
+        {
+            return ToString(format, formatProvider);
         }
     }
 }
