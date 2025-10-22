@@ -20,6 +20,11 @@ namespace AWP
             anim.Play(animName, layer);
             return anim.WaitForAnimationToComplete(layer);
         }
+        public static IEnumerator WaitForAnimationToComplete(this Animator anim, string animName, int layer, float normalizedTime)
+        {
+            anim.Play(animName, layer, normalizedTime);
+            return anim.WaitForAnimationToComplete(layer);
+        }
 
         public static IEnumerator WaitForCrossFadeInFixedTime(this Animator anim, string stateName, float fixedDuration)
         {
