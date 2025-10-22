@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Remoting.Messaging;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace AWP
@@ -19,7 +22,7 @@ namespace AWP
 
         public abstract class CreditsItem
         {
-
+            public abstract List<CreditsEntry> GetCreditEntries();
         }
 
         public class CreditsSection : CreditsItem
@@ -27,6 +30,18 @@ namespace AWP
             public string Title;
             [TextArea(1, 20)]
             public string Content;
+
+            public override List<CreditsEntry> GetCreditEntries()
+            {
+                List<CreditsEntry> entries = new List<CreditsEntry>();
+                entries.Add(new HeaderObject(Title));
+                Content.Split('\n').ForEach(x =>
+                {
+                    entries.Add(new BodyObject(x));
+                });
+
+                return entries;
+            }
         }
     }
 }

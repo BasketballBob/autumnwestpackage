@@ -18,6 +18,12 @@ namespace AWP
         {
             list.RemoveAt(0);
         }
+        public static T PopFirstItem<T>(this List<T> list)
+        {
+            T firstItem = list.FirstItem();
+            list.RemoveFirstItem();
+            return firstItem;
+        }
 
         public static T LastItem<T>(this List<T> list)
         {
@@ -30,6 +36,12 @@ namespace AWP
         public static void RemoveLastItem<T>(this List<T> list)
         {
             list.RemoveAt(list.Count - 1);
+        }
+        public static T PopLastItem<T>(this List<T> list)
+        {
+            T lastItem = list.LastItem();
+            list.RemoveLastItem();
+            return lastItem;
         }
 
         public static T RemoveAndReturn<T>(this List<T> list, int index)

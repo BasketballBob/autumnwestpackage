@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -16,7 +17,9 @@ namespace AWP
         [SerializeField]
         private SaveSettings _settings;
 
+        [NonSerialized] [ShowInInspector]
         public TSaveData SaveData = new TSaveData();
+        [NonSerialized] [ShowInInspector]
         public TPreferenceData PreferenceData = new TPreferenceData();
 
         private void Awake()
@@ -29,6 +32,7 @@ namespace AWP
         {
             SaveExternalData();
             Save<TSaveData>(fileName, ref SaveData);
+            Debug.Log("AWSaveManager: Save");
         }
 
         [Button()]
@@ -36,11 +40,14 @@ namespace AWP
         {
             Load<TSaveData>(fileName, ref SaveData);
             LoadExternalData();
+
+            Debug.Log("AWSaveManager: Load");
         }
 
         public void LoadEmptySave(string fileName = DefaultSaveName)
         {
             LoadEmpty<TSaveData>(fileName, ref SaveData);
+            Debug.Log("AWSaveManager: Load Empty");
         }
 
         [Button()]

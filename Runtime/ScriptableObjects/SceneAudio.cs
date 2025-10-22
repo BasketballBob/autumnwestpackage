@@ -49,7 +49,7 @@ namespace AWP
 
         public override string ToString(string format, IFormatProvider formatProvider)
         {
-            return ToString(format, formatProvider);
+            return name;
         }
     }
 }
