@@ -23,18 +23,21 @@ namespace AWP
         private bool _prefabInScene;
 
         private MonoBehaviour _mono;
+        private Transform _parent;
         private List<TComponent> _poolItems = new List<TComponent>();
 
         public int ActiveItemCount { get; private set; }
         public TComponent Prefab => _prefab;
 
-        public void Initialize(MonoBehaviour mono)
+        public void Initialize(MonoBehaviour mono, Transform parent = null)
         {
             _mono = mono;
+            _parent = parent;
+
             if (_prefabInScene)
             {
                 AddObjectToPool(_prefab);
-                if (ObjectIsActive(_prefab)) ActiveItemCount++;
+                SetObjectActive(_prefab, false);
             }
         }
 
@@ -62,7 +65,13 @@ namespace AWP
             return newObject;
         }
 
-        protected void AddObjectToPool(TComponent obj) => _poolItems.Add(obj);
+        protected void AddObjectToPool(TComponent obj)
+        {
+            _poolItems.Add(obj);
+            if (_parent != null) obj.transform.SetParent(_parent);
+
+            ActiveItemCount++;
+        } 
         protected void SetObjectActive(TComponent obj, bool active)
         {
             if (active != ObjectIsActive(obj))

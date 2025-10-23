@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -13,6 +15,7 @@ namespace AWP
     {
         private const string CreateItemName = "CreditsData";
 
+        [HideReferenceObjectPicker]
         public List<CreditsItem> CreditsItems = new List<CreditsItem>();
 
         public override string ToString(string format, IFormatProvider formatProvider)
@@ -41,6 +44,18 @@ namespace AWP
                 });
 
                 return entries;
+            }
+        }
+
+        public class CreditsImage : CreditsItem
+        {
+            [PreviewField]
+            public Sprite Image;
+            public float Height;
+
+            public override List<CreditsEntry> GetCreditEntries()
+            {
+                return new List<CreditsEntry>() { new ImageObject(Image, Height) };
             }
         }
     }

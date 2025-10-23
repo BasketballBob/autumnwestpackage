@@ -18,6 +18,8 @@ namespace AWP
         [SerializeField]
         private ComponentPool<CreditsObject> _bodyPool;
         [SerializeField]
+        private ComponentPool<CreditsObject> _imagePool;
+        [SerializeField]
         private InputActionReference _scrollInput;
         [SerializeField]
         private float _scrollSpeed = 200;
@@ -30,6 +32,9 @@ namespace AWP
         [ShowInInspector]
         private List<CreditsEntry> _entryList = new List<CreditsEntry>();
         private List<CreditsObject> _objectStack = new List<CreditsObject>();
+
+        // GENERIC RECYCLER TEST
+        private GenericRecycler<CreditsEntry> _recycler;
 
         private void OnEnable()
         {
@@ -45,8 +50,11 @@ namespace AWP
 
         private void Start()
         {
-            _headerPool.Initialize(this);
-            _bodyPool.Initialize(this);
+            _recycler = new GenericRecycler<CreditsEntry>(_contentArea.rect.height, SetEnabled, PositionObject);
+
+            _headerPool.Initialize(this, _contentArea);
+            _bodyPool.Initialize(this, _contentArea);
+            _imagePool.Initialize(this, _contentArea);
 
             Play();
         }
@@ -63,24 +71,26 @@ namespace AWP
 
         public void Scroll(float offset)
         {
-            _scrollOffset += offset * _scrollSpeed * Time.deltaTime;
+            _recycler.Scroll(offset * _scrollSpeed * Time.deltaTime);
 
-            // Remove top
-            while (ItemOutOfBounds(_objectStack.FirstOrDefault()) && _objectStartIndex > 0)
-            {
-                _objectStartIndex--;
-                DisposeItem(_objectStack.PopFirstItem());
-            }
+            // _scrollOffset += offset * _scrollSpeed * Time.deltaTime;
 
-            // Remove bottom
-            while (ItemOutOfBounds(_objectStack.LastOrDefault()))
-            {
-                DisposeItem(_objectStack.PopLastItem());
-            }
+            // // Remove top
+            // while (ItemOutOfBounds(_objectStack.FirstOrDefault()) && _objectStartIndex > 0)
+            // {
+            //     _objectStartIndex--;
+            //     DisposeItem(_objectStack.PopFirstItem());
+            // }
 
-            SyncObjectPositions();
-            FillRemainingRoom(offset < 0);
-            //SyncObjectPositions();
+            // // Remove bottom
+            // while (ItemOutOfBounds(_objectStack.LastOrDefault()))
+            // {
+            //     DisposeItem(_objectStack.PopLastItem());
+            // }
+
+            // SyncObjectPositions();
+            // FillRemainingRoom(offset < 0);
+            // //SyncObjectPositions();
         }
 
         private void DebugScroll(InputAction.CallbackContext context)
@@ -121,14 +131,18 @@ namespace AWP
             });
 
             _entryList.ForEach(x => x.Pool = GetPool(x));
-            _entryList.ForEach(x => x.Height = x.Pool.Prefab.Height);
+            _entryList.ForEach(x => x.Size = x.Pool.Prefab.Height);
 
-            float pos = 0;
-            for (int i = 0; i < _entryList.Count; i++)
-            {
-                _entryList[i].Position = pos;
-                pos += _entryList[i].Height;
-            }
+            InitializeRecycler(_entryList);
+
+            // _entryList.ForEach(x => x.Height = x.Pool.Prefab.Height);
+
+            // float pos = 0;
+            // for (int i = 0; i < _entryList.Count; i++)
+            // {
+            //     _entryList[i].Position = pos;
+            //     pos += _entryList[i].Height;
+            // }
 
             // // Create as many items as possible
             // for (int i = 0; i < _entryList.Count; i++)
@@ -137,28 +151,32 @@ namespace AWP
             //     _objectStack.Add(CreateItem(_entryList[i]));
             // }
 
-            FillRemainingRoom(true);
-            SyncObjectPositions();
+            // FillRemainingRoom(true);
+            // SyncObjectPositions();
         }
 
         private void SyncObjectPositions()
         {
-            for (int i = 0; i < _objectStack.Count; i++)
-            {
-                _objectStack[i].transform.localPosition = new Vector2(0, _objectStack[i].CreditsEntry.Position + _scrollOffset);
-            }
+            // for (int i = 0; i < _objectStack.Count; i++)
+            // {
+            //     _objectStack[i].transform.localPosition = new Vector2(0, _objectStack[i].CreditsEntry.Position + _scrollOffset);
+            // }
         }
 
         private CreditsObject CreateItem(CreditsEntry entry)
         {
             if (entry is HeaderObject)
             {
-                return Create(_headerPool, x => x.Text.text = (entry as HeaderObject).Text);
+                return Create(_headerPool, x => (x as CreditsText).Text.text = (entry as HeaderObject).Text);
             }
             else if (entry is BodyObject)
             {
-                return Create(_bodyPool, x => x.Text.text = (entry as BodyObject).Text);
+                return Create(_bodyPool, x => (x as CreditsText).Text.text = (entry as BodyObject).Text);
             }
+            // else if (entry is ImageObject)
+            // {
+            //     return Create(_imagePool, x => x.)
+            // }
 
             Debug.LogWarning("CREDITS ENTRY LACKS PREFAB COUNTERPART");
             return null;
@@ -192,6 +210,10 @@ namespace AWP
             {
                 return _bodyPool;
             }
+            else if (entry is ImageObject)
+            {
+                return _imagePool;
+            }
 
             return null;
         }
@@ -201,7 +223,7 @@ namespace AWP
             Debug.Log($"CAN CREATE {_contentSize} < {_contentArea.sizeDelta.y}");
             return _contentSize < _contentArea.sizeDelta.y;
         }
-        
+
         private bool ItemOutOfBounds(CreditsObject obj)
         {
             if (obj == null) return false;
@@ -210,5 +232,53 @@ namespace AWP
 
             return false;
         }
+
+        #region Generic Recycler
+        private void InitializeRecycler(List<CreditsEntry> entries)
+        {
+            //entries.ForEach(x => )
+
+            for (int i = 0; i < entries.Count; i++)
+            {
+                _recycler.AddItem(entries[i], entries[i].Size);
+            }
+
+            _recycler.SyncActiveItems();
+        }
+
+        private void SetEnabled(CreditsEntry entry, bool enabled)
+        {
+            if (enabled)
+            {
+                entry.EnsureInstance();
+
+                if (entry is HeaderObject)
+                {
+                    (entry.Instance as CreditsText).Text.text = (entry as HeaderObject).Text;
+                }
+                else if (entry is BodyObject)
+                {
+                    (entry.Instance as CreditsText).Text.text = (entry as BodyObject).Text;
+                }
+                else if (entry is ImageObject)
+                {
+                    CreditsImage creditsImage = entry.Instance as CreditsImage;
+                    ImageObject imageObject = entry as ImageObject;
+
+                    creditsImage.Image.sprite = imageObject.Image;
+                    creditsImage.Rect.sizeDelta = creditsImage.Rect.sizeDelta.SetY(imageObject.Size);
+                }
+            }
+            else entry.DisposeInstance();
+        }
+
+        private void PositionObject(CreditsEntry entry, float position)
+        {
+            Debug.Log($"POSITION OBJECT {entry} {position}");
+
+            entry.Instance.transform.localPosition = new Vector2(_contentArea.rect.center.x,
+                _contentArea.rect.max.y - position);
+        }
+        #endregion
     } 
 }
