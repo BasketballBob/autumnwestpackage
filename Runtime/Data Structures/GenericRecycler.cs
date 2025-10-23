@@ -17,6 +17,12 @@ namespace AWP
         private List<Item> _items = new List<Item>();
         private float _offset;
 
+        public float Offset => _offset;
+        public float MinOffset => -_contentSize - _items.Last().Size;
+        public float MaxOffset => 0;
+        public bool AtStartPos => _offset == MaxOffset;
+        public bool AtEndPos => _offset == MinOffset;
+
         public GenericRecycler(float areaSize, Action<TData, bool> enableAction, Action<TData, float> positionAction)
         {
             _areaSize = areaSize;
@@ -27,15 +33,24 @@ namespace AWP
         public void Scroll(float scrollAmount)
         {
             _offset += scrollAmount;
-            _offset = Mathf.Clamp(_offset, -_contentSize - _items.Last().Size, 0);
+            ClampOffset();
+
+            SyncActiveItems();
+        }
+
+        public void SetOffset(float offset)
+        {
+            _offset = offset;
+            ClampOffset();
 
             SyncActiveItems();
         }
 
         public void AddItem(TData item, float size)
         {
-            _contentSize += size;
+            _contentSize += size / 2;
             _items.Add(new Item(item, size, _contentSize));
+            _contentSize += size / 2;
         }
 
         public void SyncActiveItems()
@@ -48,6 +63,15 @@ namespace AWP
                 if (itemEnabled) _positionAction(_items[i].Data, GetCurrentPosition(_items[i]));
             }
         }
+
+        public IEnumerator ScrollRoutine(float scrollSpeed)
+        {
+            while (!AtEndPos)
+            {
+                Scroll(scrollSpeed * Time.deltaTime);
+                yield return null;
+            }
+        }
         
         private bool ItemInBounds(Item item)
         {
@@ -56,11 +80,13 @@ namespace AWP
 
             return true;
         }
-        
+
         private float GetCurrentPosition(Item item)
         {
             return item.Position + _offset;
         }
+
+        private void ClampOffset() => _offset = Mathf.Clamp(_offset, MinOffset, MaxOffset);
 
         [System.Serializable]
         private class Item

@@ -5,6 +5,7 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 namespace AWP
@@ -20,21 +21,24 @@ namespace AWP
         [SerializeField]
         private ComponentPool<CreditsObject> _imagePool;
         [SerializeField]
-        private InputActionReference _scrollInput;
-        [SerializeField]
         private float _scrollSpeed = 200;
         [SerializeField]
         private CreditsData _creditsData;
 
-        private float _scrollOffset;
-        private int _objectStartIndex;
-        private float _contentSize;
+        [Header("Events")]
+        [SerializeField]
+        private UnityEvent _onFinish;
+
+        [Header("Debug")]
+        [SerializeField]
+        private bool _debugEnabled;
+        [SerializeField]
+        private InputActionReference _scrollInput;
+
         [ShowInInspector]
         private List<CreditsEntry> _entryList = new List<CreditsEntry>();
-        private List<CreditsObject> _objectStack = new List<CreditsObject>();
-
-        // GENERIC RECYCLER TEST
         private GenericRecycler<CreditsEntry> _recycler;
+        private SingleCoroutine _scrollRoutine;
 
         private void OnEnable()
         {
@@ -56,6 +60,8 @@ namespace AWP
             _bodyPool.Initialize(this, _contentArea);
             _imagePool.Initialize(this, _contentArea);
 
+            _scrollRoutine = new SingleCoroutine(this);
+
             Play();
         }
 
@@ -67,58 +73,25 @@ namespace AWP
         public void Play()
         {
             InitializeEntryList();
+            _scrollRoutine.StartRoutine(PlayRoutine());
+        }
+
+        public IEnumerator PlayRoutine()
+        {
+            yield return _recycler.ScrollRoutine(-_scrollSpeed);
+            _onFinish?.Invoke();
         }
 
         public void Scroll(float offset)
         {
             _recycler.Scroll(offset * _scrollSpeed * Time.deltaTime);
-
-            // _scrollOffset += offset * _scrollSpeed * Time.deltaTime;
-
-            // // Remove top
-            // while (ItemOutOfBounds(_objectStack.FirstOrDefault()) && _objectStartIndex > 0)
-            // {
-            //     _objectStartIndex--;
-            //     DisposeItem(_objectStack.PopFirstItem());
-            // }
-
-            // // Remove bottom
-            // while (ItemOutOfBounds(_objectStack.LastOrDefault()))
-            // {
-            //     DisposeItem(_objectStack.PopLastItem());
-            // }
-
-            // SyncObjectPositions();
-            // FillRemainingRoom(offset < 0);
-            // //SyncObjectPositions();
         }
 
         private void DebugScroll(InputAction.CallbackContext context)
         {
+            if (!_debugEnabled) return;
             if (!AWGameManager.IsDeveloperMode()) return;
             Scroll(_scrollInput.action.ReadValue<float>());
-        }
-        
-        private void FillRemainingRoom(bool fromTop)
-        {
-            while (CanCreateItem())
-            {
-                int entryIndex = _objectStartIndex + _objectStack.Count; //fromTop ? _objectStartIndex;
-                //_objectStack.Count;
-
-                Debug.Log($"CHECK {entryIndex}");
-
-                if (entryIndex < 0 || entryIndex >= _entryList.Count) break;
-
-                Debug.Log("CREATE OBJ");
-                CreditsObject newObj = CreateItem(_entryList[entryIndex]);
-                if (fromTop)
-                {
-                    _objectStack.Insert(0, newObj);
-                    _objectStartIndex++;
-                }
-                else _objectStack.Add(newObj);
-            }
         }
 
         private void InitializeEntryList()
@@ -134,70 +107,6 @@ namespace AWP
             _entryList.ForEach(x => x.Size = x.Pool.Prefab.Height);
 
             InitializeRecycler(_entryList);
-
-            // _entryList.ForEach(x => x.Height = x.Pool.Prefab.Height);
-
-            // float pos = 0;
-            // for (int i = 0; i < _entryList.Count; i++)
-            // {
-            //     _entryList[i].Position = pos;
-            //     pos += _entryList[i].Height;
-            // }
-
-            // // Create as many items as possible
-            // for (int i = 0; i < _entryList.Count; i++)
-            // {
-            //     if (!CanCreateItem()) break;
-            //     _objectStack.Add(CreateItem(_entryList[i]));
-            // }
-
-            // FillRemainingRoom(true);
-            // SyncObjectPositions();
-        }
-
-        private void SyncObjectPositions()
-        {
-            // for (int i = 0; i < _objectStack.Count; i++)
-            // {
-            //     _objectStack[i].transform.localPosition = new Vector2(0, _objectStack[i].CreditsEntry.Position + _scrollOffset);
-            // }
-        }
-
-        private CreditsObject CreateItem(CreditsEntry entry)
-        {
-            if (entry is HeaderObject)
-            {
-                return Create(_headerPool, x => (x as CreditsText).Text.text = (entry as HeaderObject).Text);
-            }
-            else if (entry is BodyObject)
-            {
-                return Create(_bodyPool, x => (x as CreditsText).Text.text = (entry as BodyObject).Text);
-            }
-            // else if (entry is ImageObject)
-            // {
-            //     return Create(_imagePool, x => x.)
-            // }
-
-            Debug.LogWarning("CREDITS ENTRY LACKS PREFAB COUNTERPART");
-            return null;
-
-            CreditsObject Create<TComponent>(ComponentPool<TComponent> pool, Action<TComponent> action) where TComponent : CreditsObject
-            {
-                TComponent newObject = pool.PullObject();
-                newObject.CreditsEntry = entry;
-                action(newObject);
-                _contentSize += newObject.Height;
-
-                newObject.transform.SetParent(_contentArea);
-
-                return newObject;
-            }
-        }
-
-        private void DisposeItem(CreditsObject creditsObj)
-        {
-            _contentSize -= creditsObj.Height;
-            creditsObj.CreditsEntry.Pool.DisposeObject(creditsObj);
         }
 
         private ComponentPool<CreditsObject> GetPool(CreditsEntry entry)
@@ -216,21 +125,6 @@ namespace AWP
             }
 
             return null;
-        }
-
-        private bool CanCreateItem()
-        {
-            Debug.Log($"CAN CREATE {_contentSize} < {_contentArea.sizeDelta.y}");
-            return _contentSize < _contentArea.sizeDelta.y;
-        }
-
-        private bool ItemOutOfBounds(CreditsObject obj)
-        {
-            if (obj == null) return false;
-            if (obj.transform.position.y - obj.Height / 2 > _contentArea.rect.max.y) return true;
-            if (obj.transform.position.y + obj.Height / 2 < _contentArea.rect.min.y) return true;
-
-            return false;
         }
 
         #region Generic Recycler
@@ -274,8 +168,6 @@ namespace AWP
 
         private void PositionObject(CreditsEntry entry, float position)
         {
-            Debug.Log($"POSITION OBJECT {entry} {position}");
-
             entry.Instance.transform.localPosition = new Vector2(_contentArea.rect.center.x,
                 _contentArea.rect.max.y - position);
         }

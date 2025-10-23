@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace AWP
 {
-    public abstract class ReferenceObject<TReference> : AWScriptableObject where TReference : class
+    public abstract class ReferenceObject<TReference> : ReferenceObject where TReference : class
     {
         protected new const string CreateFolderName = "Reference Objects/";
 
@@ -21,10 +21,16 @@ namespace AWP
                 OnValueChanged?.Invoke();
             }
         }
+        public override Component Component => _reference as Component;
 
         public override string ToString(string format, IFormatProvider formatProvider)
         {
             throw new NotImplementedException();
         }
+    }
+
+    public abstract class ReferenceObject : AWScriptableObject
+    {
+        public abstract Component Component { get; }
     }
 }
