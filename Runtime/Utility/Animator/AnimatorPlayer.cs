@@ -24,7 +24,7 @@ namespace AWP
             _anim.Play(name, layer);
         }
 
-        [YarnCommand("PlayAnimation")]
+        [YarnCommand("PlayAnimationAtTime")]
         public void PlayAnimation(string name, int layer, float normalizedTime)
         {
             _anim.Play(name, layer, normalizedTime);
