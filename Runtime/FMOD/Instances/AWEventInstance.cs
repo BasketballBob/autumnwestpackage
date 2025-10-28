@@ -67,6 +67,10 @@ namespace AWP
 
         public void Play() => StartInstance();
         public void Stop() => StopInstance();
+        public void DisposeSelf()
+        {
+            _instance.DisposeOfSelf();
+        }
 
         protected virtual void StartInstance()
         {
