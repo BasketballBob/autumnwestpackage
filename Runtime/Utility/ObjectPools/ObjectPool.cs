@@ -106,7 +106,7 @@ namespace AWP
             SyncObjectValues(x, y);
         });
 
-        protected void ModifyActiveObjects(Action<TObject, int> action)
+        public void ModifyActiveObjects(Action<TObject, int> action)
         {
             for (int i = 0; i < Items.Count && i < ActiveItemCount; i++)
             {

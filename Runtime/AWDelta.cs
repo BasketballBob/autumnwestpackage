@@ -72,7 +72,7 @@ namespace AWP
                 case DeltaType.UnscaledUpdate:
                     return DefaultWait();
                 case DeltaType.UnscaledFixedUpdate:
-                    return FixedWait();
+                    return new WaitForSecondsRealtime(Time.fixedDeltaTime);
             }
 
             throw DeltaTypeUnaccountedException;

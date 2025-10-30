@@ -44,7 +44,7 @@ namespace AWP
         #endregion
 
         #region Coroutine
-        public static IEnumerator WaitOnRoutines(this MonoBehaviour monoBehaviour, IEnumerator[] enumerators)
+        public static IEnumerator WaitOnRoutines(this MonoBehaviour monoBehaviour, params IEnumerator[] enumerators)
         {
             List<Coroutine> routines = new List<Coroutine>();
 

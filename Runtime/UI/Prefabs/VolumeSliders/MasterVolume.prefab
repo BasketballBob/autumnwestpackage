@@ -28,9 +28,17 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3853887187226769070, guid: b405a4b6f0b75004f8742d3b628c1693, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -38661895304372107, guid: e7b6b05cd6138e6489b7fd5475abe97f, type: 2}
+    - target: {fileID: 3853887187226769070, guid: b405a4b6f0b75004f8742d3b628c1693, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5139736820168825588, guid: b405a4b6f0b75004f8742d3b628c1693, type: 3}
       propertyPath: m_Name
-      value: MasterVolume Variant
+      value: MasterVolume
       objectReference: {fileID: 0}
     - target: {fileID: 8017267548501450274, guid: b405a4b6f0b75004f8742d3b628c1693, type: 3}
       propertyPath: m_Pivot.x
