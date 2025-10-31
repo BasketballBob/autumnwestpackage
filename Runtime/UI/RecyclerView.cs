@@ -30,6 +30,7 @@ namespace AWP
 
         public List<TData> Data => _data;
         public float Offset => _offset;
+        public float OffsetDelta => _offset.GetDelta(MinOffset, MaxOffset);
         public float RectLength => _rect.sizeDelta.y;
         public float MinOffset => -_upperMargin;
         public float MaxOffset => Mathf.Max(DataTotalLength - RectLength, 0);
@@ -210,6 +211,12 @@ namespace AWP
         #endregion
 
         #region Scrollbar
+        protected void SetOffset(float value)
+        {
+            SyncScrollbar(value);
+            _scrollbar.value = OffsetDelta;
+        }
+
         private void SyncScrollbar(float value)
         {
             _offset = MinOffset.Lerp(MaxOffset, value);
