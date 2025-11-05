@@ -32,10 +32,11 @@ namespace AWP
         private bool _moving;
 
         public CameraPos CurrentPos { get; private set; }
+        public bool IsMoving => _moving;
 
         public void MoveToCamPos(CameraPos camPos, float duration, EasingFunction easing, AWDelta.DeltaType deltaType = AWCamera.DefaultDeltaType, Action onFinish = null)
         {
-            _moving = true; 
+            _moving = true;
 
             _cameraRef.Camera.MoveToCamPos(camPos, duration, easing, deltaType, () => 
             {
