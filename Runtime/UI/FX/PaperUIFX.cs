@@ -36,7 +36,7 @@ namespace AWP
 
         protected override void FXUpdate(float deltaTime)
         {
-            Debug.Log($"FX UPDATE {Vector2.Dot(_angle.GetAngleVector(), Vector2.down)}");
+            //Debug.Log($"FX UPDATE {Vector2.Dot(_angle.GetAngleVector(), Vector2.down)}");
 
             _angle += _angularVelocity * deltaTime;
             _rect.eulerAngles = _rect.eulerAngles.SetZ(_angle);
@@ -44,7 +44,7 @@ namespace AWP
 
         protected override void FXFixedUpdate(float deltaTime)
         {
-            Debug.Log($"FX FIXED UPDATE");
+            //Debug.Log($"FX FIXED UPDATE");
 
             if (_isHighlighted)
             {

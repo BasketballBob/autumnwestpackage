@@ -45,6 +45,10 @@ namespace AWP
         [SerializeField]
         private AudioChannel _snapshotChannel;
 
+        [Header("Debug")]
+        [ShowInInspector]
+        private SceneAudio _lastLoadedSceneAudio;
+
         private List<EventInstance> _eventList;
         private List<StudioEventEmitter> _emitterList;
 
@@ -221,6 +225,8 @@ namespace AWP
         public void EnterNewSceneAudio(SceneAudio sceneAudio, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null)
         {
             Debug.Log($"ENTER NEW SCENE AUDIO {sceneAudio.name}");
+            _lastLoadedSceneAudio = sceneAudio;
+
             sceneAudio.ApplyGlobalParameters();
             _musicChannel.PlayEvent(sceneAudio.Music.EventReference, fadeEnter, fadeExit, sceneAudio.Music.Volume, onSwitch);
             _ambienceChannel.PlayEvent(sceneAudio.Ambience.EventReference, fadeEnter, fadeExit, sceneAudio.Ambience.Volume, onSwitch);
