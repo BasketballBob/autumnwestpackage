@@ -8,9 +8,9 @@ using UnityEngine.UI;
 
 namespace AWP
 {
-    [RequireComponent(typeof(RectTransform))]
     public abstract class UIFX : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
+        [SerializeField]
         protected RectTransform _rect;
         protected bool _isHighlighted;
         private SingleCoroutine _updateRoutine;
@@ -20,7 +20,8 @@ namespace AWP
         protected virtual float DeltaTime => Time.unscaledDeltaTime;
         protected virtual float FixedDeltaTime => Time.fixedUnscaledDeltaTime;
         protected Vector2 MousePos => new Vector2(Mouse.current.position.x.value, Mouse.current.position.y.value);
-        protected Vector2 MouseOffset => MousePos - (Vector2)_rect.position;
+        protected Vector2 MouseWorldPos => AWGameManager.AWCamera.Camera.ScreenToWorldPoint(MousePos);
+        protected Vector2 MouseScreenOffset => MousePos - (Vector2)_rect.position;
         protected Vector2 MouseDelta => new Vector2(-1 + 2 * MousePos.x.GetDelta(_rect.position.x - _rect.sizeDelta.x / 2,
             _rect.position.x + _rect.sizeDelta.x / 2), -1 + 2 * MousePos.y.GetDelta(_rect.position.y - _rect.sizeDelta.y / 2,
             _rect.position.y + _rect.sizeDelta.y / 2));
@@ -29,7 +30,7 @@ namespace AWP
 
         protected virtual void OnEnable()
         {
-            _rect = GetComponent<RectTransform>();
+            if (_rect == null) _rect = GetComponent<RectTransform>();
             FXReset();
         }
 

@@ -49,6 +49,11 @@ namespace AWP
             return new Vector3(func(vector1.x, vector2.x), func(vector1.y, vector2.y), func(vector1.z, vector2.z));
         }
 
+        public static Vector3 Lerp(this Vector3 vector1, Vector3 vector2, float delta)
+        {
+            return vector1 + (vector2 - vector1) * Mathf.Clamp01(delta);
+        }
+
         /// <summary>
         /// Lerps vector1 to vector2 using individual values for each axis
         /// </summary>
