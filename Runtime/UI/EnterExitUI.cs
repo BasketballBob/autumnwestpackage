@@ -26,7 +26,7 @@ namespace AWP
             _anim = GetComponent<Animator>();
         }
 
-        private void Start()
+        private void Awake()
         {
             _visibleRoutine = new SingleCoroutine(this);
         }
