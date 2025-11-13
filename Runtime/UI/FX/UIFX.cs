@@ -16,6 +16,7 @@ namespace AWP
         private SingleCoroutine _updateRoutine;
         private SingleCoroutine _fixedUpdateRoutine;
         private Vector2 _mousePosOld;
+        private bool _fxActive;
 
         protected virtual float DeltaTime => Time.unscaledDeltaTime;
         protected virtual float FixedDeltaTime => Time.fixedUnscaledDeltaTime;
@@ -62,12 +63,16 @@ namespace AWP
         {
             _updateRoutine.StartRoutine(UpdateRoutine());
             _fixedUpdateRoutine.StartRoutine(FixedUpdateRoutine());
+
+            _fxActive = true;
         }
 
         protected void StopAnimationRoutines()
         {
             _updateRoutine.StopRoutine();
             _fixedUpdateRoutine.StopRoutine();
+
+            _fxActive = false;
         }
 
         private IEnumerator UpdateRoutine()
@@ -76,6 +81,7 @@ namespace AWP
             {
                 FXUpdate(DeltaTime);
 
+                CheckToFinish();
                 yield return null;
             }
         }
@@ -88,8 +94,21 @@ namespace AWP
                 FXFixedUpdate(FixedDeltaTime);
                 SyncOldVariables();
 
+                CheckToFinish();
                 yield return AWDelta.YieldNull(AWDelta.DeltaType.UnscaledFixedUpdate);
             }
+        }
+
+        private void CheckToFinish()
+        {
+            if (!_fxActive) return;
+            if (!FXFinished()) return;
+            
+
+            StopAnimationRoutines();
+            FXReset();
+
+            Debug.Log($"FINISH FX {name}");
         }
 
         private void UpdateVariables()
@@ -105,5 +124,6 @@ namespace AWP
         protected abstract void FXReset();
         protected abstract void FXUpdate(float deltaTime);
         protected abstract void FXFixedUpdate(float deltaTime);
+        protected abstract bool FXFinished();
     }
 }

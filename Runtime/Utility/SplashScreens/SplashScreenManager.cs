@@ -69,14 +69,22 @@ namespace AWP
         {
             _canvasGroup.blocksRaycasts = !value;
         }
-        
+
         /// <summary>
         /// Destroy if it has already run the splash screens
         /// </summary>
         private void CheckToDestroy()
         {
-            if (!SplashScreenPlayed) return;
+            if (!ShouldDestroy()) return;
             Destroy(gameObject);
+        }
+        
+        private bool ShouldDestroy()
+        {
+            if (SplashScreenPlayed) return true;
+            if (Time.time > 3) return true; // DESTROY IF NOT AT BEGINNING OF GAME (TESTING)
+
+            return false;
         }
     }
 }

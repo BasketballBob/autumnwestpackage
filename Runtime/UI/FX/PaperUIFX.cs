@@ -9,6 +9,9 @@ namespace AWP
 {
     public class PaperUIFX : UIFX
     {
+        private const float MinAngle = .1f;
+        private const float MinAngularVelocity = .01f;
+
         [SerializeField]
         private float _hoverSpeed = 50;
         [SerializeField]
@@ -62,18 +65,24 @@ namespace AWP
                 float dot = Vector2.Dot(screenOffset.normalized, MouseVelocity.normalized.PerpendicularClockwise());
                 _angularVelocity += dot * MouseVelocity.magnitude * _hoverSpeed * deltaTime;
 
-                Debug.DrawRay(transform.position, screenOffset.normalized, Color.red);
-                Debug.DrawRay(transform.position, MouseVelocity, Color.cyan);
-                Debug.Log($"DOT PRODUCT {Vector2.Dot(Vector2.right, Vector2.up)} {Vector2.Dot(Vector2.right, Vector2.down)}");
-
-                // _angularVelocity += MouseVelocity.x * Vector2.Dot(_angle.GetAngleVector(), Vector2.right) * _hoverSpeed * deltaTime;
-                // _angularVelocity += MouseVelocity.y * Vector2.Dot(_angle.GetAngleVector(), Vector2.up) * _hoverSpeed * deltaTime;
+                // Debug.DrawRay(transform.position, screenOffset.normalized, Color.red);
+                // Debug.DrawRay(transform.position, MouseVelocity, Color.cyan);
+                // Debug.Log($"DOT PRODUCT {Vector2.Dot(Vector2.right, Vector2.up)} {Vector2.Dot(Vector2.right, Vector2.down)}");
             }
 
             _angularVelocity -= _gravity * AWUnity.SignWithZero(_angle)
                 * Mathf.Abs(Vector2.Dot(_angle.GetAngleVector(), Vector2.down));
 
-            _angularVelocity *= (1 - Time.fixedDeltaTime * _angularDrag);
+            _angularVelocity *= (1 - deltaTime * _angularDrag);
+        }
+
+        protected override bool FXFinished()
+        {
+            if (_isHighlighted) return false;
+            if (Mathf.Abs(_angle) > MinAngle) return false;
+            if (Mathf.Abs(_angularVelocity) > MinAngularVelocity) return false;
+
+            return true;
         }
     }
 }

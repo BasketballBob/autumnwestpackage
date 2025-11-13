@@ -34,5 +34,10 @@ namespace AWP
         {
 
         }
+
+        protected override bool FXFinished()
+        {
+            return false; // PLACEHOLDER
+        }
     }
 }
