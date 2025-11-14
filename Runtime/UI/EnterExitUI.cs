@@ -33,6 +33,7 @@ namespace AWP
 
         public void SetVisible(bool visible, bool immediate = false)
         {
+            Debug.Log($"SET VISIBLE {name} -> {visible}");
             if (_visible == visible) return;
             if (!gameObject.activeInHierarchy) return;
 
