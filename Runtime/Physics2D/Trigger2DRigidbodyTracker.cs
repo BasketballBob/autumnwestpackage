@@ -11,14 +11,16 @@ namespace AWP
     {
         protected virtual void OnTriggerEnter2D(Collider2D other)
         {
-            Debug.Log($"BODY ENTER {other.name} to {name}");
+            //Debug.Log($"BODY ENTER {other.name} to {name}");
+            
             if (!ColliderIsValid(other)) return;
             OnRigidbodyEnter(other.attachedRigidbody);
         }
 
         protected virtual void OnTriggerExit2D(Collider2D other)
         {
-            Debug.Log($"BODY EXIT {other.name} from {name}");
+            //Debug.Log($"BODY EXIT {other.name} from {name}");
+
             if (!ColliderIsValid(other)) return;
             OnRigidbodyExit(other.attachedRigidbody);
         }
