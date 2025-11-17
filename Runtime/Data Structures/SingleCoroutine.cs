@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AWP
@@ -22,11 +23,12 @@ namespace AWP
             if (_mono == null) return null;
 
             StopRoutine();
-            return _routine = _mono.StartCoroutine(TrackingRoutine());
+            
+            RoutineActive = true;
+            return _routine = _mono.StartCoroutine(TrackingRoutine());;
 
             IEnumerator TrackingRoutine()
             {
-                RoutineActive = true;
                 yield return routine;
                 RoutineActive = false;
             }
@@ -34,9 +36,10 @@ namespace AWP
 
         public void StopRoutine()
         {
-            if (_mono == null) return;
             if (_routine == null) return;
+
             _mono.StopCoroutine(_routine);
+            RoutineActive = false;
         }
 
         public IEnumerator WaitUntilFinished()

@@ -16,7 +16,8 @@ namespace AWP
         private SingleCoroutine _updateRoutine;
         private SingleCoroutine _fixedUpdateRoutine;
         private Vector2 _mousePosOld;
-        private bool _fxActive;
+
+        private int _routineCount;
 
         protected virtual float DeltaTime => Time.unscaledDeltaTime;
         protected virtual float FixedDeltaTime => Time.fixedUnscaledDeltaTime;
@@ -61,18 +62,14 @@ namespace AWP
 
         protected void StartAnimationRoutines()
         {
-            _updateRoutine.StartRoutine(UpdateRoutine());
             _fixedUpdateRoutine.StartRoutine(FixedUpdateRoutine());
-
-            _fxActive = true;
+            _updateRoutine.StartRoutine(UpdateRoutine());
         }
 
         protected void StopAnimationRoutines()
         {
-            _updateRoutine.StopRoutine();
             _fixedUpdateRoutine.StopRoutine();
-
-            _fxActive = false;
+            _updateRoutine.StopRoutine();
         }
 
         private IEnumerator UpdateRoutine()
@@ -81,7 +78,11 @@ namespace AWP
             {
                 FXUpdate(DeltaTime);
 
-                CheckToFinish();
+                if (!_fixedUpdateRoutine.RoutineActive)
+                {
+                    yield break;
+                }
+
                 yield return null;
             }
         }
@@ -94,21 +95,15 @@ namespace AWP
                 FXFixedUpdate(FixedDeltaTime);
                 SyncOldVariables();
 
-                CheckToFinish();
+                // End routine if finished
+                if (FXFinished())
+                {
+                    FXReset();
+                    yield break;
+                }
+
                 yield return AWDelta.YieldNull(AWDelta.DeltaType.UnscaledFixedUpdate);
             }
-        }
-
-        private void CheckToFinish()
-        {
-            if (!_fxActive) return;
-            if (!FXFinished()) return;
-            
-
-            StopAnimationRoutines();
-            FXReset();
-
-            Debug.Log($"FINISH FX {name}");
         }
 
         private void UpdateVariables()

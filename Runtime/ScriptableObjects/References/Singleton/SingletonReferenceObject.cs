@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace AWP
 {
-    public abstract class SingletonReferenceObject<TReference> : ReferenceObject<TReference> where TReference : Component
+    public abstract class SingletonReferenceObject<TReference> : ReferenceObject<TReference>, ITransformReference where TReference : Component
     {
         [Header("Singleton handling")]
         [SerializeField] [Tooltip("Determines which singleton is prioritized if multiple exist")]
@@ -25,6 +25,7 @@ namespace AWP
                 base.Reference = ProcessNewValue(value);
             } 
         }
+        public Transform Transform => Reference.transform;
 
         private TReference ProcessNewValue(TReference newValue)
         {

@@ -60,7 +60,7 @@ namespace AWP
 
         protected override bool FXFinished()
         {
-            return false; // TEMPORARY TEST TEST TEST
+            return _velocity.magnitude < 1; // TEST
         }
 
         private void SyncOffset()
