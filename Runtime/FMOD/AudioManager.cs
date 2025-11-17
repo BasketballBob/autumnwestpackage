@@ -329,6 +329,8 @@ namespace AWP
                 bool readyToSwitch = false;
                 InitializeOnSwitchEvent();
 
+                //Debug.Log($"SWITCH AUDIO {CurrentEvent.IsNull} {eventRef.Path} {(!CurrentEvent.IsNull ? CurrentEvent.Path : null)}");
+
                 // Fade to new volume if eventRefs are the same
                 if (!CurrentEvent.IsNull && eventRef.Guid == CurrentEvent.Guid)
                 {

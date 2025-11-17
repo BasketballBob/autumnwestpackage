@@ -27,10 +27,15 @@ namespace AWP
         private float _initialEulerZ;
 
 
+        protected override void OnEnable()
+        {
+            _initialEulerZ = _rect.eulerAngles.z;
+            base.OnEnable();
+        }
+
         protected override void Start()
         {
             base.Start();
-            _initialEulerZ = _rect.eulerAngles.z;
         }
 
         public void ApplyAngularVelocity(float angularVelocity)

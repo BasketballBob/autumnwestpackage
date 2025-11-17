@@ -29,10 +29,13 @@ namespace AWP
             _rect.position.y + _rect.sizeDelta.y / 2));
         protected Vector2 MouseVelocity { get; private set; }
 
+        protected virtual void Awake()
+        {
+            if (_rect == null) _rect = GetComponent<RectTransform>();
+        }
 
         protected virtual void OnEnable()
         {
-            if (_rect == null) _rect = GetComponent<RectTransform>();
             FXReset();
         }
 
