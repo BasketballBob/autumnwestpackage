@@ -36,12 +36,15 @@ namespace AWP
         public float MaxOffset => Mathf.Max(DataTotalLength - RectLength, 0);
         public float PrefabLength => _prefab.sizeDelta.y;
         public float DataTotalLength => PrefabLength * _data.Count + _upperMargin + _lowerMargin;
+
         /// <summary>
         /// The length of the currently displayed items
         /// </summary>
         public float DisplayedLength { get; private set; }
         public float DisplayedMaxY => _rect.rect.max.y - (_dataIndexOffset < 0 ? PrefabLength * Mathf.Abs(_dataIndexOffset) : 0);
         public float DisplayedMinY => DisplayedMaxY - DisplayedLength;
+        protected virtual bool ModifyScrollbarSize => true;
+
 
         protected virtual void OnEnable()
         {
@@ -131,7 +134,7 @@ namespace AWP
             _targetActiveCount = GetTargetActiveCount();
 
             // Scrollbar
-            if (_scrollbar != null)
+            if (_scrollbar != null && ModifyScrollbarSize)
             {
                 if (DataTotalLength > 0) _scrollbar.size = 1 - (MaxOffset / DataTotalLength);
                 else _scrollbar.size = 1;
