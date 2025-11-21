@@ -21,6 +21,7 @@ namespace AWP
         [SerializeField] [MinValue(0)]
         private float _lowerMargin;
 
+        [InlineProperty]
         protected List<TData> _data = new List<TData>();
         private List<TComponent> _components = new List<TComponent>();
         private int _dataIndexOffset;
@@ -131,6 +132,7 @@ namespace AWP
             _offset += PrefabLength * (_dataIndexOffset - _oldDataIndexOffset);
             _offset = Mathf.Clamp(_offset, MinOffset, MaxOffset);
             _dataIndexOffset = (int)(_offset / PrefabLength);
+            Debug.Log($"DATA INDEX OFFSET {_dataIndexOffset}");
             _targetActiveCount = GetTargetActiveCount();
 
             // Scrollbar
@@ -165,7 +167,7 @@ namespace AWP
             SyncObjectPositions();
             if (indexOffsetChanged || targetCountChanged)
             {
-                SyncActiveValues();
+                SyncActiveValues(); //Syncs all values
             }
 
             _oldDataIndexOffset = _dataIndexOffset;

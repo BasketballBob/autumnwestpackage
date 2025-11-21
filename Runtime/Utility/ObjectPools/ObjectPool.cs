@@ -103,6 +103,7 @@ namespace AWP
         /// </summary>
         public void SyncActiveValues() => ModifyActiveObjects((x, y) =>
         {
+            Debug.Log("SYNC ACTIVE VALUES");
             SyncObjectValues(x, y);
         });
 
