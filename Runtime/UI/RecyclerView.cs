@@ -21,7 +21,6 @@ namespace AWP
         [SerializeField] [MinValue(0)]
         private float _lowerMargin;
 
-        [InlineProperty]
         protected List<TData> _data = new List<TData>();
         private List<TComponent> _components = new List<TComponent>();
         private int _dataIndexOffset;
@@ -109,9 +108,6 @@ namespace AWP
             int dataIndex = index;
             if (_dataIndexOffset >= 0) dataIndex += _dataIndexOffset;
 
-            Debug.Log($"BEFORE TEST _components[index]:{_components[index]}   _data[dataIndex]:{_data[dataIndex]}   dataIndex:{dataIndex}   index:{index} ");
-            SyncObjectValues(_components[index], _data[dataIndex]);
-            Debug.Log($"AFTER TEST _components[index]:{_components[index]}   _data[dataIndex]:{_data[dataIndex]}   dataIndex:{dataIndex}   index:{index} ");
             SyncObjectValues(_components[index], _data[dataIndex]);
         }
 
@@ -132,8 +128,6 @@ namespace AWP
         [Button]
         protected virtual void SyncView()
         {
-            Debug.Log("SYNC START");
-
             _offset += PrefabLength * (_dataIndexOffset - _oldDataIndexOffset);
             _offset = Mathf.Clamp(_offset, MinOffset, MaxOffset);
             _dataIndexOffset = (int)(_offset / PrefabLength);
@@ -168,11 +162,10 @@ namespace AWP
                 }
             }
 
-
             SyncObjectPositions();
             if (indexOffsetChanged || targetCountChanged)
             {
-                SyncActiveValues(); //Syncs all values
+                SyncActiveValues();
             }
 
             _oldDataIndexOffset = _dataIndexOffset;

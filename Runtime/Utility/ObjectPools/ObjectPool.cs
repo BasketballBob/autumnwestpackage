@@ -134,13 +134,11 @@ namespace AWP
 
         protected void EnableObject(TObject obj)
         {
-            Debug.Log($"SYNC ENABLE OBJECT {obj} {obj.name}");
             if (!ObjectIsActive(obj)) ActiveItemCount++;
             obj.gameObject.SetActive(true);
         }
         protected void DisableObject(TObject obj)
         {
-            Debug.Log($"SYNC DISABLE OBJECT {obj} {obj.name}");
             if (ObjectIsActive(obj)) ActiveItemCount--;
             obj.gameObject.SetActive(false);
         }
