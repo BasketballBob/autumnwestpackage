@@ -40,6 +40,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: MasterVolume
       objectReference: {fileID: 0}
+    - target: {fileID: 7924268712209487303, guid: b405a4b6f0b75004f8742d3b628c1693, type: 3}
+      propertyPath: m_Colors.m_NormalColor.b
+      value: 0.78431374
+      objectReference: {fileID: 0}
+    - target: {fileID: 7924268712209487303, guid: b405a4b6f0b75004f8742d3b628c1693, type: 3}
+      propertyPath: m_Colors.m_NormalColor.g
+      value: 0.78431374
+      objectReference: {fileID: 0}
+    - target: {fileID: 7924268712209487303, guid: b405a4b6f0b75004f8742d3b628c1693, type: 3}
+      propertyPath: m_Colors.m_NormalColor.r
+      value: 0.78431374
+      objectReference: {fileID: 0}
+    - target: {fileID: 7924268712209487303, guid: b405a4b6f0b75004f8742d3b628c1693, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7924268712209487303, guid: b405a4b6f0b75004f8742d3b628c1693, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7924268712209487303, guid: b405a4b6f0b75004f8742d3b628c1693, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8017267548501450274, guid: b405a4b6f0b75004f8742d3b628c1693, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
