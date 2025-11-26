@@ -50,8 +50,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 436517604b50fad41aa8a04919afa67f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lineView: {fileID: 0}
+  _img: {fileID: 3587315939424546101}
   _anim: {fileID: 9157163310829127678}
+  _lineView: {fileID: 0}
 --- !u!95 &9157163310829127678
 Animator:
   serializedVersion: 5
@@ -109,7 +110,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &419102177058041234
 CanvasRenderer:

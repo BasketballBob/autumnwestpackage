@@ -15,6 +15,11 @@ namespace AWP
         [SerializeField]
         private InputActionReference _resetKey;
 
+        private void Awake()
+        {
+            if (!AWGameManager.BuildTypeIsDemo()) Destroy(gameObject);
+        }
+
         private void OnEnable()
         {
             _devKey.action.Enable();

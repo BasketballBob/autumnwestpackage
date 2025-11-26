@@ -24,13 +24,21 @@ namespace AWP
 
         public void LoadData(Object obj)
         {
-            //Debug.Log($"LoadData 1 {obj}");
+            Debug.Log($"LoadData 1 {obj}");
             if (obj is not ISaveable<TData>) return;
             ISaveable<TData> saveable = obj as ISaveable<TData>;
-            //Debug.Log($"LoadData 2 {obj}");
-            if (!_labeledList.HasLabel(obj.name)) return;
-            saveable.LoadSaveData(_labeledList[obj.name]);
-            //Debug.Log($"LoadData 3 {obj}");
+            Debug.Log($"LoadData 2 {obj}");
+
+            if (_labeledList.HasLabel(obj.name))
+            {
+                Debug.Log($"LoadData LABEL {obj}");
+                saveable.LoadSaveData(_labeledList[obj.name]);
+            }
+            else 
+            {   
+                Debug.Log($"LoadData DEFAULT {obj}");
+                saveable.LoadEmptyData();
+            }
         }
 
         public void SaveResources(string path)

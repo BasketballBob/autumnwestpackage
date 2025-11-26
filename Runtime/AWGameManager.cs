@@ -245,7 +245,7 @@ namespace AWP
         private static void SyncTimeScale() => Time.timeScale = IsPaused ? 0 : _timeScale;
         
         #region Developer mode
-        public static bool IsDemoMode()
+        public static bool IsTestMode()
         {
             return (int)DevMode >= (int)DeveloperMode.TestBuild;
         }
@@ -258,6 +258,13 @@ namespace AWP
         public static bool IsMinimumMode(DeveloperMode mode)
         {
             return (int)DevMode >= (int)mode;
+        }
+        #endregion
+
+        #region Build Types
+        public static bool BuildTypeIsDemo()
+        {
+            return BuildType == BuildType.Demo;
         }
         #endregion
 
