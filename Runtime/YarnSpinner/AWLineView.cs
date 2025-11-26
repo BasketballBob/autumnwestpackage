@@ -26,6 +26,8 @@ namespace AWP
         [SerializeField]
         private bool _waitForInput = true;
 
+        public Action OnLineStart;
+        public Action OnLineFinish;
         protected bool _enterBodyText;
         protected bool _enterNameText;
 
@@ -33,7 +35,7 @@ namespace AWP
         public TMP_Text NameTMP => _nameTMP;
         public TypewriterCore TextTypewriter => _text;
         public TypewriterCore NameTypewriter => _nameText;
-        public Action OnLineFinish;
+        public bool WaitingOnInput { get; private set; }
         protected float DismissAnimationDuration => .25f;
 
         protected override void OnEnable()
@@ -55,11 +57,15 @@ namespace AWP
 
             IEnumerator RunLineRoutine()
             {
+                OnLineStart?.Invoke();
+
                 while (Paused) yield return null;
 
                 yield return RunLineAnimation(dialogueLine);
 
                 if (!_waitForInput) onDialogueLineFinished?.Invoke();
+                else WaitingOnInput = true;
+
                 OnLineFinish?.Invoke();
                 _prevLine = dialogueLine;
             }
@@ -81,6 +87,7 @@ namespace AWP
 
         public override void DismissLine(Action onDismissalComplete)
         {
+            WaitingOnInput = false;
             StartAnimationRoutine(DismissLineRoutine());
 
             IEnumerator DismissLineRoutine()
