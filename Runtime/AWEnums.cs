@@ -6,9 +6,10 @@ using UnityEngine;
 namespace AWP
 {
     public enum DeveloperMode { Build, TestBuild, Developer }
-    public enum DimensionType { XY, XYZ, XZ };
-    public enum SpaceType { WorldSpace, LocalSpace };
-    public enum PhysicsTarget2D { Rigidbody2D, Collider };
+    public enum BuildType { Default, Demo }
+    public enum DimensionType { XY, XYZ, XZ }
+    public enum SpaceType { WorldSpace, LocalSpace }
+    public enum PhysicsTarget2D { Rigidbody2D, Collider }
 
     public static class AWEnums
     {

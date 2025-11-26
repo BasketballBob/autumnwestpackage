@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Yarn.Unity;
 
 namespace AWP
@@ -9,9 +10,12 @@ namespace AWP
     public class DialogueInputIndicator : MonoBehaviour
     {
         [SerializeField]
-        private AWLineView _lineView;
+        private Image _img;
         [SerializeField]
         private Animator _anim;
+        [SerializeField]
+        private AWLineView _lineView;
+        
 
         private void LateUpdate()
         {
@@ -21,6 +25,7 @@ namespace AWP
         private void SyncAnimation()
         {
             _anim.SetBool("Indicating", _lineView.WaitingOnInput);
+            _img.color = _lineView.TextTMP.color;
         }
     }
 }

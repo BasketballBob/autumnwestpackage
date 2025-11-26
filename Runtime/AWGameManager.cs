@@ -20,6 +20,8 @@ namespace AWP
 
         public static DeveloperMode DevMode { get { return Current._devMode; } }
         protected virtual DeveloperMode _devMode => DeveloperMode.Developer;
+        public static BuildType BuildType { get { return Current._buildType; } }
+        protected virtual BuildType _buildType => BuildType.Default;
         public static AWGameManager Current { get; private set; }
         public static AudioManager AudioManager { get; private set; }
         public static AWSaveManager SaveManager { get; private set; }
