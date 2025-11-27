@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using UnityEngine.Video;
 
 namespace AWP
 {
@@ -14,44 +17,57 @@ namespace AWP
         private InputActionReference _devKey;
         [SerializeField]
         private InputActionReference _resetKey;
+        [SerializeField]
+        private InputActionReference _attractKey;
+
+        [Header("Attract Mode")]
+        [SerializeField]
+        private VideoClip _videoClip;
+        [SerializeField]
+        private EventReference _videoAudio;
 
         private DemoAttractPlayer _demoAttractPlayer;
-        private SingleCoroutine _managerRoutine;
+        private SingleCoroutine _demoRoutine;
         private Alarm _attractBeginAlarm;
+        private bool _inAttractMode;
 
         protected virtual bool AttractModeEnabled => true;
         protected virtual float AttractBeginDelay => 60;
         protected virtual string AttractScene => "DemoAttractMode";
 
-        private void Awake()
+        protected virtual void Awake()
         {
             if (!AWGameManager.BuildTypeIsDemo()) Destroy(gameObject);
         }
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             _devKey.action.Enable();
             _resetKey.action.Enable();
+            _attractKey.action.Enable();
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             _devKey.action.Disable();
             _resetKey.action.Disable();
+            _attractKey.action.Disable();
         }
 
-        private void Start()
+        protected virtual void Start()
         {
+            _demoRoutine = new SingleCoroutine(this);
             _attractBeginAlarm = new Alarm(AttractBeginDelay);
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             ManageAttractMode();
 
             if (_devKey.action.IsPressed())
             {
                 if (_resetKey.action.WasPressedThisFrame()) ResetDemo();
+                if (_attractKey.action.WasPressedThisFrame()) ToggleAttractMode();
             }
         }
 
@@ -61,6 +77,12 @@ namespace AWP
         }
 
         #region Attract mode
+        private void ToggleAttractMode()
+        {
+            if (_inAttractMode) ExitAttractMode();
+            else EnterAttractMode();
+        }
+
         private void ManageAttractMode()
         {
             if (!AttractModeEnabled) return;
@@ -74,14 +96,33 @@ namespace AWP
 
         private void EnterAttractMode()
         {
-
+            _demoRoutine.StartRoutine(EnterRoutine());
 
             IEnumerator EnterRoutine()
             {
+                AudioManager.CleanUp();
+
                 yield return AWGameManager.LoadSceneAsync(AttractScene, UnityEngine.SceneManagement.LoadSceneMode.Single);
                 while (DemoAttractPlayer.Current == null) yield return null;
                 _demoAttractPlayer = DemoAttractPlayer.Current;
+
+                _inAttractMode = true;
+
+                yield return AttractRoutine();
             }
+        }
+
+        private IEnumerator AttractRoutine()
+        {
+            yield return _demoAttractPlayer.PlayVideoLooped(_videoClip, _videoAudio);
+        }
+
+        private void ExitAttractMode()
+        {
+            _demoRoutine.StopRoutine();
+            _inAttractMode = false;
+
+            ResetDemo();
         }
 
         protected virtual bool PlayerIsInputting()
