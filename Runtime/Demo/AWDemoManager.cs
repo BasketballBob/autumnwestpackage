@@ -31,8 +31,9 @@ namespace AWP
         private Alarm _attractBeginAlarm;
         private bool _inAttractMode;
 
+        protected virtual float DeltaTime => Time.unscaledDeltaTime;
         protected virtual bool AttractModeEnabled => true;
-        protected virtual float AttractBeginDelay => 60;
+        protected virtual float AttractBeginDelay => 5;
         protected virtual string AttractScene => "DemoAttractMode";
 
         protected virtual void Awake()
@@ -62,7 +63,7 @@ namespace AWP
 
         protected virtual void Update()
         {
-            ManageAttractMode();
+            CheckToEnterAttractMode();
 
             if (_devKey.action.IsPressed())
             {
@@ -83,13 +84,24 @@ namespace AWP
             else EnterAttractMode();
         }
 
-        private void ManageAttractMode()
+        private void CheckToEnterAttractMode()
         {
             if (!AttractModeEnabled) return;
+            if (_inAttractMode) return;
 
-            if (!PlayerIsInputting() && _attractBeginAlarm.RunOnFinish(Time.deltaTime))
+            Debug.Log($"PLAYER IS INPUTTING {PlayerIsInputting()} {_attractBeginAlarm.RemainingTime}");
+
+            if (PlayerIsInputting()) _attractBeginAlarm.Reset(AttractBeginDelay);
+            else _attractBeginAlarm.Tick(DeltaTime);
+
+
+            if (!PlayerIsInputting())
             {
-                EnterAttractMode();
+                if (_attractBeginAlarm.RunOnFinish(DeltaTime))
+                {
+                    EnterAttractMode();
+                    _attractBeginAlarm.Reset(AttractBeginDelay);
+                }
             }
             else _attractBeginAlarm.Reset(AttractBeginDelay);
         }
@@ -97,6 +109,7 @@ namespace AWP
         private void EnterAttractMode()
         {
             _demoRoutine.StartRoutine(EnterRoutine());
+            _inAttractMode = true;
 
             IEnumerator EnterRoutine()
             {
@@ -105,9 +118,7 @@ namespace AWP
                 yield return AWGameManager.LoadSceneAsync(AttractScene, UnityEngine.SceneManagement.LoadSceneMode.Single);
                 while (DemoAttractPlayer.Current == null) yield return null;
                 _demoAttractPlayer = DemoAttractPlayer.Current;
-
-                _inAttractMode = true;
-
+                
                 yield return AttractRoutine();
             }
         }
