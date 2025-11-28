@@ -29,11 +29,14 @@ namespace AWP
         private DemoAttractPlayer _demoAttractPlayer;
         private SingleCoroutine _demoRoutine;
         private Alarm _attractBeginAlarm;
+        private Alarm _attractExitAlarm;
         private bool _inAttractMode;
+        private bool _active;
 
         protected virtual float DeltaTime => Time.unscaledDeltaTime;
         protected virtual bool AttractModeEnabled => true;
-        protected virtual float AttractBeginDelay => 5;
+        protected virtual float AttractBeginDelay => 35;
+        protected virtual float AttractExitInputDuration => 1;
         protected virtual string AttractScene => "DemoAttractMode";
 
         protected virtual void Awake()
@@ -59,11 +62,16 @@ namespace AWP
         {
             _demoRoutine = new SingleCoroutine(this);
             _attractBeginAlarm = new Alarm(AttractBeginDelay);
+            _attractExitAlarm = new Alarm(AttractExitInputDuration);
+
+            _demoRoutine.StartRoutine(DelayActivation());
         }
 
         protected virtual void Update()
         {
-            CheckToEnterAttractMode();
+            if (!_active) return;
+
+            ManageAttractMode();
 
             if (_devKey.action.IsPressed())
             {
@@ -77,6 +85,16 @@ namespace AWP
             
         }
 
+        /// <summary>
+        /// Delay to activate the demo manager until everything is ready (particularly stuttering on the first frame)
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator DelayActivation()
+        {
+            yield return new WaitForEndOfFrame();
+            _active = true;
+        }
+
         #region Attract mode
         private void ToggleAttractMode()
         {
@@ -84,26 +102,39 @@ namespace AWP
             else EnterAttractMode();
         }
 
-        private void CheckToEnterAttractMode()
+        private void ManageAttractMode()
         {
             if (!AttractModeEnabled) return;
-            if (_inAttractMode) return;
 
-            Debug.Log($"PLAYER IS INPUTTING {PlayerIsInputting()} {_attractBeginAlarm.RemainingTime}");
+            //Debug.Log($"PLAYER IS INPUTTING {PlayerIsInputting()} {_attractBeginAlarm.RemainingTime}");
 
-            if (PlayerIsInputting()) _attractBeginAlarm.Reset(AttractBeginDelay);
-            else _attractBeginAlarm.Tick(DeltaTime);
-
-
-            if (!PlayerIsInputting())
+            if (_inAttractMode)
             {
-                if (_attractBeginAlarm.RunOnFinish(DeltaTime))
+                if (PlayerIsInputting())
                 {
-                    EnterAttractMode();
-                    _attractBeginAlarm.Reset(AttractBeginDelay);
+                    if (_attractExitAlarm.RunOnFinish(DeltaTime))
+                    {
+                        ExitAttractMode();
+                        _attractExitAlarm.Reset(AttractExitInputDuration);
+                    }
                 }
+                else _attractExitAlarm.Tick(-DeltaTime);
             }
-            else _attractBeginAlarm.Reset(AttractBeginDelay);
+            else
+            {
+                if (!PlayerIsInputting())
+                {
+                    //Debug.Log($"TICK ATTRACT ALARM {_attractBeginAlarm.RemainingTime} {DeltaTime} {_attractBeginAlarm.RemainingTime - DeltaTime}");
+
+                    if (_attractBeginAlarm.RunOnFinish(DeltaTime))
+                    {
+                        Debug.Log("ENTER ATTRACT MODE!");
+                        EnterAttractMode();
+                        _attractBeginAlarm.Reset(AttractBeginDelay);
+                    }
+                }
+                else _attractBeginAlarm.Reset(AttractBeginDelay);
+            }  
         }
 
         private void EnterAttractMode()
@@ -131,6 +162,7 @@ namespace AWP
         private void ExitAttractMode()
         {
             _demoRoutine.StopRoutine();
+            AudioManager.CleanUp();
             _inAttractMode = false;
 
             ResetDemo();

@@ -126,7 +126,7 @@ namespace AWP
         }
         public void SoloSelfInstant()
         {
-            
+            AWGameManager.MenuManager.SoloMenuInstant(this);
         }
         public IEnumerator WaitOnSoloSelf()
         {

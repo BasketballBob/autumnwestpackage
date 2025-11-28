@@ -132,6 +132,19 @@ namespace AWP
 
             StartTransitionRoutine(this.WaitOnRoutines(waitRoutines.ToArray()));
         }
+        public void SoloMenuInstant(Menu menu)
+        {
+            List<Menu> popMenus = new List<Menu>();
+
+            _menuStack.ForEach(x =>
+            {
+                if (x.Menu == menu) return;
+                popMenus.Add(x.Menu);
+            });
+
+            popMenus.ForEach(x => x.PopSelfInstant());
+            menu.PushSelfInstant();
+        }
 
         public IEnumerator WaitOnTransition()
         {
