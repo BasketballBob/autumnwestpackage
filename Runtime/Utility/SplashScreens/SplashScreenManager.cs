@@ -76,7 +76,7 @@ namespace AWP
         private void CheckToDestroy()
         {
             // TEST
-            if (AWGameManager.IsTestMode())
+            if (AWGameManager.IsTestMode() || AWGameManager.BuildTypeIsDemo())
             {
                 Destroy(gameObject);
                 return;
