@@ -24,11 +24,15 @@ namespace AWP
 
         private void OnEnable()
         {
+            AWGameManager.SaveManager.OnLoad += LoadFromGlobalData;
+
             LoadFromGlobalData();
         }
 
         private void OnDisable()
         {
+            AWGameManager.SaveManager.OnLoad -= LoadFromGlobalData;
+
             SaveToGlobalData();
         }
 
@@ -98,6 +102,10 @@ namespace AWP
         /// </summary>
         public void LoadFromGlobalData()
         {
+            _floats.Clear();
+            _strings.Clear();
+            _bools.Clear();
+
             _floats.EnsureValues(Data.Floats);
             _strings.EnsureValues(Data.Strings);
             _bools.EnsureValues(Data.Bools);
@@ -191,7 +199,14 @@ public class AWVariableStorageData : ISaveable<AWVariableStorageSave>
     public void LoadSaveData(AWVariableStorageSave loadData)
     {
         Debug.Log($"TEST DATA NULL {loadData == null}");
-        if (loadData == null) return;
+        if (loadData == null)
+        {
+            Floats = new Dictionary<string, float>();
+            Strings = new Dictionary<string, string>();
+            Bools = new Dictionary<string, bool>();
+
+            return;
+        }
 
         Floats = loadData.Floats.GetDictionary();
         Strings = loadData.Strings.GetDictionary();

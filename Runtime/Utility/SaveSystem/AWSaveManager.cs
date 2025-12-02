@@ -81,6 +81,7 @@ namespace AWP
 
             saveData.Save();
             dataHandler.Save(saveData);
+            OnSave?.Invoke();
         }
 
         public void Load<TData>(string fileName, ref TData saveData) where TData : SaveableData, new()
@@ -91,12 +92,14 @@ namespace AWP
             if (saveData == null) saveData = new TData();
 
             saveData.Load();
+            OnLoad?.Invoke();
         }
 
         public void LoadEmpty<TData>(string fileName, ref TData saveData) where TData : SaveableData, new()
         {
             saveData = new TData();
             saveData.Load();
+            OnLoad?.Invoke();
         }
 
         public void Delete<TData>(string fileName) where TData : SaveableData
@@ -114,6 +117,9 @@ namespace AWP
 
     public abstract class AWSaveManager : MonoBehaviour
     {
+        public Action OnLoad;
+        public Action OnSave;
+
         public abstract void SavePreferences();
         public abstract void LoadPreferences();
     }

@@ -35,7 +35,7 @@ namespace AWP
 
         protected virtual float DeltaTime => Time.unscaledDeltaTime;
         protected virtual bool AttractModeEnabled => true;
-        protected virtual float AttractBeginDelay => 35;
+        protected virtual float AttractBeginDelay => 80;
         protected virtual float AttractExitInputDuration => 1;
         protected virtual string AttractScene => "DemoAttractMode";
 
