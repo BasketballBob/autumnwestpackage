@@ -43,13 +43,13 @@ namespace AWP
         private void OnEnable()
         {
             _scrollInput.action.Enable();
-            _scrollInput.action.performed += DebugScroll;
+            //_scrollInput.action.performed += DebugScroll;
         }
 
         private void OnDisable()
         {
             _scrollInput.action.Disable();
-            _scrollInput.action.performed -= DebugScroll;
+            //_scrollInput.action.performed -= DebugScroll;
         }
 
         private void Start()

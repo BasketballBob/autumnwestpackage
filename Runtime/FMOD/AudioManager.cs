@@ -23,6 +23,9 @@ namespace AWP
         //[SerializeField]
         //private AudioDataSetHolder _masterAudioSet;
 
+        /// <summary>
+        /// NOTE: USE SET VOLUME TO SET THE VOLUME (PROBABLY CHANGE INTO PROPERTIES)
+        /// </summary>
         [Header("Volumes")]
         [Range(0, 1)]
         public static float MasterVolume = 1;

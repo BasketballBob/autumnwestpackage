@@ -29,7 +29,7 @@ namespace AWP
             base.OnEnable();
 
             _pauseAction.action.performed += TryTogglePause;
-            _pauseAction.action.Enable();
+            //_pauseAction.action.Enable();
         }
 
         protected override void OnDisable()
@@ -37,7 +37,7 @@ namespace AWP
             base.OnDisable();
 
             _pauseAction.action.performed -= TryTogglePause;
-            _pauseAction.action.Disable();
+            //_pauseAction.action.Disable();
         }
 
         public void SetPaused(bool paused)

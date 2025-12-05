@@ -7,6 +7,7 @@ using Sirenix.OdinInspector;
 using AWPEditor;
 using Sirenix.Serialization;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 namespace AWP
 {
@@ -14,31 +15,46 @@ namespace AWP
     {
         // This class is designated for running test code in Unity
 
-        public AWComparison<float> _test = new AWComparison<float>();
+        [SerializeField]
+        private InputActionReference _reference;
 
-        private void LineClosestPointTest()
+        [Button]
+        public void Enable()
         {
-            Vector2 point = new Vector2(2, 3);
-            Func<float, float> line = (x) => 2 * x - 1;
-            Vector2 linePoint1 = new Vector2(-100, line(-100));
-            Vector2 linePoint2 = new Vector2(100, line(100));
-
-            Debug.Log(AWPhysics2D.LineClosestPoint(linePoint1, linePoint2, point));
+            _reference.action.Enable();
         }
 
-        private void RandomCurve()
+        [Button]
+        public void Disable()
         {
+            _reference.action.Disable();
+        }
+
+        //public AWComparison<float> _test = new AWComparison<float>();
+
+        // private void LineClosestPointTest()
+        // {
+        //     Vector2 point = new Vector2(2, 3);
+        //     Func<float, float> line = (x) => 2 * x - 1;
+        //     Vector2 linePoint1 = new Vector2(-100, line(-100));
+        //     Vector2 linePoint2 = new Vector2(100, line(100));
+
+        //     Debug.Log(AWPhysics2D.LineClosestPoint(linePoint1, linePoint2, point));
+        // }
+
+        // private void RandomCurve()
+        // {
         
-        }
+        // }
 
-        private void ConditionAllTest()
-        {
-            List<int> ints = new List<int>() {1};
+        // private void ConditionAllTest()
+        // {
+        //     List<int> ints = new List<int>() {1};
 
-            Debug.Log($"Any {ints.Any(x => x == 1)}");
-            Debug.Log($"All {ints.All(x => x == 1)}");
-        }
+        //     Debug.Log($"Any {ints.Any(x => x == 1)}");
+        //     Debug.Log($"All {ints.All(x => x == 1)}");
+        // }
 
-        public Sprite TestSprite;
+        // public Sprite TestSprite;
     }
 }
