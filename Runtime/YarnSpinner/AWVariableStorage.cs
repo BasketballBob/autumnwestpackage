@@ -15,6 +15,7 @@ namespace AWP
     public class AWVariableStorage : VariableStorageBehaviour
     {
         public static AWVariableStorageData Data = new AWVariableStorageData();
+        public static Action OnSaveToGlobal;
 
         private Dictionary<string, float> _floats = new Dictionary<string, float>();
         private Dictionary<string, string> _strings = new Dictionary<string, string>();
@@ -95,6 +96,7 @@ namespace AWP
         public void SaveToGlobalData()
         {
             Data.EnsureValues(_floats, _strings, _bools);
+            OnSaveToGlobal?.Invoke();
         }
 
         /// <summary>
