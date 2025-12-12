@@ -16,10 +16,11 @@ namespace AWP
         protected int _minItemCount = 5;
         private List<TObject> _poolItems = new List<TObject>();
 
+        private bool _initialized;
+
         protected List<TObject> Items => _poolItems;
         public int ActiveItemCount { get; private set; }
-
-        private bool _initialized;
+        public int MinItemCount => _minItemCount;
 
         protected virtual void Start()
         {
