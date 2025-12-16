@@ -13,6 +13,7 @@ namespace AWP
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            Debug.Log($"CLICK {name}");
             AWGameManager.AudioManager.PlayOneShot(_clickSFX);
         }
     }

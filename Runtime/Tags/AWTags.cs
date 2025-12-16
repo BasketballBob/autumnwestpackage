@@ -26,11 +26,13 @@ namespace AWP
         protected virtual void OnEnable()
         {
             _collection.AddInstance(this);
+            Debug.Log($"ADD INSTANCE {this}");
         }
 
         protected virtual void OnDisable()
         {
             _collection.RemoveInstance(this);
+            Debug.Log($"REMOVE INSTANCE {this}");
         }
 
         public bool FitsMask(int mask) => Collection.ItemFitsMask(gameObject, mask);

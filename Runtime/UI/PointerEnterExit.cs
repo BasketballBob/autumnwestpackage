@@ -20,7 +20,6 @@ namespace AWP
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Debug.Log($"EVENT DATA {eventData.pointerCurrentRaycast.gameObject}");
             if (eventData.pointerCurrentRaycast.gameObject != this && IgnoreParent) return;
 
             PointerInside = true;

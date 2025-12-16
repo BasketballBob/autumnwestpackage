@@ -22,6 +22,11 @@ namespace AWP
         private Transform _transform;
 
         public Transform Transform => _transform;
+
+        public TransformReference(Transform transform)
+        {
+            _transform = transform;
+        }
     }
 
     [System.Serializable]

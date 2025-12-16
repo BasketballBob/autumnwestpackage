@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace AWP
@@ -19,6 +20,8 @@ namespace AWP
         private CanvasGroup _canvasGroup;
         [SerializeField]
         private RectTransform _splashScreenHolder;
+        [SerializeField]
+        private InputActionReference _progressInput;
         [SerializeField]
         [AssetsOnly]
         private List<SplashScreen> _splashScreenPrefabs;
@@ -48,7 +51,13 @@ namespace AWP
                 splashScreen.Rect.anchoredPosition = Vector2.zero;
                 splashScreen.Rect.localScale = Vector3.one;
 
-                yield return splashScreen.Display();
+                Coroutine displayRoutine = splashScreen.StartCoroutine(splashScreen.Display());
+                while (!splashScreen.DisplayIsFinished())
+                {
+                    if (_progressInput.action.WasPerformedThisFrame()) break;
+                    yield return null;
+                }
+
                 Destroy(splashScreen.gameObject);
 
                 yield return new WaitForSecondsRealtime(_splashScreenDelay);

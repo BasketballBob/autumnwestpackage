@@ -17,9 +17,7 @@ namespace AWP
         /// NOTE: INPUT ACTION IS NOT ENABLED OR DISABLED IN THIS SCRIPT
         /// </summary>
         [SerializeField]
-        private InputActionReference _inputAction;
-        [SerializeField]
-        private InputAction _TEST;
+        protected InputActionReference _inputAction;
         [SerializeField]
         private UnityEvent _onLoss;
 
@@ -27,23 +25,28 @@ namespace AWP
 
         private void Update()
         {
-            Debug.Log($"INPUT {_inputAction.action.WasPerformedThisFrame()} {_inputAction.action.WasPerformedThisFrame()} {_inputAction.action.IsPressed()} {_inputAction.action.enabled}");
+            //Debug.Log($"INPUT {_inputAction.action.WasPerformedThisFrame()} {_inputAction.action.WasPerformedThisFrame()} {_inputAction.action.IsPressed()} {_inputAction.action.enabled}");
             if (!InContext && _inputAction.action.WasPerformedThisFrame())
             {
-                _onLoss.Invoke();
+                OnLoss();
             }
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Debug.Log($"CONTEXT ENTER {InContext}");
+            //Debug.Log($"CONTEXT ENTER {InContext}");
             InContext = true;
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            Debug.Log($"CONTEXT EXIT {InContext}");
+            //Debug.Log($"CONTEXT EXIT {InContext}");
             InContext = false;
+        }
+
+        protected virtual void OnLoss()
+        {
+            _onLoss.Invoke();
         }
     }
 }

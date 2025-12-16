@@ -67,7 +67,7 @@ namespace AWP
             dynamic min = _minConstant;
             dynamic max = _maxConstant;
 
-            return min + (max - min) * delta;
+            return (TValue)(min + (max - min) * delta);
         }
         public TValue ReverseLerp(float delta) => Lerp(Mathf.Clamp01(1 - delta));
 

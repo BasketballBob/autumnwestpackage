@@ -18,7 +18,19 @@ namespace AWP
 
         public IEnumerator Display()
         {
-            yield return _anim.WaitForAnimationToComplete("Display");
+            _anim.Play("Display");
+            yield return WaitForDisplayToFinish();
+        }
+
+        public IEnumerator WaitForDisplayToFinish()
+        {
+            yield return _anim.WaitForAnimationToComplete();
+        }
+
+        public bool DisplayIsFinished()
+        {
+            if (_anim == null) return true;
+            return _anim.AnimationIsFinished();
         }
     }
 }
