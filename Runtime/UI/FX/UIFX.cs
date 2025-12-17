@@ -21,6 +21,7 @@ namespace AWP
 
         protected virtual float DeltaTime => Time.unscaledDeltaTime;
         protected virtual float FixedDeltaTime => Time.fixedUnscaledDeltaTime;
+        protected virtual bool AlwaysActive => false;
         protected Vector2 MousePos => new Vector2(Mouse.current.position.x.value, Mouse.current.position.y.value);
         protected Vector2 MouseWorldPos => AWGameManager.AWCamera.Camera.ScreenToWorldPoint(MousePos);
         protected Vector2 MouseScreenOffset => MousePos - (Vector2)_rect.position;
@@ -37,6 +38,7 @@ namespace AWP
         protected virtual void OnEnable()
         {
             FXReset();
+            if (AlwaysActive) StartAnimationRoutines();
         }
 
         protected virtual void OnDisable()
@@ -99,7 +101,7 @@ namespace AWP
                 SyncOldVariables();
 
                 // End routine if finished
-                if (FXFinished())
+                if (FXFinished() && !AlwaysActive)
                 {
                     FXReset();
                     yield break;
