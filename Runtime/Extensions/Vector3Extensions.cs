@@ -55,7 +55,7 @@ namespace AWP
         }
 
         /// <summary>
-        /// Lerps vector1 to vector2 using individual values for each axis
+        /// Lerps vector1 to vector2 using individual delta values for each axis
         /// </summary>
         /// <param name="vector1"></param>
         /// <param name="vector2"></param>

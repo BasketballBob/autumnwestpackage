@@ -32,6 +32,24 @@ namespace AWP
             return Quaternion.AngleAxis(degrees, Vector3.forward) * vector;
         }
 
+        public static Vector2 Lerp(this Vector2 vector1, Vector2 vector2, float delta)
+        {
+            return vector1 + (vector2 - vector1) * Mathf.Clamp01(delta);
+        }
+
+        /// <summary>
+        /// Lerps vector1 to vector2 using individual delta values for each axis
+        /// </summary>
+        /// <param name="vector1"></param>
+        /// <param name="vector2"></param>
+        /// <param name="delta"></param>
+        /// <returns></returns>
+        public static Vector2 AxisLerp(this Vector2 vector1, Vector2 vector2, Vector2 delta)
+        {
+            return new Vector2(Mathf.Lerp(vector1.x, vector2.x, delta.x),
+                Mathf.Lerp(vector1.y, vector2.y, delta.y));
+        }
+
         /// <summary>
         /// Rounds each axis of the Vector
         /// </summary>

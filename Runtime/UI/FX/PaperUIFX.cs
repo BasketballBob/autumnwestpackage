@@ -44,6 +44,19 @@ namespace AWP
             StartAnimationRoutines();
         }
 
+        public void ApplyVelocity(Vector2 velocity)
+        {
+            float dot = Vector2.Dot(_angle.GetAngleVector(), velocity.normalized);
+            Debug.Log($"DOT {dot}");
+            _angularVelocity += dot * velocity.magnitude;
+            StartAnimationRoutines();
+        }
+
+        public void SetAngularVelocity(float angularVelocity)
+        {
+            
+        }
+
         protected override void FXReset()
         {
             _angle = 0;
