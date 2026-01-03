@@ -94,6 +94,7 @@ namespace AWP
             for (int i = 0; i < attachedCols.Length; i++)
             {
                 Physics2D.IgnoreCollision(attachedCols[i], col, ignore);
+                //Debug.Log($"IGNORE RIGIDBODY COLLIDER COLLISION col:{col.name}-{col}   rb:{rb.name}-{attachedCols[i]}");
             }
         }
         #endregion

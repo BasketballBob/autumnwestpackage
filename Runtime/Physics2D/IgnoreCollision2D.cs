@@ -33,6 +33,7 @@ public class IgnoreCollision2D : MonoBehaviour
 
     public static void IgnoreCollisions(Collider2D col, List<Collider2D> ignoredColliders)
     {
+        if (col == null) return;
         if (ignoredColliders.IsNullOrEmpty()) return;
 
         foreach (Collider2D element in ignoredColliders)
