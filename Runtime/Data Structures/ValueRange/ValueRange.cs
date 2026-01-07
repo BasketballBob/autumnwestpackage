@@ -23,6 +23,10 @@ namespace AWP
             _minConstant = min;
             _maxConstant = max;
         }
+        public ValueRange(TValue value)
+        {
+            _minConstant = value;
+        }
 
         public TValue Constant => Min;
         public TValue Min
