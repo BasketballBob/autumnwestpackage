@@ -15,13 +15,21 @@ namespace AWP
         private float _slideDrag = 1;
         [SerializeField]
         private float _gravityMultiplier = 0;
+        [SerializeField]
+        private bool _pushableByMouse = true;
 
-
-        private float _bounciness = .2f;
+        private float _bounciness = .1f;
 
         private Vector2 _velocity;
         private Vector2 _offset;
+        private Vector2 _initialAnchoredPosition;
 
+        protected override void Start()
+        {
+            _initialAnchoredPosition = _rect.anchoredPosition;
+
+            base.Start();
+        }
 
         private void OnDrawGizmosSelected()
         {
@@ -64,7 +72,7 @@ namespace AWP
         protected override void FXFixedUpdate(float deltaTime)
         {
             // Mouse velocity
-            if (_isHighlighted)
+            if (_isHighlighted && _pushableByMouse)
             {
                 _velocity += MouseVelocity * deltaTime;
             }
@@ -91,7 +99,7 @@ namespace AWP
             if (_offset.y < _slideBounds.min.y || _offset.y > _slideBounds.max.y) _velocity = _velocity.SetY(-_velocity.y * _bounciness);
 
             _offset = _offset.Clamp(_slideBounds.min, _slideBounds.max);
-            _rect.anchoredPosition = _offset;
+            _rect.anchoredPosition = _initialAnchoredPosition + _offset;
         }
     }
 }
