@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -10,15 +11,14 @@ namespace AWP
 {
     public abstract class UIFX : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        [SerializeField]
+        [SerializeField] [ValidateInput("ValidateRect", "Rect is not child or self", InfoMessageType.Warning)]
         protected RectTransform _rect;
         protected bool _isHighlighted;
         private SingleCoroutine _updateRoutine;
         private SingleCoroutine _fixedUpdateRoutine;
         private Vector2 _mousePosOld;
 
-        private int _routineCount;
-
+        public bool IsActive { get; private set; }
         protected virtual float DeltaTime => Time.unscaledDeltaTime;
         protected virtual float FixedDeltaTime => Time.fixedUnscaledDeltaTime;
         protected virtual bool AlwaysActive => false;
@@ -67,8 +67,10 @@ namespace AWP
 
         protected void StartAnimationRoutines()
         {
-            _fixedUpdateRoutine.StartRoutine(FixedUpdateRoutine());
-            _updateRoutine.StartRoutine(UpdateRoutine());
+            IsActive = true;
+            
+            if (!_fixedUpdateRoutine.RoutineActive) _fixedUpdateRoutine.StartRoutine(FixedUpdateRoutine());
+            if (!_updateRoutine.RoutineActive) _updateRoutine.StartRoutine(UpdateRoutine());
         }
 
         protected void StopAnimationRoutines()
@@ -104,6 +106,7 @@ namespace AWP
                 if (FXFinished() && !AlwaysActive)
                 {
                     FXReset();
+                    IsActive = false;
                     yield break;
                 }
 
@@ -125,5 +128,15 @@ namespace AWP
         protected abstract void FXUpdate(float deltaTime);
         protected abstract void FXFixedUpdate(float deltaTime);
         protected abstract bool FXFinished();
+
+        #region Editor
+        private bool ValidateRect()
+        {
+            if (_rect.IsChildOf(transform)) return true;
+            if (_rect == transform) return true;
+
+            return false;
+        }
+        #endregion
     }
 }

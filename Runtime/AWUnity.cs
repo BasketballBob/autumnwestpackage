@@ -67,6 +67,15 @@ namespace AWP
             if (value == 0) return 0;
             else return Mathf.Sign(value);
         }
+
+        /// <summary>
+        /// Returns randomly either 1 or -1
+        /// </summary>
+        /// <returns></returns>
+        public static float CoinFlip()
+        {
+            return UnityEngine.Random.Range(0, 2) == 0 ? 1 : -1;
+        }
         #endregion
 
         #region Perlin Noise

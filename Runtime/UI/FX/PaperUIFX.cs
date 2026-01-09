@@ -26,6 +26,7 @@ namespace AWP
         private float _angularVelocity;
         private float _initialEulerZ;
 
+        public float Angle => _angle;
 
         protected override void OnEnable()
         {
@@ -38,23 +39,23 @@ namespace AWP
             base.Start();
         }
 
+        public void SetAngularVelocity(float angularVelocity)
+        {
+            _angularVelocity = angularVelocity;
+        }
+
         public void ApplyAngularVelocity(float angularVelocity)
         {
             _angularVelocity += angularVelocity;
             StartAnimationRoutines();
         }
 
-        public void ApplyVelocity(Vector2 velocity)
+        public void ApplyForce(Vector2 velocity)
         {
             float dot = Vector2.Dot(_angle.GetAngleVector(), velocity.normalized);
-            Debug.Log($"DOT {dot}");
+
             _angularVelocity += dot * velocity.magnitude;
             StartAnimationRoutines();
-        }
-
-        public void SetAngularVelocity(float angularVelocity)
-        {
-            
         }
 
         protected override void FXReset()

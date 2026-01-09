@@ -81,6 +81,12 @@ namespace AWP
             StartAnimationRoutines();
         }
 
+        public void AddForce(float angularVelocity)
+        {
+            _angularVelocity += angularVelocity;
+            StartAnimationRoutines();
+        }
+
         private void SyncAngle()
         {
             _rect.localEulerAngles = _rect.localEulerAngles.SetZ(_defaultAngle + _angle * ReverseMultiplier);

@@ -62,6 +62,16 @@ namespace AWP
         }
 
         /// <summary>
+        /// Gets the absolute value of this vector
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        public static Vector2 Absolute(this Vector2 vector)
+        {
+            return new Vector2(Mathf.Abs(vector.x), Mathf.Abs(vector.y));
+        }
+
+        /// <summary>
         /// Modifies each axis with the func
         /// </summary>
         /// <param name="vector1"></param>

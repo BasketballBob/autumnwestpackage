@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace AWP
 {
+    /// <summary>
+    /// NOTE: The bouncing seems to break the UI positioning sometimes, I'm fairly certain it's not the fault of this script cause all the displayed variables
+    /// line up with the desired behavior 
+    /// </summary>
     public class SlideUIFX : UIFX
     {
         [SerializeField]
@@ -16,9 +20,9 @@ namespace AWP
         [SerializeField]
         private float _gravityMultiplier = 0;
         [SerializeField]
-        private bool _pushableByMouse = true;
-
         private float _bounciness = .1f;
+        [SerializeField]
+        private bool _pushableByMouse = true;
 
         private Vector2 _velocity;
         private Vector2 _offset;
@@ -45,6 +49,11 @@ namespace AWP
             StartAnimationRoutines();
         }
 
+        public void AddForce(Vector2 velocity)
+        {
+            _velocity += velocity;
+        }
+
         /// <summary>
         /// Sets the offset relative to the mins and maxes of the bounds
         /// .5f .5f is the center
@@ -53,13 +62,14 @@ namespace AWP
         public void SetOffsetDelta(Vector2 delta)
         {
             _offset = _slideBounds.min.AxisLerp(_slideBounds.max, delta);
-            Debug.Log($"AXIS LERP {_slideBounds.min} {_slideBounds.max} {delta} {_offset}");
             SyncOffset();
         }
 
         protected override void FXReset()
         {
             //_offset = Vector2.zero;
+            _velocity = Vector2.zero;
+            //SyncOffset();
         }
 
         protected override void FXUpdate(float deltaTime)
@@ -89,8 +99,8 @@ namespace AWP
 
         protected override bool FXFinished()
         {
-            if (_isHighlighted) return false;
-            return _velocity.magnitude < 1; // TEST
+            if (_isHighlighted && _pushableByMouse) return false;
+            return _velocity.magnitude < 1;
         }
 
         private void SyncOffset()
