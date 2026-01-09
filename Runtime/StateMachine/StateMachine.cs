@@ -14,6 +14,7 @@ namespace AWP
         public void SetState(BaseState newState)
         {
             _currentState?.ExitState();
+            Debug.Log($"SET STATE {newState}");
             _currentState = newState;
             _currentState?.EnterState();
         }
@@ -27,5 +28,12 @@ namespace AWP
         {
             _currentState?.FixedUpdate(fixedDeltaTime);
         }
+
+        #region Helper functions
+        public bool IsCurrentState(BaseState state)
+        {
+            return _currentState == state;
+        }
+        #endregion
     }
 }

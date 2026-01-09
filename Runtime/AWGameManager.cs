@@ -23,9 +23,11 @@ namespace AWP
         public static BuildType BuildType { get { return Current._buildType; } }
         protected virtual BuildType _buildType => BuildType.Default;
         public static AWGameManager Current { get; private set; }
+        public static AWInputManager AWInputManager { get; private set; }
         public static AudioManager AudioManager { get; private set; }
         public static AWSaveManager SaveManager { get; private set; }
         public static AWCamera AWCamera => Current?._refAWCamera.Reference;
+        public static Camera Camera => AWCamera.Camera;
         public static MenuManager MenuManager => Current?._refMenuManager.Reference;
         public static CullingBounds CullingBounds => Current?._refCullingBounds.Reference;
         public static float TimeScale
@@ -50,6 +52,8 @@ namespace AWP
         private ReferenceObject<MenuManager> _refMenuManager;
         [SerializeField]
         private ReferenceObject<CullingBounds> _refCullingBounds;
+        [SerializeField]
+        private AWInputManager _inputManager;
         [SerializeField]
         private AudioManager _audioManager;
         [SerializeField]
@@ -82,6 +86,7 @@ namespace AWP
         protected virtual void OnEnable()
         {
             Current = this;
+            AWInputManager = _inputManager;
             AudioManager = _audioManager;
             SaveManager = _saveManager;
             SceneManager.sceneLoaded += OnSceneLoaded;
