@@ -11,6 +11,11 @@ namespace AWP
 {
     public abstract class UIFX : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
+        /// <summary>
+        /// Maximum value of deltaTime (used to avoid massive jumps in single frames)
+        /// </summary>
+        private const float MaxDeltaTime = 1f / 30f;
+
         [SerializeField] [ValidateInput("ValidateRect", "Rect is not child or self", InfoMessageType.Warning)]
         protected RectTransform _rect;
         protected bool _isHighlighted;
@@ -83,7 +88,7 @@ namespace AWP
         {
             while (true)
             {
-                FXUpdate(DeltaTime);
+                FXUpdate(ClampDeltaTime(DeltaTime));
 
                 if (!_fixedUpdateRoutine.RoutineActive)
                 {
@@ -99,7 +104,7 @@ namespace AWP
             while (true)
             {
                 UpdateVariables();
-                FXFixedUpdate(FixedDeltaTime);
+                FXFixedUpdate(ClampFixedDeltaTime(FixedDeltaTime));
                 SyncOldVariables();
 
                 // End routine if finished
@@ -128,6 +133,17 @@ namespace AWP
         protected abstract void FXUpdate(float deltaTime);
         protected abstract void FXFixedUpdate(float deltaTime);
         protected abstract bool FXFinished();
+
+        #region Clamping
+        protected virtual float ClampDeltaTime(float deltaTime)
+        {
+            return Mathf.Min(deltaTime, MaxDeltaTime);
+        }
+        protected virtual float ClampFixedDeltaTime(float fixedDeltaTime)
+        {
+            return fixedDeltaTime;
+        }
+        #endregion
 
         #region Editor
         private bool ValidateRect()
