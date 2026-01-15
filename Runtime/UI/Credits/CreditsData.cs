@@ -14,6 +14,7 @@ namespace AWP
     public class CreditsData : AWScriptableObject
     {
         private const string CreateItemName = "CreditsData";
+        private const string ResourcesFolder = "CreditsData/";
 
         [HideReferenceObjectPicker]
         public List<CreditsItem> CreditsItems = new List<CreditsItem>();
@@ -57,6 +58,11 @@ namespace AWP
             {
                 return new List<CreditsEntry>() { new ImageObject(Image, Height) };
             }
+        }
+
+        public static CreditsData LoadCreditsData(string name)
+        {
+            return Resources.Load<CreditsData>(ResourcesFolder + name);
         }
     }
 }

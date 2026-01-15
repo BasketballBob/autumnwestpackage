@@ -21,6 +21,8 @@ namespace AWP
         public TSaveData SaveData = new TSaveData();
         [NonSerialized] [ShowInInspector]
         public TPreferenceData PreferenceData = new TPreferenceData();
+        [NonSerialized] [ShowInInspector]
+        public bool IsSaving;
 
         private void Awake()
         {
@@ -30,6 +32,8 @@ namespace AWP
         [Button()]
         public void Save(string fileName = DefaultSaveName)
         {
+            if (!IsSaving) return;
+
             SaveExternalData();
             Save<TSaveData>(fileName, ref SaveData);
             Debug.Log("AWSaveManager: Save");

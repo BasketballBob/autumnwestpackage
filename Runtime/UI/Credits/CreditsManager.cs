@@ -21,35 +21,76 @@ namespace AWP
         [SerializeField]
         private ComponentPool<CreditsObject> _imagePool;
         [SerializeField]
+        private InputActionReference _scrollInput;
+        [SerializeField]
+        private InputActionReference _speedUpInput;
+        [SerializeField]
         private float _scrollSpeed = 200;
         [SerializeField]
         private CreditsData _creditsData;
+        
+        [Header("Additional settings")]
+        [SerializeField]
+        private bool _playerScrollingEnabled = true;
+        [SerializeField] [ShowIf("@_playerScrollingEnabled")]
+        private float _playerScrollSpeed = 100;
+        [SerializeField]
+        private bool _speedUpEnabled = true;
+        [SerializeField] [ShowIf("@_speedUpEnabled")]
+        private float _speedUpMultiplier;
 
         [Header("Events")]
+        [SerializeField]
+        private bool _loadSceneOnFinish = true;
+        [ShowIf("@_loadSceneOnFinish")]
+        [SerializeField]
+        private string _finishScene;
         [SerializeField]
         private UnityEvent _onFinish;
 
         [Header("Debug")]
         [SerializeField]
         private bool _debugEnabled;
-        [SerializeField]
-        private InputActionReference _scrollInput;
 
         [ShowInInspector]
         private List<CreditsEntry> _entryList = new List<CreditsEntry>();
         private GenericRecycler<CreditsEntry> _recycler;
         private SingleCoroutine _scrollRoutine;
 
+        public CreditsData CreditsData
+        {
+            get => _creditsData;
+            set => _creditsData = value;
+        }
+        private float SpeedUpMultiplier
+        {
+            get
+            {
+                if (_speedUpEnabled) return _speedUpMultiplier;
+                return 1;
+            }
+        }
+
         private void OnEnable()
         {
-            _scrollInput.action.Enable();
-            //_scrollInput.action.performed += DebugScroll;
+            if (_scrollInput != null)
+            {
+                _scrollInput.action.Enable();
+                _scrollInput.action.performed += TryScroll;
+            }
+
+            if (_speedUpInput != null) _speedUpInput.action.Enable();
         }
 
         private void OnDisable()
         {
-            _scrollInput.action.Disable();
-            //_scrollInput.action.performed -= DebugScroll;
+            if (_scrollInput != null)
+            {
+                _scrollInput.action.Disable();
+                _scrollInput.action.performed -= TryScroll;
+            }
+
+            if (_speedUpInput != null) _speedUpInput.action.Disable();
         }
 
         private void Start()
@@ -79,7 +120,16 @@ namespace AWP
         public IEnumerator PlayRoutine()
         {
             yield return _recycler.ScrollRoutine(-_scrollSpeed);
+            End();
+            
+        }
+
+        public void End()
+        {
+            _scrollRoutine.StopRoutine();
+
             _onFinish?.Invoke();
+            if (_loadSceneOnFinish) AWGameManager.TransitionScene(_finishScene);
         }
 
         public void Scroll(float offset)
@@ -87,10 +137,9 @@ namespace AWP
             _recycler.Scroll(offset * _scrollSpeed * Time.deltaTime);
         }
 
-        private void DebugScroll(InputAction.CallbackContext context)
+        private void TryScroll(InputAction.CallbackContext context)
         {
-            if (!_debugEnabled) return;
-            if (!AWGameManager.IsDeveloperMode()) return;
+            if (!_playerScrollingEnabled) return;
             Scroll(_scrollInput.action.ReadValue<float>());
         }
 

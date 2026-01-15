@@ -5,11 +5,9 @@ using Yarn.Unity;
 
 namespace AWP
 {
-    [RequireComponent(typeof(Animator))]
     public class AnimatorPlayer : MonoBehaviour
     {
         [SerializeField]
-        [HideInInspector]
         private Animator _anim;
 
         private void Reset()
@@ -28,6 +26,24 @@ namespace AWP
         public void PlayAnimation(string name, int layer, float normalizedTime)
         {
             _anim.Play(name, layer, normalizedTime);
+        }
+
+        [YarnCommand("SetBool")]
+        public void SetBool(string name, bool value)
+        {
+            _anim.SetBool(name, value);
+        }
+
+        [YarnCommand("SetFloat")]
+        public void SetFloat(string name, float value)
+        {
+            _anim.SetFloat(name, value);
+        }
+
+        [YarnCommand("SetTrigger")]
+        public void SetTrigger(string name)
+        {
+            _anim.SetTrigger(name);
         }
 
         [YarnCommand("WaitOnAnimation")]
