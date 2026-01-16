@@ -80,8 +80,8 @@ namespace AWP
 
         protected void StopAnimationRoutines()
         {
-            _fixedUpdateRoutine.StopRoutine();
-            _updateRoutine.StopRoutine();
+            _fixedUpdateRoutine?.StopRoutine();
+            _updateRoutine?.StopRoutine();
         }
 
         private IEnumerator UpdateRoutine()

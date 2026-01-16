@@ -14,7 +14,6 @@ namespace AWP
         public void SetState(BaseState newState)
         {
             _currentState?.ExitState();
-            Debug.Log($"SET STATE {newState}");
             _currentState = newState;
             _currentState?.EnterState();
         }

@@ -27,10 +27,12 @@ namespace AWP
         /// <param name="strings"></param>
         public static void DrawLabels(Vector3 position, float separationDist = .25f, params string[] strings)
         {
-            for (int i = 0; i < strings.Length; i++)
-            {
-                Handles.Label(position + Vector3.up * separationDist * (strings.Length - 1 - i), strings[i]);
-            }
+            #if UNITY_EDITOR
+                for (int i = 0; i < strings.Length; i++)
+                {
+                    Handles.Label(position + Vector3.up * separationDist * (strings.Length - 1 - i), strings[i]);
+                }
+            #endif
         }
     }
 }
