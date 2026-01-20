@@ -22,7 +22,7 @@ namespace AWP
         [NonSerialized] [ShowInInspector]
         public TPreferenceData PreferenceData = new TPreferenceData();
         [NonSerialized] [ShowInInspector]
-        public bool IsSaving;
+        public bool IsSaving = true;
 
         private void Awake()
         {

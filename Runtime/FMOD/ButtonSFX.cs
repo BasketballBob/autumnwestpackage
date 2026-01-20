@@ -18,7 +18,7 @@ namespace AWP
         private void OnEnable()
         {
             _button = GetComponent<Button>();
-            _button.onClick.AddListener(PlaySelectSFX);
+            InitializeListeners();
         }
 
         private void OnDisable()
@@ -26,11 +26,24 @@ namespace AWP
             _button.onClick.RemoveListener(PlaySelectSFX);
         }
 
+        /// <summary>
+        /// Initializes the listeners for the button sfx
+        /// (Added the ability to call this for the characterSelectButton in chicken game that removes all listeners)
+        /// </summary>
+        public void InitializeListeners()
+        {
+            _button.onClick.AddListener(PlaySelectSFX);
+        }
+
         protected override void PlayHoverSFX()
         {
             if (!_button.IsInteractable()) return;
             base.PlayHoverSFX();
         }
-        private void PlaySelectSFX() => AWGameManager.AudioManager.PlayOneShot(_selectSFX);
+        private void PlaySelectSFX()
+        {
+            Debug.Log($"SELECT SFX {name}");
+            AWGameManager.AudioManager.PlayOneShot(_selectSFX);
+        }
     }
 }
