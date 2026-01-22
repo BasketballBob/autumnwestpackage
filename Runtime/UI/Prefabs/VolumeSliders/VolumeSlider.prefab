@@ -166,7 +166,7 @@ MonoBehaviour:
   OnDown:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3829758884554586926}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: AWP.SFXPlayer, autumnwest.autumnwestpackage
         m_MethodName: PlayOneShot
         m_Mode: 5
@@ -302,7 +302,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8017267548501450274}
   - component: {fileID: 5543216671495589189}
-  - component: {fileID: 3829758884554586926}
   m_Layer: 0
   m_Name: VolumeSlider
   m_TagString: Untagged
@@ -352,35 +351,6 @@ MonoBehaviour:
       Data3: -1772787786
       Data4: 2034945087
     Path: event:/Player_Character/PLR_General/Play_PLR_Handeling_GrabChicken
---- !u!114 &3829758884554586926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5139736820168825588}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afa0371fbfdf05b4493729cad517f6bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _events:
-    _items:
-    - Label: Test
-      Value:
-        Guid:
-          Data1: -471872908
-          Data2: 1312346633
-          Data3: -2022222156
-          Data4: 1445030889
-        Path: event:/UI/Play_UI_Settings_VolumeSlide
-  _attachedTransformOverride:
-    rid: -2
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
 --- !u!1 &6677953480659455340
 GameObject:
   m_ObjectHideFlags: 0

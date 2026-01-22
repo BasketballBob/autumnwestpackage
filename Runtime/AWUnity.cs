@@ -69,6 +69,15 @@ namespace AWP
         }
 
         /// <summary>
+        /// Randomly returns true or false
+        /// </summary>
+        /// <returns></returns>
+        public static bool CoinFlipBool()
+        {
+            return UnityEngine.Random.Range(0, 2) == 0;
+        }
+
+        /// <summary>
         /// Returns randomly either 1 or -1
         /// </summary>
         /// <returns></returns>

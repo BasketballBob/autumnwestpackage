@@ -15,7 +15,7 @@ namespace AWP
             _slider = GetComponent<Slider>();
         }
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             _slider.onValueChanged.AddListener(OnSliderChange);
         }
