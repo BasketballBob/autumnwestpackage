@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
@@ -33,6 +34,15 @@ namespace AWP
         [SerializeField]
         private bool _alwaysPlay;
 
+        /// <summary>
+        /// Calls on beginning of display (after fade in to black)
+        /// </summary>
+        public Action OnStartDisplay;
+        /// <summary>
+        /// Calls at end of display (right before fade out from black)
+        /// </summary>
+        public Action OnFinishDisplay;
+
         private void Awake()
         {
             CheckToDestroy();
@@ -43,7 +53,10 @@ namespace AWP
 
         private IEnumerator SplashRoutine()
         {
+            //Debug.Log($"WII ON START DISPLAY");
+            
             yield return _anim.WaitForAnimationToComplete(EnterAnimation);
+            OnStartDisplay?.Invoke();
 
             for (int i = 0; i < _splashScreenPrefabs.Count; i++)
             {
@@ -62,14 +75,15 @@ namespace AWP
                 }
 
                 Destroy(splashScreen.gameObject);
-
                 yield return new WaitForSecondsRealtime(_splashScreenDelay);
             }
 
             SetGameInteractable(true);
+            OnFinishDisplay?.Invoke();
             yield return _anim.WaitForAnimationToComplete(ExitAnimation);
 
             SplashScreenPlayed = true;
+            //Debug.Log($"WII ON FINISH DISPLAY");
             CheckToDestroy();
         }
 
