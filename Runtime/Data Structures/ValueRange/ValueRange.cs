@@ -45,7 +45,7 @@ namespace AWP
             switch (Mode)
             {
                 case RangeMode.Constant:
-                    return default;
+                    return _minConstant;
                 case RangeMode.TwoConstants:
                     return Lerp(AWRandom.Range01());
                 case RangeMode.WeightedConstants:

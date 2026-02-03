@@ -52,7 +52,7 @@ namespace AWP
             else OnUnpause.Invoke();
         }
 
-        private void TryTogglePause(InputAction.CallbackContext context)
+        public void TryTogglePause(InputAction.CallbackContext context = default)
         {
             if (!CanPause) return;
             if (!_interactable && IsVisible) return;
