@@ -70,6 +70,7 @@ namespace AWP
         public bool Mouse1Held => Mouse1.IsPressed();
         public virtual bool Debug1Pressed => false;
         public virtual bool Debug2Pressed => false;
+        public Action<bool> OnTogglePause;
 
         protected virtual bool ResetScenePressed => false;
         protected virtual bool DebugBreakPressed => false;
@@ -242,10 +243,11 @@ namespace AWP
         {
             //if (!IsPaused && paused) _prePauseTimeScale = TimeScale;
 
-            
             IsPaused = paused;
             SyncTimeScale();
             Debug.Log($"PAUSED {paused} Time.timeScale={Time.timeScale} _timeScale={_timeScale}");
+
+            Current.OnTogglePause?.Invoke(IsPaused);
         }
         private static void SyncTimeScale() => Time.timeScale = IsPaused ? 0 : _timeScale;
         
