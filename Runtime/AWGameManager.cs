@@ -101,7 +101,7 @@ namespace AWP
 
         protected void Update()
         {
-            ManageDebugCommands();
+            CheckToManageDebugCommands();
         }
 
         protected virtual void OnSceneLoaded(Scene loadedScene, LoadSceneMode loadSceneMode)
@@ -276,6 +276,13 @@ namespace AWP
         #endregion
 
         #region Debug
+        protected virtual void CheckToManageDebugCommands()
+        {
+            if (!IsDeveloperMode()) return;
+
+            ManageDebugCommands();
+        }
+
         protected virtual void ManageDebugCommands()
         {
             if (ResetScenePressed) ResetScene();
