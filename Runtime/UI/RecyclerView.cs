@@ -22,7 +22,7 @@ namespace AWP
         private float _lowerMargin;
 
         protected List<TData> _data = new List<TData>();
-        private List<TComponent> _components = new List<TComponent>();
+        protected List<TComponent> _components = new List<TComponent>();
         private int _dataIndexOffset;
         private int _oldDataIndexOffset;
         private int _targetActiveCount;
