@@ -89,6 +89,22 @@ namespace AWP
             }, duration, EasingFunction.Sin, deltaType);
         }
 
+        public static IEnumerator FadeOutAndStop(this EventInstance instance, float duration, AWDelta.DeltaType deltaType = AWDelta.DeltaType.UnscaledUpdate)
+        {
+            yield return FadeToVolume(instance, duration, 0, deltaType);
+            instance.StopIfPlaying();
+        }
+
+        public static IEnumerator WaitToFinish(this EventInstance instance)
+        {
+            while (instance.IsPlaying()) yield return null;
+        }
+
+        public static bool IsPlaying(this EventInstance instance)
+        {
+            return instance.GetPlaybackState() != PLAYBACK_STATE.STOPPED;
+        }
+
         public static PLAYBACK_STATE GetPlaybackState(this EventInstance instance)
         {
             PLAYBACK_STATE returnState;

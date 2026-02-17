@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
 using UnityEngine;
+using FMOD.Studio;
+using Yarn.Unity;
 
 namespace AWP
 {
@@ -23,6 +25,14 @@ namespace AWP
         public void PlayOneShotAttached(string name)
         {
             AWGameManager.AudioManager.PlayOneShotAttached(_events.GetItem(name), AttachedTransform.gameObject);
+        }
+
+        public EventInstance PlayInstance(string name)
+        {
+            EventInstance instance = AWGameManager.AudioManager.CreateInstance(_events.GetItem(name));
+            instance.start();
+
+            return instance;
         }
     }
 }

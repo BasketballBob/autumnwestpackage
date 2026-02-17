@@ -31,6 +31,8 @@ namespace AWP
 
         public static Collider2D[] GetAttachedColliders(this Rigidbody2D rb)
         {
+            if (rb == null) return null;
+
             Collider2D[] colliders = new Collider2D[rb.attachedColliderCount];
             rb.GetAttachedColliders(colliders);
             return colliders;
