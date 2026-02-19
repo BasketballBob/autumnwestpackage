@@ -62,6 +62,8 @@ namespace AWP
 
         private void HandleCurrentValue(TReference current)
         {
+            if (current == null) return;
+
             current.transform.SetParent(null);
             DontDestroyOnLoad(current.gameObject);
         }
