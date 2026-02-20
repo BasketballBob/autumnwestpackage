@@ -21,10 +21,13 @@ namespace AWP
         {
             AWGameManager.AudioManager.PlayOneShot(_events.GetItem(name));
         }
-
         public void PlayOneShotAttached(string name)
         {
             AWGameManager.AudioManager.PlayOneShotAttached(_events.GetItem(name), AttachedTransform.gameObject);
+        }
+        public void PlayOneShotDelayed(string name, float delay)
+        {
+            this.DelayedActionRoutine(() => PlayOneShot(name), delay);
         }
 
         public EventInstance PlayInstance(string name)
@@ -33,6 +36,10 @@ namespace AWP
             instance.start();
 
             return instance;
+        }
+        public IEnumerator PlayAndWaitInstance(string name)
+        {
+            return PlayInstance(name).WaitToFinish();
         }
     }
 }
