@@ -25,6 +25,17 @@ namespace AWP
             yield break;
         }
 
+        public static Coroutine DelayedActionRoutine(this MonoBehaviour mono, Action action, float delay, AWDelta.DeltaType deltaType = AWDelta.DeltaType.Update)
+        {
+            return mono.StartCoroutine(DelayRoutine());
+
+            IEnumerator DelayRoutine()
+            {
+                yield return deltaType.WaitForSeconds(delay);
+                action?.Invoke();
+            }
+        }
+
         private static IEnumerator RepeatIndefinitely(Func<IEnumerator> routineFunc, AWDelta.DeltaType deltaType, float rate)
         {
             return Routine();
