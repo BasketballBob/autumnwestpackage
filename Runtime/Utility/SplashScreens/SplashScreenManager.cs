@@ -42,6 +42,7 @@ namespace AWP
         /// Calls at end of display (right before fade out from black)
         /// </summary>
         public Action OnFinishDisplay;
+        public Action OnDestroyed;
 
         private void Awake()
         {
@@ -49,6 +50,11 @@ namespace AWP
 
             SetGameInteractable(false);
             StartCoroutine(SplashRoutine());
+        }
+
+        private void OnDestroy()
+        {
+            OnDestroyed?.Invoke();
         }
 
         private IEnumerator SplashRoutine()
