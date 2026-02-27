@@ -36,6 +36,7 @@ namespace AWP
     {
         public override void ApplyGlobal()
         {
+            Debug.Log($"GLOBAL APPLY {ParameterName} {Value}");
             AudioManager.SetGlobalParameterByName(ParameterName, Value);
         }
 
