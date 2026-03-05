@@ -30,5 +30,16 @@ namespace AWP
 
             hinge.motor = motor;
         }
+
+        public static Vector2 GetAnchorWorldPosition(this HingeJoint2D joint)
+        {
+            return joint.connectedBody.transform.TransformPoint(joint.connectedAnchor);
+        }
+
+        public static void ResetPosition(this HingeJoint2D joint)
+        {
+            joint.attachedRigidbody.MovePosition(joint.GetAnchorWorldPosition());
+            joint.attachedRigidbody.transform.position = joint.attachedRigidbody.position;
+        }
     }
 }
