@@ -48,19 +48,28 @@ namespace AWP
         [SerializeField]
         private UnityEvent _onFinish;
 
+        [Header("Audio")]
+        [SerializeField]
+        private SceneAudio _sceneAudio;
+
         [Header("Debug")]
         [SerializeField]
         private bool _debugEnabled;
 
         [ShowInInspector]
         private List<CreditsEntry> _entryList = new List<CreditsEntry>();
-        private GenericRecycler<CreditsEntry> _recycler;
+        private CreditsRecycler _recycler;
         private SingleCoroutine _scrollRoutine;
 
         public CreditsData CreditsData
         {
             get => _creditsData;
             set => _creditsData = value;
+        }
+        public string FinishScene
+        {
+            get => _finishScene;
+            set => _finishScene = value;
         }
         private float SpeedUpMultiplier
         {
@@ -95,7 +104,7 @@ namespace AWP
 
         private void Start()
         {
-            _recycler = new GenericRecycler<CreditsEntry>(_contentArea.rect.height, SetEnabled, PositionObject);
+            _recycler = new CreditsRecycler(_contentArea.rect.height, SetEnabled, PositionObject);
 
             _headerPool.Initialize(this, _contentArea);
             _bodyPool.Initialize(this, _contentArea);
@@ -114,11 +123,13 @@ namespace AWP
         public void Play()
         {
             InitializeEntryList();
+            AWGameManager.AudioManager.EnterNewSceneAudio(_sceneAudio);
             _scrollRoutine.StartRoutine(PlayRoutine());
         }
 
         public IEnumerator PlayRoutine()
         {
+            _recycler.SetOffsetMax();
             yield return _recycler.ScrollRoutine(-_scrollSpeed);
             End();
             
@@ -177,6 +188,16 @@ namespace AWP
         }
 
         #region Generic Recycler
+        private class CreditsRecycler : GenericRecycler<CreditsEntry>
+        {
+            public override float MinOffset => base.MinOffset;
+            public override float MaxOffset => base.MaxOffset + _areaSize;
+
+            public CreditsRecycler(float areaSize, Action<CreditsEntry, bool> enableAction, Action<CreditsEntry, float> positionAction) : base(areaSize, enableAction, positionAction)
+            {
+            }
+        }
+
         private void InitializeRecycler(List<CreditsEntry> entries)
         {
             //entries.ForEach(x => )

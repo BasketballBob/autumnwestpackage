@@ -76,6 +76,11 @@ namespace AWP
             }
         }   
 
+        public void SetDestroyDuration(float duration)
+        {
+            _destroyDuration = duration;
+        }
+
         public void SetEasingFunction(EasingFunction easingFunc)
         {
             _easingMode = easingFunc;

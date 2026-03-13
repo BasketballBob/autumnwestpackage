@@ -222,6 +222,7 @@ namespace AWP
         }
         public static IEnumerator ExitTransition(TransitionSettings settings = null)
         {
+            Debug.Log($"EXIT TRANSITION");
             if (_sceneTransition == null) yield break;
             yield return _sceneTransition.ExitRoutine(settings);
         }
@@ -266,9 +267,15 @@ namespace AWP
         {
             return (int)DevMode >= (int)mode;
         }
+
+        public static bool IsMaximumMode(DeveloperMode mode)
+        {
+            Debug.Log($"DEV COMPARISON {DevMode} {mode}");
+            return (int)DevMode <= (int)mode;
+        }
         #endregion
 
-        #region Build Types
+        #region Build Typess
         public static bool BuildTypeIsDemo()
         {
             return BuildType == BuildType.Demo;

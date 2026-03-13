@@ -6,6 +6,7 @@ namespace AWP
 {
     public class PointAtCamera : MonoBehaviour
     {
+        public Vector3 AngleOffset;
         public bool LimitAngle = false;
         public float LimitMaxDegrees = 30;
 
@@ -28,6 +29,8 @@ namespace AWP
 
 
             transform.LookAt(AWGameManager.AWCamera.Camera.transform.position);
+            transform.eulerAngles += AngleOffset;
+
             if (LimitAngle) 
             {
                 transform.rotation = Quaternion.RotateTowards(_initialRotation, transform.rotation, LimitMaxDegrees);

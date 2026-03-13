@@ -10,16 +10,16 @@ namespace AWP
     [System.Serializable]
     public class GenericRecycler<TData>
     {
-        private float _areaSize;
-        private float _contentSize;
+        protected float _areaSize;
+        protected float _contentSize;
         private Action<TData, bool> _enableAction;
         private Action<TData, float> _positionAction; 
         private List<Item> _items = new List<Item>();
         private float _offset;
 
         public float Offset => _offset;
-        public float MinOffset => -_contentSize - _items.Last().Size;
-        public float MaxOffset => 0;
+        public virtual float MinOffset => -_contentSize - _items.Last().Size;
+        public virtual float MaxOffset => 0;
         public bool AtStartPos => _offset == MaxOffset;
         public bool AtEndPos => _offset == MinOffset;
 
@@ -45,6 +45,8 @@ namespace AWP
 
             SyncActiveItems();
         }
+        public void SetOffsetMin() => SetOffset(MinOffset);
+        public void SetOffsetMax() => SetOffset(MaxOffset);
 
         public void AddItem(TData item, float size)
         {

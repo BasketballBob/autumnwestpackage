@@ -356,8 +356,10 @@ namespace AWP
                 // Fade in new audio
                 if (!eventRef.IsNull)
                 {
-                    Instance = _audioManager.CreateAttachedInstance(eventRef, AWGameManager.AWCamera.gameObject);
-                    //Instance.setPa // HERE
+                    //Debug.Log($"TEST {eventRef} {_audioManager != null} {AWGameManager.AWCamera != null}");
+                    //Instance = _audioManager.CreateAttachedInstance(eventRef, AWGameManager.AWCamera.gameObject);
+
+                    Instance = _audioManager.CreateInstance(eventRef);
                     CurrentEvent = eventRef;
                     Instance.start();
                     Instance.setVolume(0);

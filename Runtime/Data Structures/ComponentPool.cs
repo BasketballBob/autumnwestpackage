@@ -59,7 +59,6 @@ namespace AWP
         protected virtual TComponent CreateObject()
         {
             TComponent newObject = GameObject.Instantiate(_prefab, _mono.transform);
-            Debug.Log("CREATEN NEW OBJECT");
             AddObjectToPool(newObject);
 
             return newObject;

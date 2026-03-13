@@ -5,7 +5,7 @@ using UnityEngine;
 namespace AWP
 {
     [CreateAssetMenu(fileName = CreateItemName, menuName = CreateFolderName + CreateItemName)]
-    public class TransformObject : SingletonReferenceObject<Transform>
+    public class TransformObject : ReferenceObject<Transform>
     {
         private const string CreateItemName = "TransformObject";
     }
