@@ -12,7 +12,7 @@ using UnityEditor;
 namespace AWP
 {
 
-    public class AWTags : MonoBehaviour
+    public class AWTags : MonoBehaviour, IAWTagsReference
     {
         [SerializeField]
         private TagCollection _collection;
@@ -20,6 +20,7 @@ namespace AWP
         [CustomValueDrawer("TagMask")]
         private int _appliedTags;
 
+        public AWTags Tags => this;
         public TagCollection Collection { get { return _collection; } }
         public int AppliedTags { get { return _appliedTags; } }
 
@@ -46,18 +47,14 @@ namespace AWP
 
         public static bool ItemHasTag(GameObject gameObject, string tagName)
         {
-            AWTags tags = gameObject.GetComponent<AWTags>();
-            if (tags == null) return false;
-
-            return tags.HasTag(tagName);
+            if (!gameObject.TryGetComponent<IAWTagsReference>(out IAWTagsReference tagsRef)) return false;
+            return tagsRef.Tags.HasTag(tagName);
         }
 
         public static bool ItemFitsMask(GameObject gameObject, int mask)
         {
-            AWTags tags = gameObject.GetComponent<AWTags>();
-            if (tags == null) return false;
-
-            return tags.FitsMask(mask);
+            if (!gameObject.TryGetComponent<IAWTagsReference>(out IAWTagsReference tagsRef)) return false;
+            return tagsRef.Tags.FitsMask(mask);
         }
 
 #if UNITY_EDITOR

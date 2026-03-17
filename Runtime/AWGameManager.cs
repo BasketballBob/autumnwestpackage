@@ -229,6 +229,7 @@ namespace AWP
 
         private static void SetTransition(SceneTransition transition)
         {
+            Debug.Log($"SET TRANSITION");
             if (_sceneTransition != null) Destroy(_sceneTransition.gameObject);
             _sceneTransition = Instantiate(transition);
         }
