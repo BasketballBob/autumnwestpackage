@@ -134,7 +134,6 @@ namespace AWP
             _recycler.SetOffsetMax();
             yield return _recycler.ScrollRoutine(-_scrollSpeed);
             End();
-            
         }
 
         public void End()
@@ -142,7 +141,7 @@ namespace AWP
             _scrollRoutine.StopRoutine();
 
             _onFinish?.Invoke();
-            if (_loadSceneOnFinish) AWGameManager.TransitionScene(_finishScene);
+            if (_loadSceneOnFinish) AWGameManager.TransitionScene(_finishScene, new TransitionSettings() { EnterDuration = 1, DelayDuration = 2, ExitDuration = 1 });
         }
 
         public void Scroll(float offset)

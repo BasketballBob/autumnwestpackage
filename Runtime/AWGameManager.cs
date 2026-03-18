@@ -200,6 +200,7 @@ namespace AWP
 
         #region Scene transition
         public static void TransitionScene(string scene) => TransitionScene(scene, Current._defaultSceneTransition);
+        public static void TransitionScene(string scene, TransitionSettings settings) => TransitionScene(scene, Current._defaultSceneTransition, settings);
         public static void TransitionScene(string scene, SceneTransition transition, TransitionSettings settings = null)
         {
             SetTransition(transition);

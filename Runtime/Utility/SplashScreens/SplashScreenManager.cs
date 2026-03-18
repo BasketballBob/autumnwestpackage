@@ -124,8 +124,8 @@ namespace AWP
             if (AWGameManager.IsDeveloperMode() && Time.time > .5f) return true; // DESTROY IF NOT AT BEGINNING OF GAME (TESTING)
 
             // TESTING
-            if (AWGameManager.IsTestMode()) return false;
-            if (AWGameManager.BuildTypeIsDemo()) return false;
+            // if (AWGameManager.IsTestMode()) return false;
+            // if (AWGameManager.BuildTypeIsDemo()) return false;
 
             if (SplashScreenPlayed && !_alwaysPlay) return true;
 
