@@ -71,6 +71,8 @@ namespace AWP
             get => _finishScene;
             set => _finishScene = value;
         }
+        public SceneAudio SceneAudio { get => _sceneAudio; set => _sceneAudio = value; }
+
         private float SpeedUpMultiplier
         {
             get
