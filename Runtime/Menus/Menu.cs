@@ -136,7 +136,6 @@ namespace AWP
 
         public void SetMenuState(MenuState state)
         {
-            Debug.Log($"VIDEO {gameObject} {state}");
             switch (state)
             {
                 case MenuState.Displayed:
@@ -175,12 +174,11 @@ namespace AWP
         {
             AWGameManager.AudioManager.PlayOneShot(_pushSFX);
 
-            Debug.Log("PUSH START " + gameObject.name + " " + _currentMenuState);
             _currentMenuState = MenuState.Entering;
             SetVisible(true);
             yield return WaitOnTransition(EnterAnimation);
             SetStateDisplayed();
-            Debug.Log("PUSH STOP " + gameObject.name + " " + _currentMenuState);
+
             yield break;
         }
 
@@ -188,12 +186,11 @@ namespace AWP
         {
             AWGameManager.AudioManager.PlayOneShot(_popSFX);
 
-            Debug.Log("POP START " + gameObject.name + " " + _currentMenuState);
             _currentMenuState = MenuState.Exitting;
             yield return WaitOnTransition(ExitAnimation);
             SetVisible(false);
             SetStateHidden();
-            Debug.Log("POP STOP " + gameObject.name + " " + _currentMenuState);
+
             yield break;
         }
 

@@ -13,7 +13,6 @@ namespace AWP
 
         public void OnSubmit(BaseEventData eventData)
         {
-            Debug.Log($"SUBMIT {name}");
             AWGameManager.AudioManager.PlayOneShot(_submitSFX);
         }
     }

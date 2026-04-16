@@ -150,7 +150,6 @@ namespace AWP
 
         public static IEnumerator UnloadSceneAsync(string sceneName)
         {
-            Debug.Log($"UNLOAD SCENE {sceneName}");
             AsyncOperation operation = SceneManager.UnloadSceneAsync(sceneName);
             while (!operation.isDone) yield return null;
         }
@@ -223,14 +222,12 @@ namespace AWP
         }
         public static IEnumerator ExitTransition(TransitionSettings settings = null)
         {
-            Debug.Log($"EXIT TRANSITION");
             if (_sceneTransition == null) yield break;
             yield return _sceneTransition.ExitRoutine(settings);
         }
 
         private static void SetTransition(SceneTransition transition)
         {
-            Debug.Log($"SET TRANSITION");
             if (_sceneTransition != null) Destroy(_sceneTransition.gameObject);
             _sceneTransition = Instantiate(transition);
         }
@@ -248,7 +245,7 @@ namespace AWP
 
             IsPaused = paused;
             SyncTimeScale();
-            Debug.Log($"PAUSED {paused} Time.timeScale={Time.timeScale} _timeScale={_timeScale}");
+            //Debug.Log($"PAUSED {paused} Time.timeScale={Time.timeScale} _timeScale={_timeScale}");
 
             Current.OnTogglePause?.Invoke(IsPaused);
         }
@@ -272,7 +269,7 @@ namespace AWP
 
         public static bool IsMaximumMode(DeveloperMode mode)
         {
-            Debug.Log($"DEV COMPARISON {DevMode} {mode}");
+            //Debug.Log($"DEV COMPARISON {DevMode} {mode}");
             return (int)DevMode <= (int)mode;
         }
         #endregion

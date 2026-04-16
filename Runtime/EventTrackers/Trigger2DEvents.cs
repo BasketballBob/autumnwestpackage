@@ -17,19 +17,16 @@ namespace AWP
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            Debug.Log("E");
             OnTriggerEnter?.Invoke(other);
         }
 
         private void OnTriggerStay2D(Collider2D other)
         {
-            Debug.Log("E2");
             OnTriggerStay?.Invoke(other);
         }
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            Debug.Log("E3");
             OnTriggerExit?.Invoke(other);
         }
     }

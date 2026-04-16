@@ -21,7 +21,6 @@ namespace AWP
 
             while (currentBone != null)
             {
-                Debug.Log($"WEST {transformIndex} {currentBone.name}");
                 _transforms[transformIndex].transform.position = currentBone.transform.position;
 
                 if (currentBone.childCount <= 0) return;

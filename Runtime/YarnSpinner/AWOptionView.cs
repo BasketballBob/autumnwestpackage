@@ -80,8 +80,6 @@ namespace AWP
                 int optionIndex = i;
                 int optionIDIndex = dialogueOptions[i].DialogueOptionID;
 
-                Debug.Log($"INTIAILIZE {optionIndex} {optionIDIndex}");
-
                 _optionButtons[i].Initialize(dialogueOptions[i], () => 
                 {
                     onOptionSelected(optionIDIndex);

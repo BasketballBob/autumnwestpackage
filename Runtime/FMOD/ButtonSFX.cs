@@ -42,7 +42,6 @@ namespace AWP
         }
         private void PlaySelectSFX()
         {
-            Debug.Log($"SELECT SFX {name}");
             AWGameManager.AudioManager.PlayOneShot(_selectSFX);
         }
     }

@@ -39,8 +39,6 @@ namespace AWP
 
         private void CheckToPlayTestSFX()
         {
-            Debug.Log($"CHECK TO PLAY TEST SFX {name} {_testSoundDelay.Delta}");
-
             if (!_testSoundDelay.IsFinished()) return;
 
             AWGameManager.AudioManager.PlayOneShot(_testSFX);

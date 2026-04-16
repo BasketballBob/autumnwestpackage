@@ -14,11 +14,11 @@ namespace AWP
 
             foreach (Type type in obj.GetType().GetInterfaces())
             {
-                Debug.Log($"EEE {type}");
+                //Debug.Log($"EEE {type}");
                 if (type is ISaveable)
                 {
-                    Debug.Log($"TYPE {type.IsGenericType}");
-                    Debug.Log($"TYPE {type.GetGenericArguments().Length}");
+                    //Debug.Log($"TYPE {type.IsGenericType}");
+                    //Debug.Log($"TYPE {type.GetGenericArguments().Length}");
                 }
             }
 
@@ -31,8 +31,6 @@ namespace AWP
         {
             List<Type> returnList = interfaceType.GetType().GetGenericArguments().ToList();
 
-            Debug.Log($"EAST {interfaceType} {returnList.Count}");
-
             return returnList;
         }
 
@@ -43,7 +41,7 @@ namespace AWP
                 //if (test.Name != name) continue;
                 //if (!test.IsGenericType) continue;
 
-                Debug.Log($"HAS INTERFACE {test} {test.Name}");
+                //Debug.Log($"HAS INTERFACE {test} {test.Name}");
             }
 
             return null;

@@ -46,7 +46,7 @@ namespace AWP
                         }
                         catch (Exception e)
                         {
-                            Debug.Log($"TYPE CAUGHT ERROR {parameters[0].ParameterType} " + e);
+                            Debug.LogError($"TYPE CAUGHT ERROR {parameters[0].ParameterType} " + e);
                             continue;
                         }
                     }

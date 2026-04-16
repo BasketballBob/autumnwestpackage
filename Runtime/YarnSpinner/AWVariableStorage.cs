@@ -200,7 +200,6 @@ public class AWVariableStorageData : ISaveable<AWVariableStorageSave>
 
     public void LoadSaveData(AWVariableStorageSave loadData)
     {
-        Debug.Log($"TEST DATA NULL {loadData == null}");
         if (loadData == null)
         {
             Floats = new Dictionary<string, float>();

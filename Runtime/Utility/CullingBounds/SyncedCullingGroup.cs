@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace AWP
@@ -35,6 +37,12 @@ namespace AWP
         public void SetEnabled(bool enabled)
         {
             _cullingObjects.ForEach(x => x.enabled = enabled);
+        }
+
+        [Button]
+        private void SyncCullingObjects()
+        {
+            _cullingObjects = transform.GetComponentsInChildren<CullingObject>().ToList();
         }
     }
 }

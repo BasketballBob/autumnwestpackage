@@ -35,7 +35,7 @@ namespace AWP
         /// </summary>
         public void CullSilently()
         {
-            _invokeCullEvent = false        ;
+            _invokeCullEvent = false;
             Cull();
             _invokeCullEvent = true;
         }

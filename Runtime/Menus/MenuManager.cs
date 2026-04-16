@@ -62,7 +62,6 @@ namespace AWP
 
         public void Push(Menu menu)
         {
-            Debug.Log($"INVOKE PUSH START {menu.name}");
             menu.OnPushStart?.Invoke();
             StartTransitionRoutine(PushRoutine(menu));
         }
@@ -148,7 +147,6 @@ namespace AWP
 
         public IEnumerator WaitOnTransition()
         {
-            Debug.Log($"INTRANSITION " + InTransition);
             if (!InTransition) yield break;
             yield return _transitionRoutine;
         }

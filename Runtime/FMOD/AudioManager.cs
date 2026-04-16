@@ -51,6 +51,7 @@ namespace AWP
         [Header("Debug")]
         [ShowInInspector]
         private SceneAudio _lastLoadedSceneAudio;
+        [ShowInInspector]
 
         private List<EventInstance> _eventList;
         private List<StudioEventEmitter> _emitterList;
@@ -82,9 +83,7 @@ namespace AWP
         {
             _bankLoader.Unload();
 
-            _musicChannel.Clean();
-            _ambienceChannel.Clean();
-            _snapshotChannel.Clean();
+            CleanChannels();
         }
 
         public static void SetGlobalParameterByName(string name, float value)
@@ -182,6 +181,15 @@ namespace AWP
 
                 Current._emitterList[i].Stop();
             }
+
+            Current.CleanChannels();
+        }
+
+        private void CleanChannels()
+        {
+            _musicChannel.Clean();
+            _ambienceChannel.Clean();
+            _snapshotChannel.Clean();
         }
 
         // public void OnBeginLoadScene(string nextScene, float fadeDuration = DefaultFadeInDuration)
@@ -227,7 +235,7 @@ namespace AWP
 
         public void EnterNewSceneAudio(SceneAudio sceneAudio, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null)
         {
-            Debug.Log($"ENTER NEW SCENE AUDIO {sceneAudio.name}");
+            //Debug.Log($"ENTER NEW SCENE AUDIO {sceneAudio.name}");
             _lastLoadedSceneAudio = sceneAudio;
 
             sceneAudio.ApplyGlobalParameters();
@@ -307,6 +315,8 @@ namespace AWP
             {
                 Instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 Instance.release();
+
+                CurrentEvent = default;
             }
 
             public void PlayEvent(EventReference eventRef, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, float volume = DefaultVolume, Action onSwitch = null, List<AWEventParameter> localParams = null)
@@ -356,9 +366,6 @@ namespace AWP
                 // Fade in new audio
                 if (!eventRef.IsNull)
                 {
-                    //Debug.Log($"TEST {eventRef} {_audioManager != null} {AWGameManager.AWCamera != null}");
-                    //Instance = _audioManager.CreateAttachedInstance(eventRef, AWGameManager.AWCamera.gameObject);
-
                     Instance = _audioManager.CreateInstance(eventRef);
                     CurrentEvent = eventRef;
                     Instance.start();
@@ -382,6 +389,27 @@ namespace AWP
                     while (!readyToSwitch) yield return null;
                 }
             }
+
+            #if UNITY_EDITOR
+            [CustomValueDrawer("DrawInstanceVolume")]
+            [ShowInInspector]
+            private float _instanceVolume;
+
+            private float DrawInstanceVolume()
+            {
+                if (!Instance.isValid())
+                {
+                    EditorGUILayout.LabelField($"Volume: None");
+                    return 0;
+                }
+
+                float volume;
+                Instance.getVolume(out volume);
+
+                EditorGUILayout.LabelField($"Volume: {volume}");
+                return volume;
+            }
+            #endif
         }
         #endregion
 

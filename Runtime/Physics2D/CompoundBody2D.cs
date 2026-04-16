@@ -124,19 +124,15 @@ namespace AWP
 
             AttachedColliders.ForEach(x => 
             {
-                Debug.Log("TOUCH ATTACHED COLLIDERS " + x.name);
                 Collider2D[] results = new Collider2D[8];
                 Physics2D.OverlapCollider(x, contactFilter2D, results);
                 results.ForEach(x =>
                 {
                     if (x == null) return;
-                    Debug.Log("COLLISION " + x.name);
                     if (colliders.Contains(x)) return;
                     colliders.Add(x);
                 });
             });
-
-            Debug.Log("OVERLAP " + colliders.Count);
 
             return colliders;
         }
