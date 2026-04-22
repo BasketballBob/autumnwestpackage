@@ -20,6 +20,23 @@ namespace AWP
             return raycastResults;
         }
 
+        public static GameObject GetTopRaycast(this EventSystem eventSystem, Vector2 mousePos)
+        {
+            List<RaycastResult> results = eventSystem.GetCurrentRaycastResults(mousePos);
+            if (results.IsNullOrEmpty()) return null;
+            GameObject result;
+
+            for (int i = 0; i < results.Count; i++)
+            {
+                if (!results[i].isValid) continue;
+
+                result = results[i].gameObject;
+                if (result != null) return result;
+            }
+
+            return null;
+        }
+
         public static Selectable GetTopRaycastSelectable(this EventSystem eventSystem, Vector2 mousePos)
         {
             List<RaycastResult> results = eventSystem.GetCurrentRaycastResults(mousePos);
