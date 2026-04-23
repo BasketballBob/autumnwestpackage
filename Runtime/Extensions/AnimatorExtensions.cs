@@ -26,10 +26,20 @@ namespace AWP
             return anim.WaitForAnimationToComplete(layer);
         }
 
-        public static IEnumerator WaitForCrossFadeInFixedTime(this Animator anim, string stateName, float fixedDuration)
+        /// <summary>
+        /// Plays and waits for a crossfaded animation to finish
+        /// Has the additional condition of checking if outside of the entered animation (in case it transitions before finishing)
+        /// </summary>
+        /// <param name="anim"></param>
+        /// <param name="stateName"></param>
+        /// <param name="fixedDuration"></param>
+        /// <param name="layer"></param>
+        /// <returns></returns>
+        public static IEnumerator WaitForCrossFadeInFixedTime(this Animator anim, string stateName, float fixedDuration, int layer = 0)
         {
-            anim.CrossFadeInFixedTime(stateName, fixedDuration);
-            yield return new WaitForSeconds(fixedDuration);
+            anim.CrossFadeInFixedTime(stateName, fixedDuration, layer);
+            while (!anim.GetCurrentAnimatorStateInfo(layer).IsName(stateName)) yield return null;
+            while (anim.GetCurrentAnimatorStateInfo(layer).IsName(stateName) && !anim.AnimationIsFinished()) yield return null;
         }
 
         /// <summary>
