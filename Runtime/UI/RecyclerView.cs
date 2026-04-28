@@ -13,7 +13,7 @@ namespace AWP
         [SerializeField]
         protected RectTransform _rect;
         [SerializeField]
-        private Scrollbar _scrollbar;
+        protected Scrollbar _scrollbar;
         [SerializeField]
         private float _offset;
         [SerializeField] [MinValue(0)]
@@ -229,10 +229,18 @@ namespace AWP
 
         protected void Scroll(float offsetChange)
         {
-            if (MaxOffset == 0) return;
+            if (!CanScroll()) return;
+            
             _scrollbar.value += offsetChange / MaxOffset;
             _scrollbar.value = Mathf.Clamp01(_scrollbar.value);
             //_offset += offsetChange;
+        }
+
+        protected bool CanScroll()
+        {
+            if (MaxOffset == 0) return false;
+
+            return true;
         }
         #endregion
     }
