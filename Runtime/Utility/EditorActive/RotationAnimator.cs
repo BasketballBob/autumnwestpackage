@@ -15,5 +15,10 @@ namespace AWP
         {
             transform.Rotate(_rotationEulers * delta);
         }
+
+        public void SetRotationEulers(Vector3 eulers)
+        {
+            _rotationEulers = eulers;
+        }
     }
 }
