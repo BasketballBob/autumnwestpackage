@@ -31,8 +31,6 @@ namespace AWP
 
         protected override void OnSliderChange(float newValue)
         {
-            base.OnSliderChange(newValue);
-
             AudioManager.SetVolume(_volumeType, newValue);
             CheckToPlayTestSFX();
         }

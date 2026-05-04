@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace AWP
 {
-    public class AWSlider : AWUI
+    public abstract class AWSlider : AWUI
     {
         [SerializeField]
         protected Slider _slider;
@@ -25,9 +25,6 @@ namespace AWP
             _slider.onValueChanged.RemoveListener(OnSliderChange);
         }
 
-        protected virtual void OnSliderChange(float newValue)
-        {
-
-        }
+        protected abstract void OnSliderChange(float newValue);
     }
 }
