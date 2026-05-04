@@ -60,6 +60,26 @@ namespace AWP
         #endregion
 
         #region Rigidbody
+        /// <summary>
+        /// Gets all of the individual rigidbodies out of an array of colliders
+        /// </summary>
+        /// <param name="cols"></param>
+        /// <returns></returns>
+        public static List<Rigidbody2D> GetRigidbodies(this Collider2D[] cols)
+        {
+            List<Rigidbody2D> bodies = new List<Rigidbody2D>();
+
+            cols.ForEach(x =>
+            {
+                if (x.attachedRigidbody == null) return;
+                if (bodies.Contains(x.attachedRigidbody)) return;
+
+                bodies.Add(x.attachedRigidbody);
+            });
+
+            return bodies;
+        }
+
         public static Vector2 GetPointVelocity(this Rigidbody2D rb, Vector2 pos, Vector2 velocity, float angularVelocity)
         {
             if (rb.bodyType != RigidbodyType2D.Dynamic) return default;
