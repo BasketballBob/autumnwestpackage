@@ -29,6 +29,7 @@ namespace AWP
         public Action OnPushFinish;
         public Action OnPopStart;
         public Action OnPopFinish;
+        public Action<bool> OnSetInteractable;
 
         protected CanvasGroup _canvasGroup;
         protected MenuState _currentMenuState;
@@ -52,6 +53,7 @@ namespace AWP
             OnPushFinish += PushFinish;
             OnPopStart += PopStart;
             OnPopFinish += PopFinish;
+            OnSetInteractable += SetInteractableEvent;
         }
 
         protected virtual void OnDisable()
@@ -60,6 +62,7 @@ namespace AWP
             OnPushFinish -= PushFinish;
             OnPopStart -= PopStart;
             OnPopFinish -= PopFinish;
+            OnSetInteractable -= SetInteractableEvent;
         }
 
         protected virtual void Start()
@@ -71,6 +74,7 @@ namespace AWP
         protected virtual void PushFinish() { }
         protected virtual void PopStart() { }
         protected virtual void PopFinish() { }
+        protected virtual void SetInteractableEvent(bool value) { }
 
         public void SetVisible(bool visible)
         {
@@ -82,6 +86,8 @@ namespace AWP
             _canvasGroup.interactable = interactable;
             _canvasGroup.blocksRaycasts = interactable;
             _interactable = interactable;
+
+            OnSetInteractable.Invoke(interactable);
         }
 
         public void PushSelf()
