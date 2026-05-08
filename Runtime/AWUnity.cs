@@ -188,6 +188,25 @@ namespace AWP
         }
         #endregion
 
+        #region Text
+        /// <summary>
+        /// Turns a float into timer format of variable length
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <returns></returns>
+        public static string ConvertToSpeedrunTimer(this float seconds)
+        {
+            TimeSpan timeSpan = TimeSpan.FromSeconds(seconds);
+
+            if (timeSpan.TotalSeconds < 10) return timeSpan.ToString("s'.'ff");
+            if (timeSpan.TotalSeconds < 60) return timeSpan.ToString("ss'.'ff");
+            if (timeSpan.TotalMinutes < 10) return timeSpan.ToString("m':'ss'.'ff");
+            if (timeSpan.TotalMinutes < 60) return timeSpan.ToString("mm':'ss'.'ff");
+            if (timeSpan.TotalHours < 10) return timeSpan.ToString("h':'mm':'ss'.'ff");
+            return timeSpan.ToString("hh':'mm':'ss'.'ff");
+        }
+        #endregion
+
         #region Debug
         #endregion
     }
