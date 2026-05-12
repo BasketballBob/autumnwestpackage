@@ -42,5 +42,18 @@ namespace AWP
             Rect newRect = rect.rect;
             rect.SetRect(modification(newRect));
         }
+
+        /// <summary>
+        /// Converts a screen position into the local anchored position for rect
+        /// Note: transform.position on UI element that are (Screen Space - Overlay) are already screen positions
+        /// Reference: https://www.reddit.com/r/Unity3D/comments/ge84w9/best_way_to_convert_from_a_world_position_to_an/
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="screenPos"></param>
+        /// <returns></returns>
+        public static Vector2 ScreenToAnchoredPosition(this RectTransform rect, Vector2 screenPos)
+        {
+            return rect.InverseTransformPoint(screenPos);
+        }
     }
 }

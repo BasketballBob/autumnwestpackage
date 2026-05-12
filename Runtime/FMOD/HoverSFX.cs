@@ -11,6 +11,8 @@ namespace AWP
         [SerializeField]
         private EventReference _hoverSFX;
 
+        public bool HoverSFXDisabled { get; set; }
+
         public void OnPointerEnter(PointerEventData eventData)
         {
             PlayHoverSFX();
@@ -18,6 +20,7 @@ namespace AWP
 
         protected virtual void PlayHoverSFX()
         {
+            if (HoverSFXDisabled) return;
             AWGameManager.AudioManager.PlayOneShot(_hoverSFX);
         }
     }

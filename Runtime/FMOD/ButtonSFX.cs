@@ -15,6 +15,8 @@ namespace AWP
 
         private Button _button;
 
+        public bool SelectSFXDisabled { get; set; }
+
         private void OnEnable()
         {
             _button = GetComponent<Button>();
@@ -42,6 +44,7 @@ namespace AWP
         }
         private void PlaySelectSFX()
         {
+            if (SelectSFXDisabled) return;
             AWGameManager.AudioManager.PlayOneShot(_selectSFX);
         }
     }
