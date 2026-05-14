@@ -94,6 +94,20 @@ namespace AWP
             menu.OnPopStart?.Invoke();
             StartTransitionRoutine(PopRoutine(menu));
         }
+        /// <summary>
+        /// Pops all of the menus in a stack at once
+        /// </summary>
+        public void PopAll()
+        {
+            List<IEnumerator> waitRoutines = new List<IEnumerator>();
+
+            _menuStack.ForEach(x =>
+            {
+                waitRoutines.Add(PopRoutine(x.Menu));
+            });
+
+            StartTransitionRoutine(this.WaitOnRoutines(waitRoutines.ToArray()));
+        }
         private IEnumerator PopRoutine(Menu menu)
         {
             //if (!Interactable) return;
