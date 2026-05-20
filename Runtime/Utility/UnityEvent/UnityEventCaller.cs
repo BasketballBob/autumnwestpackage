@@ -21,7 +21,12 @@ namespace AWP
             _eventRoutine = new SingleCoroutine(this);
         }
 
-        public void Invoke()
+        /// <summary>
+        /// Renamed to "CallInvoke" because of override error with naming it "Invoke"
+        /// Classic Unity bullshit  > : - (
+        /// Reference: https://discussions.unity.com/t/animation-events-problems/753526
+        /// </summary>
+        public void CallInvoke()
         {
             _eventRoutine.StartRoutine(EventRoutine());
         }

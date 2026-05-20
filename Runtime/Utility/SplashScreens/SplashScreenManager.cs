@@ -115,6 +115,11 @@ namespace AWP
             // }
 
             if (!ShouldDestroy()) return;
+            DestroySelf();
+        }
+
+        public void DestroySelf()
+        {
             Destroy(gameObject);
         }
         
