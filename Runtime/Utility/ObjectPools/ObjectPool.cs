@@ -35,8 +35,7 @@ namespace AWP
         {
             if (_initialized) return;
 
-            // Add initial prefab object
-            AddObjectToPool(_prefab);
+            // Disable object (and don't add to pool to preserve state)
             DisableObject(_prefab);
 
             // Create remaining minimal item count
