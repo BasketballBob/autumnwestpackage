@@ -38,7 +38,7 @@ namespace AWP
             float targetAspect = targetWidth / targetHeight;
             float scaleHeight = WindowAspect / targetAspect;
 
-            Debug.Log($"ADJUST w:{ScreenWidth} h:{ScreenHeight} targetAspect:{targetAspect} scaleHeight:{scaleHeight}");
+            //Debug.Log($"ADJUST w:{ScreenWidth} h:{ScreenHeight} targetAspect:{targetAspect} scaleHeight:{scaleHeight}");
 
             // If screen is too tall
             if (scaleHeight < 1.0f)
