@@ -31,15 +31,23 @@ namespace AWP
             hinge.motor = motor;
         }
 
-        public static Vector2 GetAnchorWorldPosition(this HingeJoint2D joint)
+        public static Vector2 GetConnectedAnchorWorldPosition(this HingeJoint2D joint)
         {
             return joint.connectedBody.transform.TransformPoint(joint.connectedAnchor);
         }
 
+        /// <summary>
+        /// Moves the provided joint to the world position where anchor and connectedAnchor overlap
+        /// </summary>
+        /// <param name="joint"></param>
         public static void ResetPosition(this HingeJoint2D joint)
         {
-            joint.attachedRigidbody.MovePosition(joint.GetAnchorWorldPosition());
-            joint.attachedRigidbody.transform.position = joint.attachedRigidbody.position;
+            Vector2 targetPos = joint.GetConnectedAnchorWorldPosition();
+            Vector2 anchorOffset = joint.transform.position - joint.transform.TransformPoint(joint.anchor);
+            
+            joint.enabled = false;
+            joint.attachedRigidbody.transform.position = targetPos + anchorOffset;
+            joint.enabled = true;
         }
     }
 }
