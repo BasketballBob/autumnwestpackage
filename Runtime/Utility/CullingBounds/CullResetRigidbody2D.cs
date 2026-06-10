@@ -21,7 +21,7 @@ namespace AWP
         public override void Cull()
         {
             base.Cull();
-            _rb.linearVelocity = ResetVelocity;
+            _rb.velocity = ResetVelocity;
             _rb.angularVelocity = ResetAngularVelocity;
         }
     }

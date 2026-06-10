@@ -25,7 +25,7 @@ namespace AWP
 
         private void SyncAngle()
         {
-            transform.eulerAngles = new Vector3(0, 0, _rb.linearVelocity.GetEulerZ() + _angleOffset);
+            transform.eulerAngles = new Vector3(0, 0, _rb.velocity.GetEulerZ() + _angleOffset);
         }
     }
 }

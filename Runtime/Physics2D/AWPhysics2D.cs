@@ -84,15 +84,15 @@ namespace AWP
         {
             if (rb.bodyType != RigidbodyType2D.Dynamic) return default;
 
-            Vector2 oldVelocity = rb.linearVelocity;
+            Vector2 oldVelocity = rb.velocity;
             float oldAngularVelocity = rb.angularVelocity;
 
-            rb.linearVelocity = velocity;
+            rb.velocity = velocity;
             rb.angularVelocity = angularVelocity;
 
             Vector2 pointVelocity = rb.GetPointVelocity(pos);
 
-            rb.linearVelocity = oldVelocity;
+            rb.velocity = oldVelocity;
             rb.angularVelocity = oldAngularVelocity;
 
             return pointVelocity;
@@ -197,7 +197,7 @@ namespace AWP
         {
             float timestep = Time.fixedDeltaTime / Physics2D.velocityIterations;
             Vector2 gravityAccel = Physics2D.gravity * rb.gravityScale * timestep;
-            float drag = 1f - timestep * rb.linearDamping;
+            float drag = 1f - timestep * rb.drag;
 
             return PlotFunc(new PlotFunctionData(Vector2.zero, velocity), (data) =>
             {
