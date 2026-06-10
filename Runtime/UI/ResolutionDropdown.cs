@@ -8,6 +8,8 @@ namespace AWP
     {
         protected override LabeledList<Resolution> ItemList => new LabeledList<Resolution>()
         {
+            {"3840 x 2160", new Resolution(3840, 2160) },
+            {"2560 x 1440", new Resolution(2560, 1440) },
             {"1920 x 1080", new Resolution(1920, 1080) },
             {"1600 x 900", new Resolution(1600, 900) },
             {"640 x 360", new Resolution(640, 360) }
