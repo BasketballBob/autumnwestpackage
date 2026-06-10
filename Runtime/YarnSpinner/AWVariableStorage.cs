@@ -66,7 +66,7 @@ namespace AWP
         public override void Clear() => Dictionaries.ForEach(x => x.Clear());
         public override bool Contains(string variableName) => Dictionaries.Any(x => x.Contains(variableName));
 
-        public override (Dictionary<string, float> FloatVariables, Dictionary<string, string> StringVariables, Dictionary<string, bool> BoolVariables) GetAllVariables()
+        public override (Dictionary<string, float>, Dictionary<string, string>, Dictionary<string, bool>) GetAllVariables()
         {
             return (_floats, _strings, _bools);
         }

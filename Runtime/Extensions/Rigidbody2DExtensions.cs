@@ -15,7 +15,7 @@ namespace AWP
         /// <param name="magnitude"></param>
         public static void LaunchTowards(this Rigidbody2D rb, Vector2 target, float magnitude)
         {   
-            rb.velocity = (target - rb.position).normalized * magnitude;
+            rb.linearVelocity = (target - rb.position).normalized * magnitude;
         }
 
         // public static void ArcTowards(this Rigidbody2D rb, Vector2 target, float magnitude)

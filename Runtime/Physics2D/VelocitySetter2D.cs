@@ -20,10 +20,10 @@ namespace AWP
             switch (_spaceType)
             {
                 case SpaceType.WorldSpace:
-                    _rb.velocity = _setVelocity;
+                    _rb.linearVelocity = _setVelocity;
                     break;
                 case SpaceType.LocalSpace:
-                    _rb.velocity = transform.InverseTransformVector(_setVelocity);
+                    _rb.linearVelocity = transform.InverseTransformVector(_setVelocity);
                     break;
             }
         }

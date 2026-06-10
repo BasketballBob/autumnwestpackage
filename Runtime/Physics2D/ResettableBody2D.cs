@@ -30,7 +30,7 @@ public class ResettableBody2D : ResettableBody, IResettable
 
         transform.position = _initialPosition;
         transform.rotation = _initialRotation;
-        if (_zeroVelocity) _rb.velocity = Vector2.zero;
+        if (_zeroVelocity) _rb.linearVelocity = Vector2.zero;
         if (_zeroAngularVelocity) _rb.angularVelocity = 0;
     }
 }

@@ -36,8 +36,8 @@ namespace AWP
             BodyType = rigidbody2D.bodyType;
             PhysicsMaterial = rigidbody2D.sharedMaterial;
             Mass = rigidbody2D.mass;
-            Drag = rigidbody2D.drag;
-            AngularDrag = rigidbody2D.angularDrag;
+            Drag = rigidbody2D.linearDamping;
+            AngularDrag = rigidbody2D.angularDamping;
             GravityScale = rigidbody2D.gravityScale;
             CollisionDetectionMode = rigidbody2D.collisionDetectionMode;
             Interpolation = rigidbody2D.interpolation;
@@ -49,8 +49,8 @@ namespace AWP
             rigidbody2D.bodyType = BodyType;
             rigidbody2D.sharedMaterial = PhysicsMaterial;
             rigidbody2D.mass = Mass;
-            rigidbody2D.drag = Drag;
-            rigidbody2D.angularDrag = AngularDrag;
+            rigidbody2D.linearDamping = Drag;
+            rigidbody2D.angularDamping = AngularDrag;
             rigidbody2D.gravityScale = GravityScale;
             rigidbody2D.collisionDetectionMode = CollisionDetectionMode;
             rigidbody2D.interpolation = Interpolation;

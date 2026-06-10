@@ -137,7 +137,7 @@ namespace AWP
         public EventInstance CreateAttachedInstance(EventReference eventRef, GameObject gameObject)
         {
             EventInstance instance = CreateInstance(eventRef);
-            RuntimeManager.AttachInstanceToGameObject(instance, gameObject);
+            RuntimeManager.AttachInstanceToGameObject(instance, gameObject.transform);
             return instance;
         }
 
