@@ -18,14 +18,16 @@ namespace AWP
 
         [SerializeField] [ValidateInput("ValidateRect", "Rect is not child or self", InfoMessageType.Warning)]
         protected RectTransform _rect;
+        [SerializeField]
+        private bool _unscaledTime = true;
         protected bool _isHighlighted;
         private SingleCoroutine _updateRoutine;
         private SingleCoroutine _fixedUpdateRoutine;
         private Vector2 _mousePosOld;
 
         public bool IsActive { get; private set; }
-        protected virtual float DeltaTime => Time.unscaledDeltaTime;
-        protected virtual float FixedDeltaTime => Time.fixedUnscaledDeltaTime;
+        protected virtual float DeltaTime => _unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+        protected virtual float FixedDeltaTime => _unscaledTime ? Time.fixedUnscaledDeltaTime : Time.fixedDeltaTime;
         protected virtual bool AlwaysActive => false;
         protected Vector2 MousePos => new Vector2(Mouse.current.position.x.value, Mouse.current.position.y.value);
         protected Vector2 MouseWorldPos => AWGameManager.AWCamera.Camera.ScreenToWorldPoint(MousePos);
@@ -115,7 +117,7 @@ namespace AWP
                     yield break;
                 }
 
-                yield return AWDelta.YieldNull(AWDelta.DeltaType.UnscaledFixedUpdate);
+                yield return AWDelta.YieldNull(_unscaledTime ? AWDelta.DeltaType.UnscaledFixedUpdate : AWDelta.DeltaType.FixedUpdate);
             }
         }
 
