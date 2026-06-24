@@ -70,7 +70,7 @@ namespace AWP
             InitializeStartOption();
         }
 
-        private void InitializeStartOption()
+        protected virtual void InitializeStartOption()
         {
             int index = ItemList.IndexOf(GetStartValue());
             _dropdown.SetValueWithoutNotify(index);

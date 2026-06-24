@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AWP
@@ -58,6 +59,11 @@ namespace AWP
             }
 
             return 0;
+        }
+        
+        public bool ContainsValue(TData data)
+        {
+            return _items.Select(x => x.Value).Contains(data);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
