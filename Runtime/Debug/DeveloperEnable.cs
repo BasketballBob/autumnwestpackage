@@ -9,6 +9,7 @@ namespace AWP
     /// </summary>
     public class DeveloperEnable : MonoBehaviour
     {
+        [Header("If condition is not true enable/disable")]
         [SerializeField]
         private DeveloperMode _minDevMode = DeveloperMode.Developer;
         [SerializeField]
