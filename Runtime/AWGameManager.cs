@@ -81,20 +81,31 @@ namespace AWP
         protected virtual void Awake()
         {
             DontDestroyOnLoad(transform.gameObject);
-            OnSceneLoaded(GetCurrentScene(), default);
-        }
+            //OnSceneLoaded(GetCurrentScene(), default);
 
-        protected virtual void OnEnable()
-        {
+            // Previously OnEnable 7/9/26
             Current = this;
             AWInputManager = _inputManager;
             AudioManager = _audioManager;
             SaveManager = _saveManager;
             SceneManager.sceneLoaded += OnSceneLoaded;
+
+            Debug.Log($"AWGAMEMANAGER AWAKE {Current != null}");
+        }
+
+        protected virtual void OnEnable()
+        {
+            
         }
 
         protected virtual void OnDisable()
         {
+            
+        }
+
+        protected virtual void OnDestroy()
+        {
+            // Previously OnEnable 7/9/26
             if (Current == this) Current = null;
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }

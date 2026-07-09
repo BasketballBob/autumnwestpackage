@@ -25,7 +25,7 @@ namespace AWP
 
         private void Push(Rigidbody2D other)
         {
-            other.AddForceAtPosition(_rb.velocity * _forceMultiplier, transform.position, ForceMode2D.Impulse);
+            other.AddForceAtPosition(_rb.linearVelocity * _forceMultiplier, transform.position, ForceMode2D.Impulse);
         }
     }
 }

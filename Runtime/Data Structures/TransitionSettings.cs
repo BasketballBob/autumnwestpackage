@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,8 +7,9 @@ namespace AWP
 {
     public class TransitionSettings
     {
-        public float EnterDuration;
-        public float DelayDuration;
+        public Action OnLoad;
+        public float EnterDuration = .5f;
+        public float DelayDuration = .2f;
         public float ExitDuration;
         public bool PauseGame = true;
         public int? OverrideSortingOrder;

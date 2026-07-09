@@ -11,6 +11,8 @@ namespace AWP
         [SerializeField]
         private BaseState _currentState;
 
+        public BaseState CurrentState => _currentState;
+
         public void SetState(BaseState newState)
         {
             _currentState?.ExitState();

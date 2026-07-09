@@ -84,15 +84,15 @@ namespace AWP
         {
             if (rb.bodyType != RigidbodyType2D.Dynamic) return default;
 
-            Vector2 oldVelocity = rb.velocity;
+            Vector2 oldVelocity = rb.linearVelocity;
             float oldAngularVelocity = rb.angularVelocity;
 
-            rb.velocity = velocity;
+            rb.linearVelocity = velocity;
             rb.angularVelocity = angularVelocity;
 
             Vector2 pointVelocity = rb.GetPointVelocity(pos);
 
-            rb.velocity = oldVelocity;
+            rb.linearVelocity = oldVelocity;
             rb.angularVelocity = oldAngularVelocity;
 
             return pointVelocity;
@@ -197,7 +197,7 @@ namespace AWP
         {
             float timestep = Time.fixedDeltaTime / Physics2D.velocityIterations;
             Vector2 gravityAccel = Physics2D.gravity * rb.gravityScale * timestep;
-            float drag = 1f - timestep * rb.drag;
+            float drag = 1f - timestep * rb.linearDamping;
 
             return PlotFunc(new PlotFunctionData(Vector2.zero, velocity), (data) =>
             {
@@ -261,6 +261,15 @@ namespace AWP
 
                 return true;
             }
+        }
+        #endregion
+
+        #region Debug
+        public static RaycastHit2D RaycastWithDebug(Vector2 origin, Vector2 direction, float distance, int layerMask)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(origin, direction, distance, layerMask);
+            Debug.DrawRay(origin, direction * distance, hit.collider != null ? Color.green : Color.red);
+            return hit;
         }
         #endregion
     }

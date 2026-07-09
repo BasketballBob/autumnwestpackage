@@ -12,8 +12,6 @@ namespace AWP
         private Canvas _canvas;
         [SerializeField]
         private Animator _animator;
-        [SerializeField]
-        private float _exitDelay = .2f;
 
         private SingleCoroutine _transitionRoutine;
         private string _destinationScene;
@@ -74,11 +72,12 @@ namespace AWP
             PrepareSceneAudioTransition();
             yield return EnterRoutine(settings);
             yield return transitionRoutine;
-            yield return new WaitForSecondsRealtime(_exitDelay);
-            if (settings == null || settings.PauseGame) AWGameManager.SetPaused(false);
 
+            settings.OnLoad.Invoke();
             onSwitch?.Invoke();
 
+            yield return new WaitForSecondsRealtime(settings.DelayDuration);
+            if (settings == null || settings.PauseGame) AWGameManager.SetPaused(false);
             yield return ExitRoutine(settings);
 
             void PrepareSceneAudioTransition()

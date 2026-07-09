@@ -78,7 +78,7 @@ namespace AWP
             rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             rb.interpolation = RigidbodyInterpolation2D.Interpolate;
             rb.mass = segment.Mass;
-            rb.velocity = _rb.velocity;
+            rb.linearVelocity = _rb.linearVelocity;
             rb.angularVelocity = _rb.angularVelocity;
             rb.gravityScale = _rb.gravityScale;
             rb.transform.SetParent(_disconnectTransform);
