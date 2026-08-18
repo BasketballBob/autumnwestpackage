@@ -89,8 +89,6 @@ namespace AWP
             AudioManager = _audioManager;
             SaveManager = _saveManager;
             SceneManager.sceneLoaded += OnSceneLoaded;
-
-            Debug.Log($"AWGAMEMANAGER AWAKE {Current != null}");
         }
 
         protected virtual void OnEnable()

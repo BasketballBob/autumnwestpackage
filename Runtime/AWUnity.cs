@@ -208,6 +208,20 @@ namespace AWP
         #endregion
 
         #region Debug
+        /// <summary>
+        /// Method to clear developer console since Debug.ClearDeveloperConsole(); is not working
+        /// Copied from https://discussions.unity.com/t/clear-console-through-code-in-development-build/87213/6
+        /// </summary>
+        public static void ClearLogConsole()
+        {
+            #if UNITY_EDITOR
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetAssembly(typeof(UnityEditor.SceneView));
+
+            System.Type type = assembly.GetType("UnityEditor.LogEntries");
+            System.Reflection.MethodInfo method = type.GetMethod("Clear");
+            method.Invoke(new object(), null);
+            #endif
+        }
         #endregion
     }
 }

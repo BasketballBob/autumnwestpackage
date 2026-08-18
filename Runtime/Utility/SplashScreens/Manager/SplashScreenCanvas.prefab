@@ -171,6 +171,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -215,7 +216,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 262143
+    m_Bits: 262135
 --- !u!114 &918538095405192078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,14 +232,17 @@ MonoBehaviour:
   _anim: {fileID: 2966526133922258447}
   _canvasGroup: {fileID: 5126904190853683731}
   _splashScreenHolder: {fileID: 1887831780006502848}
+  _progressInput: {fileID: 0}
   _splashScreenPrefabs:
-  - {fileID: 1644285648815719952, guid: e0109658818f1264d9a155ea636b2d66, type: 3}
-  - {fileID: 1644285648815719952, guid: e0109658818f1264d9a155ea636b2d66, type: 3}
-  - {fileID: 1644285648815719952, guid: e0109658818f1264d9a155ea636b2d66, type: 3}
+  - {fileID: 7992478491769671779, guid: fb3b4e1be7a7d4d47b42c68bc2fe8119, type: 3}
+  - {fileID: 7992478491769671779, guid: cd97f5dbef0c37b40887a61651ecde2d, type: 3}
+  - {fileID: 7992478491769671779, guid: 54766033a9b015e4ea6f5ecf28432794, type: 3}
+  - {fileID: 7992478491769671779, guid: b7e1e9bb03774b34b853be2491874650, type: 3}
   _splashScreenDelay: 0.5
+  _alwaysPlay: 0
 --- !u!95 &2966526133922258447
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -252,6 +256,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
