@@ -9,11 +9,11 @@ namespace AWP
     {
         public TData GetSaveData();
         public void LoadSaveData(TData loadData);
-        // public void LoadEmptyData()
-        // {
-        //     LoadSaveData((TData)Activator.CreateInstance(typeof(TData)));
-        //     (this as ISerializationCallbackReceiver)?.OnAfterDeserialize();
-        // }
+        public void LoadEmptyData()
+        {
+            LoadSaveData((TData)Activator.CreateInstance(typeof(TData)));
+            (this as ISerializationCallbackReceiver)?.OnAfterDeserialize();
+        }
     }
 
     public interface ISaveable { }

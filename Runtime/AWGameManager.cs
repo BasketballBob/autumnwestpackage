@@ -26,10 +26,10 @@ namespace AWP
         public static AWInputManager AWInputManager { get; private set; }
         public static AudioManager AudioManager { get; private set; }
         public static AWSaveManager SaveManager { get; private set; }
-        public static AWCamera AWCamera => Current?._refAWCamera.Reference;
-        public static Camera Camera => AWCamera.Camera;
-        public static MenuManager MenuManager => Current?._refMenuManager.Reference;
-        public static CullingBounds CullingBounds => Current?._refCullingBounds.Reference;
+        public static AWCamera AWCamera => Current._refAWCamera != null ? Current._refAWCamera.Reference : null;
+        public static Camera Camera => AWCamera != null ? AWCamera.Camera : null;
+        public static MenuManager MenuManager => Current._refMenuManager != null ? Current._refMenuManager.Reference : null;
+        public static CullingBounds CullingBounds => Current._refCullingBounds != null ? Current._refCullingBounds.Reference : null;
         public static float TimeScale
         {
             get

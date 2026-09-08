@@ -34,8 +34,8 @@ namespace AWP
         {
             if (!IsSaving) return;
 
-            SaveExternalData();
             Save<TSaveData>(fileName, ref SaveData);
+
             Debug.Log("AWSaveManager: Save");
         }
 
@@ -43,7 +43,6 @@ namespace AWP
         public void Load(string fileName = DefaultSaveName)
         {
             Load<TSaveData>(fileName, ref SaveData);
-            LoadExternalData();
 
             Debug.Log("AWSaveManager: Load");
         }
@@ -51,6 +50,7 @@ namespace AWP
         public void LoadEmptySave(string fileName = DefaultSaveName)
         {
             LoadEmpty<TSaveData>(fileName, ref SaveData);
+            
             Debug.Log("AWSaveManager: Load Empty");
         }
 
@@ -84,6 +84,8 @@ namespace AWP
             FileDataHandler<TData> dataHandler = new FileDataHandler<TData>(fileName);
 
             saveData.Save();
+            SaveExternalData();
+
             dataHandler.Save(saveData);
             OnSave?.Invoke();
         }
@@ -96,6 +98,8 @@ namespace AWP
             if (saveData == null) saveData = new TData();
 
             saveData.Load();
+            LoadExternalData();
+
             OnLoad?.Invoke();
         }
 
@@ -103,6 +107,8 @@ namespace AWP
         {
             saveData = new TData();
             saveData.Load();
+            LoadExternalData();
+
             OnLoad?.Invoke();
         }
 

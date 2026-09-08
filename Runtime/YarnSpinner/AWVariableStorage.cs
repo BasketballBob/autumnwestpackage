@@ -23,14 +23,14 @@ namespace AWP
 
         private List<IDictionary> Dictionaries => new List<IDictionary>() { _floats, _strings, _bools };
 
-        private void OnEnable()
+        private void Awake()
         {
             AWGameManager.SaveManager.OnLoad += LoadFromGlobalData;
 
             LoadFromGlobalData();
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             AWGameManager.SaveManager.OnLoad -= LoadFromGlobalData;
 
@@ -82,8 +82,11 @@ namespace AWP
 
         public bool NodeIsVisited(string nodeName)
         {
+            Debug.Log($"NODE IS VISITED {nodeName} = {TryGetValue<float>($"$Yarn.Internal.Visiting.{nodeName}", out float result2)} -> {$"$Yarn.Internal.Visiting.{nodeName}"}");
+
             if (TryGetValue<float>($"$Yarn.Internal.Visiting.{nodeName}", out float result))
             {
+                Debug.Log("NODE IS VISITED WONKA");
                 return result > 0;
             }
 

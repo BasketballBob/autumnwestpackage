@@ -60,6 +60,10 @@ namespace AWP
         public enum VolumeType { Master, SFX, Music, Ambience }
         public enum EventPlayType { Music, Ambience, Snapshot };
 
+        public AudioChannel MusicChannel => _musicChannel;
+        public AudioChannel AmbienceChannel => _ambienceChannel;
+        public AudioChannel SnapshotChannel => _snapshotChannel;
+
         private void Awake()
         {
             Current = this;
@@ -127,10 +131,10 @@ namespace AWP
             return instance;
         }
 
-        public EventInstance CreateInstance(EventReference eventRef)
+        public EventInstance CreateInstance(EventReference eventRef, bool addToEventList = true)
         {
             EventInstance instance = CreateEvent(eventRef);
-            _eventList.Add(instance);
+            if (addToEventList) _eventList.Add(instance);
             return instance;
         }
 
@@ -182,7 +186,7 @@ namespace AWP
                 Current._emitterList[i].Stop();
             }
 
-            Current.CleanChannels();
+            //Current.CleanChannels();
         }
 
         private void CleanChannels()
@@ -191,16 +195,6 @@ namespace AWP
             _ambienceChannel.Clean();
             _snapshotChannel.Clean();
         }
-
-        // public void OnBeginLoadScene(string nextScene, float fadeDuration = DefaultFadeInDuration)
-        // {
-        //     PrepareForNewSceneAudio(nextScene, fadeDuration);
-        // }
-
-        // public void OnSceneLoaded(string currentLevel)
-        // {
-        //     LoadNewSceneAudio(currentLevel);
-        // }
 
         private void UpdateVolumes()
         {
@@ -233,35 +227,33 @@ namespace AWP
             return audio;
         }
 
-        public void EnterNewSceneAudio(SceneAudio sceneAudio, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null)
+        public void EnterNewSceneAudio(SceneAudio sceneAudio, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration)
         {
             //Debug.Log($"ENTER NEW SCENE AUDIO {sceneAudio.name}");
             _lastLoadedSceneAudio = sceneAudio;
 
             sceneAudio.ApplyGlobalParameters();
-            _musicChannel.PlayEvent(sceneAudio.Music.EventReference, fadeEnter, fadeExit, sceneAudio.Music.Volume, onSwitch);
-            _ambienceChannel.PlayEvent(sceneAudio.Ambience.EventReference, fadeEnter, fadeExit, sceneAudio.Ambience.Volume, onSwitch);
-            _snapshotChannel.PlayEvent(sceneAudio.Snapshot.EventReference, fadeEnter, fadeExit, sceneAudio.Snapshot.Volume, onSwitch);
+            _musicChannel.PlayEvent(sceneAudio.Music.EventReference, fadeEnter, fadeExit, sceneAudio.Music.Volume);
+            _ambienceChannel.PlayEvent(sceneAudio.Ambience.EventReference, fadeEnter, fadeExit, sceneAudio.Ambience.Volume);
+            _snapshotChannel.PlayEvent(sceneAudio.Snapshot.EventReference, fadeEnter, fadeExit, sceneAudio.Snapshot.Volume);
         }
         public void EnterNewSceneAudio(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration) =>
-            EnterNewSceneAudio(name, fadeEnter, fadeExit, null);
-        public void EnterNewSceneAudio(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null) =>
-            EnterNewSceneAudio(GetSceneAudio(name), fadeEnter, fadeExit, onSwitch);
+            EnterNewSceneAudio(name, fadeEnter, fadeExit);
 
-        public void PlaySceneAudioMusic(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null)
+        public void PlaySceneAudioMusic(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration)
         {
             SceneAudio sceneAudio = GetSceneAudio(name);
-            _musicChannel.PlayEvent(sceneAudio.Music.EventReference, fadeEnter, fadeExit, sceneAudio.Music.Volume, onSwitch);
+            _musicChannel.PlayEvent(sceneAudio.Music.EventReference, fadeEnter, fadeExit, sceneAudio.Music.Volume);
         }
-        public void PlaySceneAudioAmbience(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null)
+        public void PlaySceneAudioAmbience(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration)
         {
             SceneAudio sceneAudio = GetSceneAudio(name);
-            _ambienceChannel.PlayEvent(sceneAudio.Ambience.EventReference, fadeEnter, fadeExit, sceneAudio.Ambience.Volume, onSwitch);
+            _ambienceChannel.PlayEvent(sceneAudio.Ambience.EventReference, fadeEnter, fadeExit, sceneAudio.Ambience.Volume);
         }
-        public void PlaySceneAudioSnapshot(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null)
+        public void PlaySceneAudioSnapshot(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration)
         {
             SceneAudio sceneAudio = GetSceneAudio(name);
-            _snapshotChannel.PlayEvent(sceneAudio.Snapshot.EventReference, fadeEnter, fadeExit, sceneAudio.Snapshot.Volume, onSwitch);
+            _snapshotChannel.PlayEvent(sceneAudio.Snapshot.EventReference, fadeEnter, fadeExit, sceneAudio.Snapshot.Volume);
         }
         #endregion
 
@@ -294,7 +286,7 @@ namespace AWP
 
         #region Audio channels
         [System.Serializable]
-        private class AudioChannel
+        public class AudioChannel
         {
             public EventReference CurrentEvent;
             public EventInstance Instance;
@@ -319,13 +311,13 @@ namespace AWP
                 CurrentEvent = default;
             }
 
-            public void PlayEvent(EventReference eventRef, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, float volume = DefaultVolume, Action onSwitch = null, List<AWEventParameter> localParams = null)
+            public void PlayEvent(EventReference eventRef, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, float volume = DefaultVolume, List<AWEventParameter> localParams = null)
             {
-                _shiftRoutine.StartRoutine(SwitchAudio(eventRef, fadeEnter, fadeExit, volume, onSwitch, localParams));
+                _shiftRoutine.StartRoutine(SwitchAudio(eventRef, fadeEnter, fadeExit, volume, localParams));
             }
-            public void PlaySceneAudioSettings(SceneAudio.SceneAudioSettings settings, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null)
+            public void PlaySceneAudioSettings(SceneAudio.SceneAudioSettings settings, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration)
             {
-                PlayEvent(settings.EventReference, fadeEnter, fadeExit, settings.Volume, onSwitch);
+                PlayEvent(settings.EventReference, fadeEnter, fadeExit, settings.Volume);
             }
 
             /// <summary>
@@ -337,17 +329,13 @@ namespace AWP
             /// <param name="volume"></param>
             /// <param name="onSwitch">Action to optionally be called to allow the entering of new audio</param>
             /// <returns></returns>
-            private IEnumerator SwitchAudio(EventReference eventRef, float fadeEnter, float fadeExit, float volume = DefaultVolume, Action onSwitch = null, List<AWEventParameter> localParams = null)
+            private IEnumerator SwitchAudio(EventReference eventRef, float fadeEnter, float fadeExit, float volume = DefaultVolume, List<AWEventParameter> localParams = null)
             {
-                bool readyToSwitch = false;
-                InitializeOnSwitchEvent();
-
                 //Debug.Log($"SWITCH AUDIO {CurrentEvent.IsNull} {eventRef.Path} {(!CurrentEvent.IsNull ? CurrentEvent.Path : null)}");
 
                 // Fade to new volume if eventRefs are the same
                 if (!CurrentEvent.IsNull && eventRef.Guid == CurrentEvent.Guid)
                 {
-                    yield return WaitOnSwitchEvent();
                     yield return Instance.FadeToVolume(fadeEnter + fadeExit, volume);
                     yield break;
                 }
@@ -360,33 +348,16 @@ namespace AWP
                     Instance.release();
                     CurrentEvent = default;
                 }
-
-                yield return WaitOnSwitchEvent();
+                else yield return AWDelta.WaitForSeconds(AWDelta.DeltaType.UnscaledUpdate, fadeEnter);
 
                 // Fade in new audio
                 if (!eventRef.IsNull)
                 {
-                    Instance = _audioManager.CreateInstance(eventRef);
+                    Instance = _audioManager.CreateInstance(eventRef, addToEventList: false);
                     CurrentEvent = eventRef;
                     Instance.start();
                     Instance.setVolume(0);
                     yield return Instance.FadeToVolume(fadeExit, volume);
-                }
-
-                void InitializeOnSwitchEvent()
-                {
-                    if (onSwitch == null)
-                    {
-                        readyToSwitch = true;
-                        return;
-                    }
-
-                    onSwitch += () => readyToSwitch = true;
-                }
-
-                IEnumerator WaitOnSwitchEvent()
-                {
-                    while (!readyToSwitch) yield return null;
                 }
             }
 
@@ -415,9 +386,9 @@ namespace AWP
 
         #region Yarn Commands
         [YarnCommand("EnterNewSceneAudio")]
-        public static void YarnEnterNewSceneAudio(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, Action onSwitch = null)
+        public static void YarnEnterNewSceneAudio(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration)
         {
-            AWGameManager.AudioManager.EnterNewSceneAudio(name, fadeEnter, fadeExit, onSwitch);
+            AWGameManager.AudioManager.EnterNewSceneAudio(name, fadeEnter, fadeExit);
         }
         #endregion
     }

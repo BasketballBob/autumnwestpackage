@@ -64,8 +64,6 @@ namespace AWP
 
         private IEnumerator TransitionRoutine(IEnumerator transitionRoutine, TransitionSettings settings, SceneAudio audio)
         {
-            Action onSwitch = null;
-
             if (settings != null && settings.OverrideSortingOrder != null) Canvas.sortingOrder = (int)settings.OverrideSortingOrder;
 
             if (settings == null || settings.PauseGame) AWGameManager.SetPaused(true);
@@ -74,7 +72,6 @@ namespace AWP
             yield return transitionRoutine;
 
             settings.OnLoad.Invoke();
-            onSwitch?.Invoke();
 
             yield return new WaitForSecondsRealtime(settings.DelayDuration);
             if (settings == null || settings.PauseGame) AWGameManager.SetPaused(false);
@@ -83,7 +80,7 @@ namespace AWP
             void PrepareSceneAudioTransition()
             {
                 if (audio == null) return;
-                AWGameManager.AudioManager.EnterNewSceneAudio(audio, onSwitch: onSwitch);
+                AWGameManager.AudioManager.EnterNewSceneAudio(audio);
             }
         }
 
