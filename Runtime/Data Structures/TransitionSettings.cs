@@ -8,9 +8,9 @@ namespace AWP
     public class TransitionSettings
     {
         public Action OnLoad;
-        public float EnterDuration = .5f;
-        public float DelayDuration = .2f;
-        public float ExitDuration;
+        public float EnterDuration = .25f;
+        public float DelayDuration = 0f;
+        public float ExitDuration = .25f;
         public bool PauseGame = true;
         public int? OverrideSortingOrder;
 

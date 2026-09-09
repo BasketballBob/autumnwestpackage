@@ -148,12 +148,19 @@ namespace AWP
             AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName, loadMode);
             operation.allowSceneActivation = false;
 
-            while (!operation.isDone && operation.progress < 0.9f)
+            while (!operation.isDone) 
             {
+                if (operation.progress >= 0.9f)
+                {
+                    operation.allowSceneActivation = true;
+                }
+
                 yield return null;
             }
 
-            operation.allowSceneActivation = true;
+            // Hacky workaround to prevent Time.unscaledDeltaTime from being huge (primarily for SceneTransition Exit animation)
+            // https://discussions.unity.com/t/unscaled-time-animation-not-working-on-game-launch/834755
+            for (int i = 0; i < 2; i++) yield return new WaitForEndOfFrame();
         }
         public static IEnumerator LoadSceneAsyncAdditive(string sceneName) => LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 

@@ -14,24 +14,12 @@ namespace AWP
         private Animator _animator;
 
         private SingleCoroutine _transitionRoutine;
-        private string _destinationScene;
-        private bool _destinationSceneLoaded;
 
         public Canvas Canvas => _canvas;
 
         private void Awake()
         {
             _transitionRoutine = new SingleCoroutine(this);
-        }
-
-        private void OnEnable()
-        {
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-
-        private void OnDisable()
-        {
-            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
         private void Start()
@@ -41,15 +29,15 @@ namespace AWP
 
         public void Transition(string scene, TransitionSettings settings, SceneAudio audio = null)
         {
-            _destinationScene = scene;
-            _destinationSceneLoaded = false;
             if (audio == null) AWGameManager.AudioManager.GetSceneAudio(scene);
             _transitionRoutine.StartRoutine(TransitionRoutine(LoadSceneRoutine(), settings, audio));
 
             IEnumerator LoadSceneRoutine()
             {
-                AWGameManager.LoadScene(_destinationScene);
-                while (!_destinationSceneLoaded) yield return null;
+                // AWGameManager.LoadScene(_destinationScene);
+                // while (!_destinationSceneLoaded) yield return null;
+
+                yield return AWGameManager.LoadSceneAsync(scene, LoadSceneMode.Single);
             }
         }
 
@@ -86,25 +74,17 @@ namespace AWP
 
         public IEnumerator EnterRoutine(TransitionSettings settings)
         {
-            if (settings != null) _animator.SetSpeedForDuration(settings.EnterDuration);
             _animator.Play("Enter");
+            if (settings != null) _animator.SetSpeedForDuration(settings.EnterDuration);
             yield return _animator.WaitForAnimationToComplete();
         }
 
         public IEnumerator ExitRoutine(TransitionSettings settings)
         {
-            if (settings != null) _animator.SetSpeedForDuration(settings.ExitDuration);
             _animator.Play("Exit");
+            if (settings != null) _animator.SetSpeedForDuration(settings.ExitDuration);
             yield return _animator.WaitForAnimationToComplete();
             Destroy(gameObject);
-        }
-
-        private void OnSceneLoaded(Scene loadedScene, LoadSceneMode loadSceneMode)
-        {
-            if (loadedScene.name == _destinationScene)
-            {
-                _destinationSceneLoaded = true;
-            }
         }
     }
 }
