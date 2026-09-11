@@ -98,6 +98,7 @@ namespace AWP
         /// </summary>
         public void SaveToGlobalData()
         {
+            Debug.Log($"SAVE TO GLOBAL DATA! {gameObject.name}");
             Data.EnsureValues(_floats, _strings, _bools);
             OnSaveToGlobal?.Invoke();
         }

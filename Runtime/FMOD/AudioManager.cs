@@ -28,13 +28,13 @@ namespace AWP
         /// </summary>
         [Header("Volumes")]
         [Range(0, 1)]
-        public static float MasterVolume = 1;
+        private static float _masterVolume = 1;
         [Range(0, 1)]
-        public static float SFXVolume = 1;
+        private static float _sfxVolume = 1;
         [Range(0, 1)]
-        public static float MusicVolume = 1;
+        private static float _musicVolume = 1;
         [Range(0, 1)]
-        public static float AmbienceVolume = 1;
+        private static float _ambienceVolume = 1;
 
         private Bus _masterBus;
         private Bus _sfxBus;
@@ -60,6 +60,10 @@ namespace AWP
         public enum VolumeType { Master, SFX, Music, Ambience }
         public enum EventPlayType { Music, Ambience, Snapshot };
 
+        public static float MasterVolume => _masterVolume;
+        public static float SFXVolume => _sfxVolume;
+        public static float MusicVolume => _musicVolume;
+        public static float AmbienceVolume => _ambienceVolume;
         public AudioChannel MusicChannel => _musicChannel;
         public AudioChannel AmbienceChannel => _ambienceChannel;
         public AudioChannel SnapshotChannel => _snapshotChannel;
@@ -71,6 +75,7 @@ namespace AWP
 
             _bankLoader.Load();
 
+            Debug.Log($"TESTICLE AWAKE");
             _masterBus = RuntimeManager.GetBus("bus:/MasterBus");
             _sfxBus = RuntimeManager.GetBus("bus:/MasterBus/SFX");
             _musicBus = RuntimeManager.GetBus("bus:/masterBus/Music");
@@ -271,13 +276,13 @@ namespace AWP
             switch (volumeType)
             {
                 case VolumeType.Master:
-                    return ref MasterVolume;
+                    return ref _masterVolume;
                 case VolumeType.SFX:
-                    return ref SFXVolume;
+                    return ref _sfxVolume;
                 case VolumeType.Music:
-                    return ref MusicVolume;
+                    return ref _musicVolume;
                 case VolumeType.Ambience:
-                    return ref AmbienceVolume;
+                    return ref _ambienceVolume;
             }
 
             throw new Exception("VOLUME TIME DOESN'T EXIST!");
@@ -290,6 +295,7 @@ namespace AWP
         {
             public EventReference CurrentEvent;
             public EventInstance Instance;
+            public Action<EventInstance> OnCreateInstance;
 
             private AudioManager _audioManager;
             private SingleCoroutine _shiftRoutine;
@@ -354,6 +360,8 @@ namespace AWP
                 if (!eventRef.IsNull)
                 {
                     Instance = _audioManager.CreateInstance(eventRef, addToEventList: false);
+                    OnCreateInstance?.Invoke(Instance);
+
                     CurrentEvent = eventRef;
                     Instance.start();
                     Instance.setVolume(0);
