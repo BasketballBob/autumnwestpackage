@@ -14,8 +14,14 @@ namespace AWP
     public class AudioManager : MonoBehaviour
     {
         private const float DefaultVolume = 1;
-        private const float DefaultFadeInDuration = .3f;
-        private const float DefaultFadeOutDuration = .3f;
+        /// <summary>
+        /// Represents start of switch
+        /// </summary>
+        private const float DefaultEnterDuration = .3f;
+        /// <summary>
+        /// Represents end of switch
+        /// </summary>
+        private const float DefaultExitDuration = .3f;
 
         [Header("References")]
         [SerializeField]
@@ -209,15 +215,15 @@ namespace AWP
         }
 
         [Button()]
-        public void PlayMusic(EventReference eventRef, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, float volume = DefaultVolume) =>
+        public void PlayMusic(EventReference eventRef, float fadeEnter = DefaultEnterDuration, float fadeExit = DefaultExitDuration, float volume = DefaultVolume) =>
             _musicChannel.PlayEvent(eventRef, fadeEnter, fadeExit, volume);
 
         [Button()]
-        public void PlayAmbience(EventReference eventRef, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, float volume = DefaultVolume) =>
+        public void PlayAmbience(EventReference eventRef, float fadeEnter = DefaultEnterDuration, float fadeExit = DefaultExitDuration, float volume = DefaultVolume) =>
             _ambienceChannel.PlayEvent(eventRef, fadeEnter, fadeExit, volume);
 
         [Button()]
-        public void PlaySnapshot(EventReference eventRef, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, float volume = DefaultVolume) =>
+        public void PlaySnapshot(EventReference eventRef, float fadeEnter = DefaultEnterDuration, float fadeExit = DefaultExitDuration, float volume = DefaultVolume) =>
             _snapshotChannel.PlayEvent(eventRef, fadeEnter, fadeExit, volume);
 
         #region Scene Audio
@@ -232,7 +238,7 @@ namespace AWP
             return audio;
         }
 
-        public void EnterNewSceneAudio(SceneAudio sceneAudio, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration)
+        public void EnterNewSceneAudio(SceneAudio sceneAudio, float fadeEnter = DefaultEnterDuration, float fadeExit = DefaultExitDuration)
         {
             //Debug.Log($"ENTER NEW SCENE AUDIO {sceneAudio.name}");
             _lastLoadedSceneAudio = sceneAudio;
@@ -242,20 +248,20 @@ namespace AWP
             _ambienceChannel.PlayEvent(sceneAudio.Ambience.EventReference, fadeEnter, fadeExit, sceneAudio.Ambience.Volume);
             _snapshotChannel.PlayEvent(sceneAudio.Snapshot.EventReference, fadeEnter, fadeExit, sceneAudio.Snapshot.Volume);
         }
-        public void EnterNewSceneAudio(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration) =>
+        public void EnterNewSceneAudio(string name, float fadeEnter = DefaultEnterDuration, float fadeExit = DefaultExitDuration) =>
             EnterNewSceneAudio(name, fadeEnter, fadeExit);
 
-        public void PlaySceneAudioMusic(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration)
+        public void PlaySceneAudioMusic(string name, float fadeEnter = DefaultEnterDuration, float fadeExit = DefaultExitDuration)
         {
             SceneAudio sceneAudio = GetSceneAudio(name);
             _musicChannel.PlayEvent(sceneAudio.Music.EventReference, fadeEnter, fadeExit, sceneAudio.Music.Volume);
         }
-        public void PlaySceneAudioAmbience(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration)
+        public void PlaySceneAudioAmbience(string name, float fadeEnter = DefaultEnterDuration, float fadeExit = DefaultExitDuration)
         {
             SceneAudio sceneAudio = GetSceneAudio(name);
             _ambienceChannel.PlayEvent(sceneAudio.Ambience.EventReference, fadeEnter, fadeExit, sceneAudio.Ambience.Volume);
         }
-        public void PlaySceneAudioSnapshot(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration)
+        public void PlaySceneAudioSnapshot(string name, float fadeEnter = DefaultEnterDuration, float fadeExit = DefaultExitDuration)
         {
             SceneAudio sceneAudio = GetSceneAudio(name);
             _snapshotChannel.PlayEvent(sceneAudio.Snapshot.EventReference, fadeEnter, fadeExit, sceneAudio.Snapshot.Volume);
@@ -317,13 +323,22 @@ namespace AWP
                 CurrentEvent = default;
             }
 
-            public void PlayEvent(EventReference eventRef, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration, float volume = DefaultVolume, List<AWEventParameter> localParams = null)
+            public void PlayEvent(EventReference eventRef, float fadeEnter = DefaultEnterDuration, float fadeExit = DefaultExitDuration, float volume = DefaultVolume, List<AWEventParameter> localParams = null)
             {
                 _shiftRoutine.StartRoutine(SwitchAudio(eventRef, fadeEnter, fadeExit, volume, localParams));
             }
-            public void PlaySceneAudioSettings(SceneAudio.SceneAudioSettings settings, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration)
+            public void PlaySceneAudioSettings(SceneAudio.SceneAudioSettings settings, float fadeEnter = DefaultEnterDuration, float fadeExit = DefaultExitDuration)
             {
                 PlayEvent(settings.EventReference, fadeEnter, fadeExit, settings.Volume);
+            }
+
+            public void FadeOutInstance(float duration = DefaultEnterDuration)
+            {
+                _shiftRoutine.StartRoutine(FadeOut(duration));
+            }
+            public void FadeInInstance(EventReference eventRef, float duration = DefaultEnterDuration, float volume = DefaultVolume)
+            {
+                _shiftRoutine.StartRoutine(FadeIn(eventRef, duration, volume));
             }
 
             /// <summary>
@@ -347,16 +362,38 @@ namespace AWP
                 }
 
                 // Fade out old audio
+                yield return FadeOut(fadeEnter);
+
+                // Fade in new audio
+                yield return FadeIn(eventRef, fadeExit, volume);
+            }
+
+            /// <summary>
+            /// Fades out instance over duration
+            /// </summary>
+            /// <param name="duration"></param>
+            /// <returns></returns>
+            private IEnumerator FadeOut(float duration)
+            {
                 if (Instance.isValid())
                 {
-                    yield return Instance.FadeToVolume(fadeEnter, 0);
+                    yield return Instance.FadeToVolume(duration, 0);
                     Instance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                     Instance.release();
                     CurrentEvent = default;
                 }
-                else yield return AWDelta.WaitForSeconds(AWDelta.DeltaType.UnscaledUpdate, fadeEnter);
+                else yield return AWDelta.WaitForSeconds(AWDelta.DeltaType.UnscaledUpdate, duration);
+            }
 
-                // Fade in new audio
+            /// <summary>
+            /// Replaces instance with eventRef and fades it into volume over duration
+            /// </summary>
+            /// <param name="eventRef"></param>
+            /// <param name="volume"></param>
+            /// <param name="duration"></param>
+            /// <returns></returns>
+            private IEnumerator FadeIn(EventReference eventRef, float duration, float volume)
+            {
                 if (!eventRef.IsNull)
                 {
                     Instance = _audioManager.CreateInstance(eventRef, addToEventList: false);
@@ -365,7 +402,7 @@ namespace AWP
                     CurrentEvent = eventRef;
                     Instance.start();
                     Instance.setVolume(0);
-                    yield return Instance.FadeToVolume(fadeExit, volume);
+                    yield return Instance.FadeToVolume(duration, volume);
                 }
             }
 
@@ -394,7 +431,7 @@ namespace AWP
 
         #region Yarn Commands
         [YarnCommand("EnterNewSceneAudio")]
-        public static void YarnEnterNewSceneAudio(string name, float fadeEnter = DefaultFadeInDuration, float fadeExit = DefaultFadeOutDuration)
+        public static void YarnEnterNewSceneAudio(string name, float fadeEnter = DefaultEnterDuration, float fadeExit = DefaultExitDuration)
         {
             AWGameManager.AudioManager.EnterNewSceneAudio(name, fadeEnter, fadeExit);
         }

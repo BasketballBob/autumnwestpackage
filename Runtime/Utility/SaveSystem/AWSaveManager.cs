@@ -24,11 +24,6 @@ namespace AWP
         [NonSerialized] [ShowInInspector]
         public bool IsSaving = true;
 
-        private void Awake()
-        {
-            LoadPreferences();
-        }
-
         [Button()]
         public void Save(string fileName = DefaultSaveName)
         {
