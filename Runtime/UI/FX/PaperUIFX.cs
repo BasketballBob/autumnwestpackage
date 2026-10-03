@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Febucci.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
