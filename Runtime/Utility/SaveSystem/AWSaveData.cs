@@ -8,18 +8,18 @@ namespace AWP
     [System.Serializable]
     public abstract class AWSaveData : SaveableData
     {
-        public AWVariableStorageSave VariableStorageData;
+        //public AWVariableStorageSave VariableStorageData;
 
         public AWSaveData() { }
 
         public override void Save()
         {
-            VariableStorageData = AWVariableStorage.Data.GetSaveData();
+            //VariableStorageData = AWVariableStorage.Data.GetSaveData();
         }
 
         public override void Load()
         {
-            AWVariableStorage.Data.LoadSaveData(VariableStorageData);
+            //AWVariableStorage.Data.LoadSaveData(VariableStorageData);
         }
     }
 }
